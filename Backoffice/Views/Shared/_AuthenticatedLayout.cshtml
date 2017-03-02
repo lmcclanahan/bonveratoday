@@ -1,0 +1,276 @@
+﻿@using System.Linq
+@{
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+@section styles { @RenderSection("styles", required: false) }
+@section header { @RenderSection("header", required: false) }
+
+<div class="hidden-print">
+    <div class="navbar-mobile-fixed-top-offset"></div>
+    <div class="hidden-xs">
+        <div class="navbar-fixed-top-offset"></div>
+        <nav class="navbar navbar-fixed-top navbar-inverse" role="navigation" id="site-top-navigation">
+            <div class="container">
+                <ul class="nav navbar-nav">
+                    @if (GlobalSettings.Globalization.AvailableLanguages.Count > 1)
+                    {
+                        var selectedLanguage = GlobalUtilities.GetSelectedLanguage();
+                        var languageID = GlobalSettings.Globalization.AvailableLanguages.Where(c => c.CultureCode == selectedLanguage).FirstOrDefault().LanguageID;
+                        var languageImage = "";
+
+                        switch (languageID)
+                        {
+                            case Languages.English:
+                                languageImage = "/Content/images/country-flags/16/US.png";
+                                break;
+                            case Languages.Spanish:
+                                languageImage = "/Content/images/country-flags/16/ES.png";
+                                break;
+                            default:
+                                break;
+                        }
+
+                        <li class="dropdown ">
+                            <a class="dropdown-toggle" data-toggle="dropdown"><img src="@languageImage" />&nbsp;@CommonResources.Languages(languageID)&nbsp;<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                @foreach (var item in GlobalSettings.Globalization.AvailableLanguages)
+                                {
+                                    var cultureCode = GlobalUtilities.GetCultureCode(item.LanguageID);
+                                    <li><a data-language="@cultureCode" href="@Url.Action("setlanguagepreference", "app", new { id = item.LanguageID })">@CommonResources.Languages(item.LanguageID)</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                </ul>
+
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown"><img src="@Url.Avatar(Identity.Current.CustomerID, type: AvatarType.Tiny, cache: false)" class="avatar avatar-xs" /> @Identity.Current.DisplayName <b class="caret"></b></a>
+                        <ul class="dropdown-menu col-2 dropdown-menu-unstyled">
+                            <li>
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="row margin-15">
+                                            <div class="col-sm-4">
+                                                <div class="text-center">
+                                                    <a href="@Url.Action("manageavatar", "account")" title="@Resources.Common.Edit">
+                                                        <img src="@Url.Avatar(Identity.Current.CustomerID, cache: false)" class="avatar" />
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <h5>@Identity.Current.DisplayName</h5>
+                                                <small class="text-muted">@(Resources.Common.ID)# @Identity.Current.CustomerID</small>
+                                                <div class="space-10"></div>
+                                                @if (!GlobalSettings.Globalization.HideForLive)
+                                                {
+                                                    <a href="@Url.Action("index", "profile", new { token = Security.Encrypt(Identity.Current.CustomerID, Identity.Current.CustomerID)})" class="btn btn-primary btn-xs">@Resources.Common.ViewProfile</a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-footer">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <a href="@Url.Action("index", "account")" class="btn btn-default btn-sm">@Resources.Common.ChangeSettings</a>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <a href="@Url.Action("logout", "authentication")" class="btn btn-default btn-sm pull-right">@Resources.Common.SignOut</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="hidden-xs" data-toggle="tooltip" data-placement="left" title="Expand View"><a data-toggle="container"><i class="fa-expand"></i></a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <header id="site-header">
+        <div class="container">
+            <div class="row margin-0">
+                <div class="col-xs-10">
+                    <!-- Site Logo -->
+                    <a href="@Url.Action("index", "dashboard")">
+                        <div id="site-logo-container">
+                            <img src="@Url.Content("~/content/images/logo_with_gradient.png")" id="site-logo" class="img-responsive hidden-xs" />
+                            <img src="@Url.Content("~/content/images/logo-mobile.png")" id="site-logo-mobile" class="img-responsive visible-xs" />
+                        </div>
+                    </a>
+                </div>
+                @if (!GlobalSettings.Globalization.HideForLive)
+                {
+                    <div class="col-xs-2">
+                        <!-- Cart Button -->
+                        <div id="cart-button-container">
+                            <a href="@Url.Action("cart", "shopping")">
+                                <img class="img-responsive" src="~/Content/images/cart.png" />
+                                <sup id="my-cart"></sup>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </header>
+
+    <nav class="navbar navbar-default navbar-mobile-fixed-top" role="navigation" id="site-main-navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse-side" data-target="#site-navigation-navbar-collapse" data-target-2="#site-content">
+                <span class="sr-only">@Resources.Common.ToggleNavigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <div class="side-collapse in" id="site-navigation-navbar-collapse">
+            <div class="container">
+                <ul class="nav navbar-nav">
+                    @{
+                        var nodes = Settings.SiteMap.Current.Items;
+                    }
+                    @foreach (var node in nodes.Cast<NavigationSiteMapNode>())
+                    {
+                        if (node.Children.Any())
+                        {
+                            <li class="dropdown dropdown-hover @node.DeviceVisibilityCssClass">
+                                <a class="dropdown-toggle" data-toggle="dropdown">@node.Label <b class="caret"></b></a>
+                                <ul class="dropdown-menu col-2">
+                                    @foreach (var item in node.Children.Where(c => c.IsVisible()))
+                                    {
+
+                                        // Dividers
+                                        var dividerItem = item as DividerNode;
+                                        if (dividerItem != null)
+                                        {
+                                            <li class="divider"></li>
+
+                                            continue;
+                                        }
+
+                                        // Headings
+                                        var headingItem = item as HeadingNode;
+                                        if (headingItem != null)
+                                        {
+                                            <li role="presentation" class="dropdown-header">@headingItem.Label</li>
+
+                                            continue;
+                                        }
+
+                                        // Links
+                                        var linkItem = item as NavigationSiteMapNode;
+                                        var additionalClass = (linkItem.ShowWhenNotSubscribedMonthly) ? "" : "";
+                                        if (linkItem != null)
+                                        {
+                                            <li class="@linkItem.DeviceVisibilityCssClass @(linkItem.IsActive() ? "active" : "")">
+                                                <a href="@linkItem.Url" target="@linkItem.Target">
+                                                    @if (linkItem.HasIcon)
+                                                    {
+                                                        <i class="@linkItem.Icon"></i>
+                                                    }
+                                                    @item.Label
+                                                </a>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="@node.DeviceVisibilityCssClass">
+                                @{
+                                    var isMessageUsNode = (node.ID == "contactus");
+                                    var id = (isMessageUsNode) ? "message-us" : "";
+                                    var url = (isMessageUsNode) ? "javascript:;" : node.Url;
+                                }
+
+                                <a href="@url" id="@id">
+                                    @if (node.HasIcon)
+                                    {
+                                        <i class="@node.Icon"></i>
+                                    }
+                                    @node.Label
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>
+
+@RenderSection("pagebanner", required: false)
+
+<main id="site-content">
+    <div class="container container-expandable side-collapse-container">
+        @RenderBody()
+    </div>
+</main>
+
+
+
+<div id="quickshop-container">
+    <div class="modal"></div>
+</div>
+
+@* Global Modal *@
+<div id="addtocart-modalcontainer">
+    <div class="modal fade" id="view-item" tabindex="-1" role="dialog" aria-labelledby="quickShopLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">@Resources.Common.Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel"><div class="space-20"></div></h4>
+
+                </div>
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Message Us Modal *@
+<div id="message-us-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">@Resources.Common.Close</span></button>
+                <h4 class="modal-title">Message Us</h4>
+            </div>
+            <div class="modal-body">
+                <form id="message-us-form">
+                    <label>Your email:</label>
+                    <input type="text" name="fromEmail" class="form-control" placeholder="Email" />
+
+                    <div class="space-30"></div>
+
+                    <label>Subject:</label>
+                    <input type="text" name="subject" class="form-control" placeholder="Subject" />
+
+                    <div class="space-30"></div>
+
+                    <label>Enter your message:</label>
+                    <textarea name="body" class="form-control"></textarea>
+                    <div class="space-20"></div>
+
+                    <button type="button" data-dismiss="modal" class="btn pull-right">Close</button>
+                    <button id="submit-message" type="button" class="btn btn-info pull-right" style="margin-right: 10px;">@Resources.Common.Submit</button>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @RenderSection("scripts", required: false)
+}

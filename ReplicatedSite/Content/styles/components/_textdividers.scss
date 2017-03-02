@@ -1,0 +1,4 @@
+.text-divider { text-align: center; position: relative; top: 2px; padding-top: 1px; margin-top: 13px; margin-bottom: 16px; line-height: 0; box-sizing: border-box;
+    &:after { content: ''; width: 100%; background-color: transparent; display: block; height: 1px; border-top: 1px solid rgb(231, 231, 231); position: absolute; top: 50%; margin-top: -1px; z-index: 1; }
+    h1, h2, h3, h4, h5, h6 { line-height: 1; font-size: 12px; color: rgb(136, 136, 136); font-weight: normal; z-index: 2; position: relative; display: inline-block; background-color: white; padding: 0px 8px 0px 7px; margin: 0px; }
+}

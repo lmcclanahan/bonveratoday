@@ -1,0 +1,167 @@
+﻿@model CartViewModel
+@{
+    ViewBag.Title = Resources.Common.Cart;
+
+    var hasItems = Model.Items.Any();
+    var orderItems = Model.Items.Where(c => c.Type == ShoppingCartItemType.Order);
+    var autoOrderItems = Model.Items.Where(c => c.Type == ShoppingCartItemType.AutoOrder);
+
+    var takeItemCount = 2;
+}
+
+
+<p class="recently-added">@Resources.Common.RecentlyAddedItems</p>
+
+@if (hasItems)
+{
+    if (orderItems.Count() > 0)
+    {
+        <h4>@Resources.Common.TodaysOrder</h4>
+        foreach (var item in orderItems.Take(takeItemCount))
+        {
+            <div class="product-row">
+                <table class="table table-condensed">
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("itemdetail", "shopping", new { itemcode = item.ItemCode })" class="product-image product-link pull-left">
+                                <img width="50" height="37" src="@item.TinyImageUrl" class="attachment-50x50 wp-post-image img-responsive" alt="@item.ItemDescription">
+                            </a>
+                        </td>
+                        <td>
+                            <a class="product-link" href="@Url.Action("itemdetail", "shopping", new { itemcode = item.ItemCode })">@item.ItemDescription</a>
+                        </td>
+                        <td class="col-xs-3">
+                            <div class="item-description text-left">
+                                <span class="price">
+                                    <span class="amount">@item.Price.ToString("C")</span>
+                                </span>
+                                <br />
+                                <span class="grey-label">@Resources.Common.CartQuantity.FormatWith(item.Quantity.ToString("0"))</span>
+                            </div>
+                        </td>
+                        <td>
+                            <a class="delete-btn removeitemfromcart" data-id="@item.ID" title="Remove this item"><i class="fa-remove text-danger"></i></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        }
+
+        if (orderItems.Count() > takeItemCount)
+        {
+            <div class="product-row">
+                <a href="@Url.Action("cart", "shopping")">
+                    @Resources.Common.ViewAllItems.FormatWith(orderItems.Count())
+                </a>
+            </div>
+        }
+
+        <div class="space-20"></div>
+
+        <div class="totals text-right">
+            <span class="total-label grey-label">@Resources.Common.Total:</span> <span class="price"><span class="pricedisplay"><span class="amount">@orderItems.Sum(c => c.Quantity * c.Price).ToString("C")</span> @*<span class="tax-message">(@Resources.Common.IncludingTaxAbbreviated)</span>*@</span></span>
+        </div>
+    }
+
+    if (autoOrderItems.Count() > 0)
+    {
+        <h4>@Resources.Common.AutoOrder</h4>
+        foreach (var item in autoOrderItems.Take(takeItemCount))
+        {
+            <div class="product-row">
+                <table class="table table-condensed">
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("itemdetail", "shopping", new { itemcode = item.ItemCode })" class="product-image product-link pull-left">
+                                <img width="50" height="37" src="@item.TinyImageUrl" class="attachment-50x50 wp-post-image" alt="@item.ItemDescription">
+                            </a>
+                        </td>
+                        <td>
+                            <a class="product-link" href="@Url.Action("itemdetail", "shopping", new { itemcode = item.ItemCode })">@item.ItemDescription</a>
+                        </td>
+                        <td class="col-xs-3">
+                            <div class="item-description text-left">
+                                <span class="price">
+                                    <span class="amount">@item.Price.ToString("C")</span>
+                                </span>
+                                <br />
+                                <span class="grey-label">(Qty: @item.Quantity.ToString("0"))</span>
+                            </div>
+                        </td>
+                        <td>
+                            <a class="delete-btn removeitemfromcart" data-id="@item.ID" title="Remove this item"><i class="fa-remove"></i></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        }
+
+        if (autoOrderItems.Count() > takeItemCount)
+        {
+            <div class="product-row">
+                <a href="@Url.Action("cart", "shopping")">
+                    @Resources.Common.ViewAllItems.FormatWith(autoOrderItems.Count())
+                </a>
+            </div>
+        }
+
+        <div class="totals text-right">
+            <span class="total-label grey-label">@Resources.Common.Total:</span> <span class="price"><span class="pricedisplay"><span class="amount">@autoOrderItems.Sum(c => c.Quantity * c.Price).ToString("C")</span> @*<span class="tax-message">(@Resources.Common.IncludingTaxAbbreviated)</span>*@</span></span>
+        </div>
+    }
+
+    <div class="space-20"></div>
+    <div class="cart-preview-controls text-right">
+        <a href="@Url.Action("cart", "shopping")" class="btn btn-info emptycart"><span><i class="fa-arrow-left"></i> @Resources.Common.ViewCart</span></a>
+        <a href="@Url.Action("checkout", "shopping")" class="btn btn-primary"><span>@Resources.Common.Checkout <i class="fa-arrow-right"></i></span></a>
+    </div>
+}
+else
+{
+    <div class="order-preview">
+        @Resources.Common.CartContainsNoItems
+    </div>
+}
+
+<script>
+    require(["jquery", "pubsub", "ajax"], function ($, pubsub, ajax) {
+
+        // Settings
+        var removeitemUrl = "@Url.Action("removeitemfromcart", "shopping")",
+            removeAutoOrderItemsUrl = "@Url.Action("removeautoordersitems", "shopping")";
+
+        $('#defaultMessage').hide();
+
+        $("a.removeitemfromcart").on("click", function (id) {
+            id = $(this).data('id');
+            ajax.json({
+                url: removeitemUrl,
+                data: {
+                    id: id
+                },
+                success: function (response) {
+                    if (response.success) {
+                        window.trigger('cart.itemremoved', id);
+                    }
+                }
+            });
+        });
+
+        window.on("cart.removeAutoOrders", function () {
+            ajax.json({
+                url: removeAutoOrderItemsUrl,
+                success: function (response) {                    
+
+                }
+            });
+        });
+
+        window.on('cart.itemremoved', function (id) {
+            $('[data-id="{0}"]'.format(id)).slideUp('fast', function () {
+                $(this).remove();
+                window.location = window.location;
+            });
+
+        });
+    });
+</script>

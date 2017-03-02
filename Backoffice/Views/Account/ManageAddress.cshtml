@@ -1,0 +1,97 @@
+﻿@model Address
+@{
+    ViewBag.Title = Resources.Common.Addresses;
+    var hasInvalidAddressError = Request.QueryString["error"] != null;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div id="view-addressoverview" class="row">
+    <div class="col-sm-3">
+        @Html.Navigation()
+    </div>
+
+    <div class="col-sm-9">
+
+        <div class="row">
+            <div class="col-sm-9">
+                @if (hasInvalidAddressError)
+                {
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>The address you have entered is not valid, please try again.</strong>
+                    </div>
+                }
+                @using (Html.BeginForm("saveaddress", "account"))
+                {
+                    <div class="well">
+                        @Html.EditorFor(model => model, "Address")
+                        @Html.HiddenFor(model => model.AddressType)
+
+                        @if (Model != null) //20170118 82825 DV. Potential null Model was encountered during testing with new addresses from Haitia, so added this check
+                        {
+                            if (Model.AddressType != AddressType.Main)
+                            {
+                                <div class="checkbox">
+                                    <label>
+                                        @Html.CheckBox("MakePrimary") @Resources.Common.SaveAsPrimaryAddress
+                                    </label>
+                                </div>
+                            }
+                        }
+
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" data-loading-text="Loading...">@Resources.Common.SaveChanges</button>
+                    <a href="@Url.Action("AddressList")" class="btn btn-link">@Resources.Common.Cancel</a>
+
+                    if (Model != null) //20170118 82825 DV. Potential null Model was encountered during testing with new addresses from Haitia, so added this check
+                    {
+                        if (Model.AddressType != AddressType.New && Model.AddressType != AddressType.Main)
+                        {
+                            <span class="pull-right">
+                                <a href="@Url.Action("DeleteAddress", new { type = Model.AddressType })" class="btn btn-default">@Resources.Common.Delete</a>
+                            </span>
+                        }
+                    }
+
+
+                }
+            </div>
+            <div class="col-sm-3">
+
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+
+    <script>
+        require(["jquery", "forms", "bootstrap"], function ($) {
+
+            // Settings
+            var context = "#view-addressoverview",
+                $context = $(context);
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $("[type='submit']", $context).on("click", function () {
+                    $(this).button("loading");
+                    if (!$("form", $context).valid()) {
+                        $(this).button("reset");
+                    }
+                });
+            }
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+
+        });
+    </script>
+}

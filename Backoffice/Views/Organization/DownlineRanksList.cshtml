@@ -1,0 +1,130 @@
+﻿@model DownlineRanksListViewModel
+@{
+    ViewBag.Title = Resources.Common.DownlineRanks;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row" id="drTable">
+    <div class="col-sm-3">
+        @Html.Navigation()
+    </div>
+
+    <div class="col-sm-9">
+        <div class="">
+            <select id="" class="form-control downline-rank-dropdown" data-id="@Identity.Current.CustomerID">
+
+                <option value="0"> All Teams</option>
+
+                @for (var i = 1; i <= Model.TeamCount; i++)
+                {
+
+                    <option value="@i"> Team @i</option>
+                }
+
+            </select>
+        </div>
+        <div class="space-20"></div>
+        <div id="drPartial">
+            @Html.Partial("Partials/DownlineRanksRanksPartial")
+        </div>
+        <div class="col-md-8 col-md-pull-4 col-sm-12">
+            <div id="grid">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts
+{
+    <script>
+        require(["jquery", "ajax", "pubsub", "kendogrids", "urls", "extensions"], function ($, ajax, pubsub, kendoGrid, UrlHelper) {
+
+            var cultureCode = "@Identity.Current.Market.CultureCode";
+            kendo.culture(cultureCode);
+
+
+            kendoGrid.create("#grid", {
+                columns: [
+                    { field: "ct_CustomerID", title: "Associate", type: "number", width: 200, template: kendoGrid.templates.customer("ct_CustomerID", "ct_FirstName", "ct_LastName", "CustomerIDToken") },
+                    { field: "r_RankDescription", title: Resources.Common.Rank },
+                    { field: "ct_Team", title: "Team", type: "number" },
+                    { field: "ct_CreatedDate", title: Resources.Common.StartDate, type: "date", format: "{0:d}", attributes: { "class": "text-right" } }
+                ]
+            });
+
+
+            var mainUrl = "@Url.Action("DownlineRanksList", "organization")",
+             context = "#drTable",
+              $context = $(context),
+              $grid = $("#grid", $context);
+
+            function registerEventHandlers() {
+
+
+                $(".downline-rank-dropdown", $context).on("change", function () {
+                    console.log(this);
+                    var team = $(this).val();
+                    $grid.data('kendoGrid').dataSource.transport.options.read.url = actions.refreshGrid(team);
+                    $grid.data('kendoGrid').dataSource.fetch();
+
+                    actions.refreshRanks(team);
+                });
+            }
+
+            // Actions
+            var actions = {
+
+                refreshGrid: function (team) {
+                    return helpers.buildUrl(mainUrl, {
+                        "team": team
+                    });
+                },
+                refreshRanks: function (team) {
+                    ajax.json({
+                        url: '@Url.Action("GetDownlineRanksPartial", "organization")',
+                        data: {
+                            team: team
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                console.log("rawr");
+                                $("#drPartial", $context).html(response.html);
+                                $("#downline-rank-dropdown").val(team);
+                            } else {
+
+                            }
+                        }
+                    });
+                }
+            };
+
+            var helpers = {
+                getUrlSeparator: function (url) {
+                    return (url.indexOf("?") != -1) ? "&" : "?";
+                },
+                buildUrl: function (url, queries) {
+                    if (typeof url !== "string") {
+                        queries = url;
+                        url = UrlHelper.current.source;
+                    }
+                    queries = queries || {};
+
+                    var result = url;
+                    for (var key in queries) {
+                        result += helpers.getUrlSeparator(result) + key + "=" + queries[key];
+                    }
+
+                    return result;
+                }
+            };
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+        });
+    </script>
+}

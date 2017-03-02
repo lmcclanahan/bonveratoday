@@ -1,0 +1,156 @@
+﻿<div class="associate-search">
+
+    <p><strong>Search for your a distributor by entering their customer ID, first name or last name.</strong></p>
+
+    <div class="row margin-0">
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" class="form-control" id="search-field" />
+                <a class="input-group-addon btn btn-primary" style="color: #fff;" data-role="search"><span class="fa-search"></span></a>
+            </div>
+        </div>
+    </div>
+
+    <div id="search-results-container" style="display: none;">
+        <div class="space-20"></div>
+
+        <h5>Search Results</h5>
+
+
+        <div id="search-results" style="overflow-y: auto; overflow-x: hidden; max-height: 400px;"></div>
+        <script id="search-results-template" data-target="#search-results" type="text/x-handlebars-template">
+            {{#each subscriptions}}
+            <div class="row margin-10">
+                <div class="col-sm-1">
+                    <img src="/profiles/avatar/{{CustomerID}}" class="img-responsive" />
+                </div>
+                <div class="col-sm-11 results-info">
+                    <span class="name">{{FullName}}</span>, ID# <span class="id">{{CustomerID}}</span>
+                    <hr />
+                    {{#each Calendars}}
+                    <div class="row subscription">
+                        <div class="col-sm-8">{{Description}}</div>
+                        <div class="col-sm-4 text-right"><a data-role="subscribe" data-id="{{CalendarID}}" class="btn btn-sm btn-block btn-primary">@Resources.Common.Subscribe</a></div>
+                    </div>
+                    {{/each}}
+                </div>
+            </div>
+            <div class="space-10"></div>
+            {{/each}}
+        </script>
+
+
+    </div>
+
+    <input type="hidden" id="enrollerID" name="EnrollerID" value="@Identity.Current.CustomerID" />
+</div>
+
+
+<script>
+    require(["jquery", "ajax", "pubsub", "handlebars", "toastr"], function ($, ajax, pubsub, Handlebars, toastr) {
+
+        // Settings
+        var context = ".associate-search",
+            $context = $(context);
+
+        // State
+        var state = {
+            subscriptions: null
+        };
+
+        // Event Handlers
+        function registerEventHandlers() {
+            $('#search-field').on("keypress", function (e) {
+                if (e.which == 13) {
+                    e.preventDefault();
+                    $('[data-role="search"]').click();
+                }
+            });
+
+            $('[data-role="search"]', $context).on('click', function () {
+                var query = $('#search-field', $context).val();
+
+                if (query != "") {
+                    actions.search(query);
+                }
+                else {
+                    $('#search-field', $context).focus();
+                }
+            });
+
+            $('#search-results', $context).on("click", '[data-role="subscribe"]', function () {
+                var id = $(this).data('id');
+
+                actions.subscribe(id);
+            });
+
+
+        }
+
+
+        // Actions
+        var actions = {
+            search: function (query) {
+                ajax.json({
+                    url: "@Url.Action("searchsubscriptions", "events")",
+                    data: { query: query },
+                    success: function (response) {
+                        if (response.success) {
+
+                            if (response.subscriptions.length == 0) {
+                                toastr.warning("The customer you are looking for does not exist, or they do not have a calendar set up.");
+                                $("#search-field").val("");
+                                return;
+                            }
+
+                            var source = $("#search-results-template").html();
+                            var template = Handlebars.compile(source);
+                            var html = template(response);
+                            $("#search-results").html(html);
+
+                            $.each(state.subscriptions, function (index, value) {
+                                $('#search-results [data-id="' + value + '"]').text('Subscribed').css('background', '#0090D6');
+                            });
+
+                            $("#search-results-container").show();
+                        }
+                        else {
+                            toastr.error("The customer you are looking for does not exist, or they do not have a calendar set up.");
+                        }
+                    }
+                });
+            },
+            subscribe: function (id) {
+                ajax.json({
+                    url: "@Url.Action("subscribetodistributorcalendar", "events")",
+                    data: { id: id },
+                    success: function (response) {
+                        window.location = window.location;
+                    }
+                });
+            },
+            getSubscriptions: function () {
+                ajax.json({
+                    url: "@Url.Action("getsubscriptions", "events")",
+                    success: function (response) {
+                        state.subscriptions = response.subscriptions;
+                    }
+                });
+            }
+        };
+
+
+        // Initialization
+        function init() {
+            registerEventHandlers();
+
+            actions.getSubscriptions();
+        }
+        init();
+
+    });
+</script>
+
+<style>
+    .results-info { padding-left: 30px; }
+</style>

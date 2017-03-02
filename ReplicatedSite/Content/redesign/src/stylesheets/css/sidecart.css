@@ -1,0 +1,61 @@
+﻿/*Sidenav*/
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    right: 0;
+    background-color: #fff;
+    overflow-x: hidden;
+    transition: 0.5s;
+    box-shadow: 0 4px 8px -3px #555454;
+    padding-top: 0;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-size: 25px;
+    color: #fff;    
+
+}
+
+@media screen and (max-height: 450px) {
+    .sidenav a {font-size: 18px;}
+}
+
+.sidenav-heading{
+    font-size: 36px;
+    color: #fff;
+}
+
+.recalculating-progress {
+    background-color: darkgreen;
+}
+
+body > div#item-search-banner{
+    background-color:transparent;
+}
+
+h2.tier-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #777;
+  border-top: 6px solid #ddd;
+  padding: 15px 0; }
+
+
+/**************end mobile css *********/
+
+

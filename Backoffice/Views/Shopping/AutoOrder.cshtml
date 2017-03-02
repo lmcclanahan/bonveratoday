@@ -1,0 +1,174 @@
+﻿@model AutoOrderSettingsViewModel
+@{
+    ViewBag.Title = Resources.Common.ConfigureYourReplenish;
+    var minimumStartDate = GlobalUtilities.GetNextAvailableAutoOrderStartDate(DateTime.Now); 
+
+    
+    var availableFrequencyTypes = new List<Common.Api.ExigoWebService.FrequencyType>()
+                        {
+                            Common.Api.ExigoWebService.FrequencyType.Monthly
+                        };
+}
+
+<div id="view-autoordersettings" class="container shop cart">
+    <h3>@ViewBag.Title</h3>
+    <div class="space-20"></div>
+
+    @using (Html.BeginForm())
+    {
+        <div class="form">
+            <div class="form-group">
+                <input type="hidden" name="AutoOrderFrequencyType" value="@Common.Api.ExigoWebService.FrequencyType.Monthly" />
+
+                <div class="checkbox" id="ship-today-container">
+                    <label for="chkShipToday">
+                        <input type="checkbox" id="chkShipToday" name="ShipToday" value="true" />
+                        I would like to have my Replenish item(s) processed today.
+                    </label>
+                </div>
+
+                <div id="auto-order-date-container">
+                    <label for="">@Resources.Common.AutoOrderFrequencyMessage</label>
+
+                    <div class="space-10"></div>
+
+                    <div class="row">
+                        <div class="auto-order-start-selection col-sm-3">
+                            <input type="text" class="form-control form-control-inline" id="" name="AutoOrderStartDate" data-type="date" value="@Model.AutoOrderStartDate.ToString("M/d/yyyy")" />
+                        </div>
+                    </div>
+                </div>
+                <div id="auto-order-today-message" style="display:none;">
+                    <div class="alert alert-info" role="alert">
+                        If you choose to have your first Replenish process today, you will be charged for the Replenish items as well as any additional items you have in your cart at the end of the checkout process.
+
+                        Your next Replenish after today will process on: <strong>@minimumStartDate.AddMonths(1).ToShortDateString()</strong>
+                        <br />
+                        You can always change your process date by editing your Replenish profile. Just click on Replenish menu to find all your profiles.
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Continue</button>
+
+            @Html.AntiForgeryToken()
+        </div>
+    }
+
+</div>
+<div class="space-20"></div>
+
+<link href="~/Content/scripts/vendor/kendo/styles/kendo.bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/scripts/vendor/kendo/styles/kendo.common-bootstrap.min.css" rel="stylesheet" />
+
+@section scripts
+{
+    <script>
+        require(["jquery", "kendo"], function ($, kendo) {
+
+            // Settings
+            var context            = "#view-autoordersettings",
+                $context           = $(context),
+                currentCultureCode = "@System.Threading.Thread.CurrentThread.CurrentCulture.Name",
+                // The -1 is to account for js months being 0 based
+                minimumStartDate   = new Date(@minimumStartDate.Year, @minimumStartDate.Month - 1, @minimumStartDate.Day),
+                shipToday = @Model.ShipToday.ToString().ToLower();
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                // Dates and Times
+                $('[data-type="date"]').kendoDatePicker({
+                    culture: currentCultureCode,
+                    dates: [
+                             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25
+                    ],
+                    min: minimumStartDate,
+                    month: {
+                        // template for dates in month view
+                        content: '# if ($.inArray(+data.date.getDate(), data.dates) == -1) { #' +
+                        '<div class="disabledDay">#= data.value #</div>' +
+                        '# } else { #' +
+                        '#= data.value #' +
+                        '# } #'
+                    },
+                    change: function () {
+                        if (this.options.dates.indexOf(+this.value().getDate()) >= 0) {
+
+                            $(".disabledDay").parent().removeClass("k-link"); //removing this class makes the day unselectable
+                            $(".disabledDay").parent().removeAttr("href"); //this removes the hyperlink styling
+
+                        }
+                        else {
+                            this.value(null); //clear the selected value
+
+                            $(".disabledDay").parent().removeClass("k-link"); //removing this class makes the day unselectable
+                            $(".disabledDay").parent().removeAttr("href"); //this removes the hyperlink styling
+                        }
+                    },
+                    open: function (e) {
+                        $(".disabledDay").parent().removeClass("k-link"); //removing this class makes the day unselectable
+                        $(".disabledDay").parent().removeAttr("href"); //this removes the hyperlink styling
+                    }
+                }).on({
+                    focus: function () {
+                        $(this).data("kendoDatePicker").open();
+                    },
+                    click: function () {
+                        $(this).data("kendoDatePicker").open();
+                    },
+                    keypress: function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+
+                });
+
+                function disableDates(date) {
+                    for (var i = 0; i < availableDates.length; i++) {
+                        if (date.getDate() == availableDates[i].getDate()) {
+                            return true;
+                        }
+
+                    }
+                }
+                $('[name="ShipToday"]').on("change", function () {
+                    var isChecked = $(this).is(":checked");
+
+                    if (isChecked) {
+                        $("#auto-order-date-container").slideUp(200);
+                        $("#auto-order-today-message").slideDown(200);
+                    } else {
+                        $("#auto-order-date-container").slideDown(200);
+                        $("#auto-order-today-message").slideUp(200);
+                    }
+                });
+
+                $(function(){
+                    if (shipToday) {
+                        $('[name="ShipToday"]').click();
+                    }
+                })();
+            }
+
+
+            // Actions
+            var actions = {
+            };
+
+
+            // Helpers
+            var helpers = {
+
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+
+        });
+    </script>
+}

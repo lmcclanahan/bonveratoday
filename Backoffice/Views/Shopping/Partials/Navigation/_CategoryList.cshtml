@@ -1,0 +1,24 @@
+﻿@model IShoppingListViewModel
+@{
+    var selectedCategoryID = 0;
+    var featuredCategoryID = GlobalUtilities.GetCurrentMarketConfiguration().Orders.FeaturedCategoryID;
+    if (Model.CurrentCategory != null)
+    {
+        selectedCategoryID = Model.CurrentCategory.ItemCategoryID;
+    }
+}
+
+    @Html.Partial("Partials/Navigation/_CategoryBreadCrumb")
+<div class="space-20"></div>
+
+<div id="product-categories">
+    <div class="container">
+        <ul class="nav nav-tabs">
+            @foreach (var category in Model.Categories)
+            {
+                var activeClass = (selectedCategoryID == category.ItemCategoryID) ? "active" : "";
+                <li role="presentation" class="@activeClass" data-id="@category.ItemCategoryID"><a href="@Url.Action("itemlist", "shopping", new { parentCategoryKey = category.ItemCategoryViewName, subCategoryKey = "" })">@category.ItemCategoryDescription</a></li>
+            }
+        </ul>
+    </div>
+</div>

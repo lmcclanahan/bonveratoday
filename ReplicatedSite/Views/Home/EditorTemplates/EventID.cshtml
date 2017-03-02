@@ -1,0 +1,31 @@
+﻿@model DistributorSearch
+@{
+    var contextID = Guid.NewGuid().ToString();
+
+}
+
+<div class="view-designer info" id="view-EventID-@contextID" data-container="view-event-site-search">
+    <div class="form-group row margin-5">
+        @Html.LabelFor(c => c.EventCode, new { @class = "control-label" })
+        <div class="space-5"></div>
+        <div class="row margin-5">
+            <div class="col-sm-7">
+                @Html.EditorFor(c => c.EventCode, new
+        {
+            htmlAttributes = new
+                 {
+                     @class = "form-control",
+                     id = Html.IdFor(c => c.EventCode),
+                     data_role = "search-field",
+                     @placeholder = "EventID",
+                     name = Html.NameFor(c => c.EventCode)
+                 }
+        })
+                @Html.ValidationMessageFor(c => c.EventCode)
+            </div>
+            <div class="col-sm-3">
+                <button role="button" class="btn btn-info" data-role="search" id="event-site-search">Search</button>
+            </div>
+        </div>
+    </div>
+</div>

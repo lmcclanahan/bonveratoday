@@ -1,0 +1,242 @@
+﻿@model ItemListViewModel
+@{
+    ViewBag.Title = "Shopping";
+    Layout = "~/Views/Shared/_ShoppingLayout.cshtml";
+    var customerID = (Identity.Current.CustomerID != null) ? Identity.Current.CustomerID : Identity.Current.CustomerID;
+    var isLoggedIn = customerID != 5; // || !Identity.Owner.IsOrphan
+}
+
+<input type="hidden" class="activenavigation" value="shopping" />
+
+@section pagebanner
+{
+    <div id="category-banner-container" class="partnerstores-banner">
+        <h3>Partner Stores</h3>
+    </div>
+}
+
+<div id="view-productlist" class="shop">
+    <div class="container product-list">
+        <h2 class="header-ltblue text-center">The Brands You Know &amp; Trust</h2>
+
+        <div class="space-20"></div>
+
+        <div class="col-sm-12 col-md-12 product item-fields">
+            @{
+                var partnerStoreNode = GlobalUtilities.GetPartnerStoreUrl(0, Identity.Current.CustomerID, type: PartnerStoreTypes.AllBrandsForYou);
+            }
+            <div data-widget="item" id="view-item" class="view-item view-item-card">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="image">
+                                    <a target="_blank" href="@partnerStoreNode.Url">
+                                        <img class="img-responsive" src="~/Content/images/allbrandstoyou.png" />
+                                    </a>
+                                </div>
+
+                                @if (GlobalSettings.HideForLive)
+                                {
+                                    <div class="space-20"></div>
+                                    <strong>Partner Store products are available to order next week. For now, you can browse the website.</strong>
+                                    <div class="space-20"></div>
+                                }
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="details">
+                                    <div class="">
+                                        All Brands To You is striving to bring the term "Anyway Money" to life.
+                                        It begins with over 1,000 pet items, including many name brand dog and cat foods, pet treats, and other pet supplies.
+                                        Next you will find over 1,000 Dollar Items including batteries, plastic bags, razors, school supplies, and many more general merchandise items.
+                                        You will also find many name brand grocery items including bread and buns, coffee, potato chips, beef jerky, and fudge.
+                                        We will continue to search for more and more items that you purchase "Anyway".
+                                    </div>
+
+                                    <div class="space-20"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <a class="btn btn-info btn-block" target="_blank" href="@partnerStoreNode.Url">Shop Now</a>
+
+
+                        </div>
+                        <div class="space-10"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12 product item-fields">
+            @{
+                var eskimoNode = GlobalUtilities.GetPartnerStoreUrl(0, Identity.Current.CustomerID, type: PartnerStoreTypes.Eskimo);
+            }
+            <div data-widget="item" id="view-item" class="view-item view-item-card">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="image">
+                                    <a target="_blank" href="@eskimoNode.Url">
+                                        <img class="img-responsive" src="@Url.Content("~/content/images/banners/EKCB_Logo.png")" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="details">
+                                    <div class="">
+                                        Eskimo Kisses Boutique is all about finding trendy deals and selling products at great prices. We have established relationships with suppliers and manufacturers of the hottest most fashionable items available for babies and children. We are able to deliver low prices because we work directly with the manufacturers! We find the deals, you order from Eskimo Kisses Boutique, then we place a larger order directly from the manufacturers and pass on the savings to you!
+                                    </div>
+
+                                    <div class="space-20"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <a class="btn btn-info btn-block" target="_blank" href="@eskimoNode.Url">Shop Now</a>
+
+
+                        </div>
+                        <div class="space-10"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*T.W. 7/11/2016 78266 Added new partner store used dev site for uat, when successful change to isabelles live site http://www.isabelleslighting.com/*@
+        <div class="col-sm-12 col-md-12 product item-fields">
+            @{
+                var isabellesNode = GlobalUtilities.GetPartnerStoreUrl(0, Identity.Current.CustomerID, type: PartnerStoreTypes.Isabelles);
+            }
+            <div data-widget="item" id="view-item" class="view-item view-item-card">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="image">
+                                    <a target="_blank" href="@isabellesNode.Url">
+                                        <img class="img-responsive" src="@Url.Content("~/Content/images/banners/isabelleslightingcom_logo.png")" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="details">
+                                    <div class="">
+                                        Family owned and operated since 1970, at IsabellesLighting.com, we specialize in helping busy home owners like you complete a more comfortable atmosphere in your home with lighting and home décor that compliments your style. Our local Vermont staff is ready to serve you 24/7 any day! We guarantee to price match, plus 25% of the difference, should you find a price lower than ours anywhere online. We challenge you to try! :-) When you see the Genuine Service Guarantee logo on our product pages, you don't have to question if it is in stock. We guarantee it is. Free shipping at $99. Small things or big things, it doesn't matter to us. Earn 5% Rewards Dollars for any $100 purchase. All this and more when you experience our Vermont team of lighting and home décor specialists at IsabellesLighting.com!
+                                    </div>
+                                    <div class="space-20"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <a class="btn btn-info btn-block" target="_blank" href="@isabellesNode.Url">Shop Now</a>
+                        </div>
+                        <div class="space-10"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @**D.H. 8-22-16 #77129 Added new partner store for Fuller Brush**@
+        <div class="col-sm-12 col-md-12 product item-fields">
+            @{
+                var fullBrushNode = GlobalUtilities.GetPartnerStoreUrl(0, Identity.Current.CustomerID, type: PartnerStoreTypes.FullerBrush);            }
+            <div data-widget="item" id="view-item" class="view-item view-item-card fuller-brush-logo">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="image">
+                                    <a target="_blank" href="@fullBrushNode.Url">
+                                        <img class="img-responsive" src="@Url.Content("~/Content/images/FullerBrushLogo.png")" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="details">
+                                    <div>
+                                        @Resources.Common.FullerBrushDescription
+                                    </div>
+                                    <div class="space-20"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <a class="btn btn-info btn-block" target="_blank" href="@fullBrushNode.Url">Shop Now</a>
+                        </div>
+                        <div class="space-10"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @**D.H. 10-05-16 #801789 **@
+        <div class="col-sm-12 col-md-12 product item-fields">
+            @{
+                var BullionworksNode = GlobalUtilities.GetPartnerStoreUrl(0, Identity.Current.CustomerID, type: PartnerStoreTypes.Bullionworks);
+            }
+            <div data-widget="item" id="view-item" class="view-item view-item-card fuller-brush-logo">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="image">
+                                    <a target="_blank" href="@BullionworksNode.Url">
+                                        <img class="img-responsive" src="@Url.Content("~/Content/images/bullionworkslogo.png")" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="details">
+                                    <div>
+                                        @Resources.Common.WhenItComesToPurchasingPreciousMetals
+
+
+                                    </div>
+                                    <div class="space-20"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <a class="btn btn-info btn-block" data-prevent-navigate="@isLoggedIn.ToString().ToLower()" target="_blank" href="@BullionworksNode.Url">Shop Now</a>
+                        </div>
+                        <div class="space-10"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Quilbed*@
+        <div class="col-sm-12 col-md-12 product item-fields">
+            @{
+                var Quilbed = GlobalUtilities.GetPartnerStoreUrl(0, Identity.Current.CustomerID, type: PartnerStoreTypes.Quilbed);
+            }
+            <div data-widget="item" id="view-item" class="view-item view-item-card fuller-brush-logo">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="image">
+                                    <a data-prevent-navigate="@isLoggedIn.ToString().ToLower()" target="_blank" href="@Quilbed.Url">
+                                        <img class="img-responsive" src="@Url.Content("~/Content/images/quilbed.jpg")" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="details">
+                                    <div>
+                                         @Html.Raw(Resources.Common.QuilbedDescription)
+                                    </div>
+                                    <div class="space-20"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <a class="btn btn-info btn-block" data-prevent-navigate="@isLoggedIn.ToString().ToLower()" target="_blank" href="@Quilbed.Url">Shop Now</a>
+                        </div>
+                        <div class="space-10"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="space-100"></div>

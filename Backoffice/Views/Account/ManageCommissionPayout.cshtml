@@ -1,0 +1,214 @@
+﻿@model Backoffice.Models.CommissionPayout.CommissionPayout
+@{
+    ViewBag.Title = Resources.Common.CommissionPayout;
+}
+<h2>@ViewBag.Title</h2>
+<div id="view-accountoverview">
+    <div class="row">
+        <div class="col-sm-3">
+            @Html.Navigation()
+        </div>
+        <div class="col-sm-9">
+            <div class="alert alert-danger hide" id="directdeposit-alert">
+                <h3 class="error-header">@Resources.Common.Sorry</h3>
+                <p class="error-content">@Resources.Common.ProblemWithInformationText</p>
+            </div>
+            <div class="alert alert-info">
+                <p>Please make sure all information is correct before saving.</p>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    @using (Html.BeginForm("updatedirectdeposit", "account"))
+                    {
+
+                        <div class="well">
+                            <div class="row margin-5">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(c => c.BankName, Resources.Common.BankName, new { @class = "control-label" })
+                                        @Html.TextBoxFor(c => c.BankName, htmlAttributes: new
+                                        {
+                                            @class = "form-control",
+                                            placeholder = Resources.Common.BankName,
+                                            id = "bankNameList"
+                                        })
+                                        <span class="text-danger">
+                                            @Html.ValidationMessageFor(c => c.BankName)
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row margin-5">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="NameOnAccount" class="control-label">@Resources.Common.NameOnAccount</label>
+                                        @Html.TextBoxFor(c => c.NameOnAccount, htmlAttributes: new
+                                    {
+                                        @class = "form-control",
+                                        placeholder = Resources.Common.NameOnYourAccount
+                                    })
+                                        <span class="text-danger">
+                                            @Html.ValidationMessageFor(c => c.NameOnAccount)
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            @* 79630 09/01/2016 PM Direct deposit account type radio options *@
+                            <div class="row margin-5">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="DepositAccountType" class="control-label">Account Type</label>
+                                        <div>
+                                            <label class="radio-inline">
+                                                @Html.RadioButtonFor(c => c.DepositAccountTypeForm, Common.Api.ExigoWebService.DepositAccountType.Checking, new { id = "DepositAccountTypeFormChecking" }) Checking
+                                            </label>
+                                            <label class="radio-inline">
+                                                @Html.RadioButtonFor(c => c.DepositAccountTypeForm, Common.Api.ExigoWebService.DepositAccountType.Saving, new { id = "DepositAccountTypeFormSavings" }) Savings
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @* 79630 09/01/2016 PM Switched routing and account number fields *@
+                            <div class="row margin-5">
+                                <div class="col-sm-12">
+                                    <div class="form-group" id="routing-number">
+                                        <label for="RoutingNumber" class="control-label">@Resources.Common.RoutingNumber</label>
+                                        @Html.TextBoxFor(c => c.RoutingNumber, htmlAttributes: new
+                                        {
+                                            @class = "form-control",
+                                            placeholder = Resources.Common.YourRoutingNumber
+                                        })
+                                        <span class="text-danger">
+                                            @Html.ValidationMessageFor(c => c.RoutingNumber)
+                                        </span>
+                                    </div>
+                                    <div class="form-group" id="account-number">
+                                        <label for="AccountNumber" class="control-label">@Resources.Common.AccountNumberRules</label>
+                                        @Html.TextBoxFor(c => c.AccountNumber, htmlAttributes: new
+                                        {
+                                            @class = "form-control",
+                                            placeholder = Resources.Common.YourAccountNumber
+                                        })
+                                        <span class="text-danger">
+                                            @Html.ValidationMessageFor(c => c.AccountNumber)
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            @* 79630 09/01/2016 PM Image highlighting routing and account numbers *@
+                            <img src="~/Content/images/RoutingNumberCheck.jpg" />
+                        </div>
+
+                        <a data-role="submitform" class="btn btn-primary">@Resources.Common.SaveChanges</a>
+                        <a href="@Url.Action("PaymentMethodList")" class="btn btn-link">@Resources.Common.Cancel</a>
+                    }
+                    <div class="space-20"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    require(["jquery", "toastr"], function ($, toastr) {
+        $(function () {
+
+            // Restrict to 10 digits
+            $("#@Html.IdFor(c => c.AccountNumber)").on("keypress", function (event) {
+                var regex = new RegExp("^[0-9]+$");
+                var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+                if (!regex.test(key)) {
+                    event.preventDefault();
+                    return false;
+                }
+
+            });
+
+            // Restrict to 18 digits
+            $("#@Html.IdFor(c => c.RoutingNumber)").on("keypress", function (event) {
+                var regex = new RegExp("^[0-9]+$");
+                var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+                if (!regex.test(key)) {
+                    event.preventDefault();
+                    return false;
+                }
+
+            });
+
+
+            $("[data-role='submitform']").on("click", function () {
+                var isValid = true,
+                    accountNumber = $('#@Html.IdFor(c => c.AccountNumber)').val(),
+                    routingNumber = $('#@Html.IdFor(c => c.RoutingNumber)').val();
+
+                var $form = $("#view-accountoverview form"),
+                    formIsValid = $form.valid();
+
+
+                if (!formIsValid) {
+                    return;
+                }
+
+                validateRN();
+
+                // 79630 09/01/2016 PM Validate account number
+                function validateRN(){
+
+                    if (accountNumber.length < 5) {
+                        isValid = false;
+                        toastr.error("@Resources.Common.AccountNumberError");
+                    }
+
+                    // Validate routing number with algorithm.
+
+                    var i, n, t;
+
+                    // First, remove any non-numeric characters.
+
+                    t = "";
+                    for (i = 0; i < routingNumber.length; i++) {
+                        c = parseInt(routingNumber.charAt(i), 10);
+                        if (c >= 0 && c <= 9)
+                            t = t + c;
+                    }
+
+                    // Check the length, it should be nine digits.
+
+                    if (t.length != 9) {
+                        isValid = false;
+                        toastr.error("@Resources.Common.RoutingNumberError");
+                    }
+
+                    // Now run through each digit and calculate the total.
+
+                    n = 0;
+                    for (i = 0; i < t.length; i += 3) {
+                        n += parseInt(t.charAt(i), 10) * 3
+                        + parseInt(t.charAt(i + 1), 10) * 7
+                        + parseInt(t.charAt(i + 2), 10);
+                    }
+
+                    // If the resulting sum is an even multiple of ten (but not zero),
+                    // the aba routing number is good.
+
+                    if (n == 0 || n % 10 != 0){
+                        isValid = false;
+                        toastr.error("@Resources.Common.RoutingNumberError");
+                    }
+                }
+
+                // validate form.
+
+                if (isValid) {
+                    var $form = $(this).parents("form").first();
+
+                    $form.submit();
+                }
+            });
+
+
+        });
+    });
+</script>

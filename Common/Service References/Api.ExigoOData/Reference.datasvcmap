@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="14a45d98-0097-475d-b1f8-836cec2063e2" xmlns="urn:schemas-microsoft-com:xml-dataservicemap">
+  <MetadataSources>
+    <MetadataSource Address="http://api.exigo.com/4.0/exigodemo/model" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.edmx" MetadataType="Edmx" ID="470337a8-452f-4ff8-93c5-54b79e0726f6" SourceId="1" SourceUrl="http://api.exigo.com/4.0/exigodemo/model" />
+  </Metadata>
+  <Extensions />
+  <Parameters>
+    <Parameter Name="NuGetPackageSource" Value="C:\Program Files (x86)\Microsoft WCF Data Services\5.6\bin\NuGet\" />
+    <Parameter Name="NuGetPackageId" Value="Microsoft.Data.Services.Client" />
+    <Parameter Name="UseDataServiceCollection" Value="true" />
+    <Parameter Name="Version" Value="3.0" />
+  </Parameters>
+</ReferenceGroup>

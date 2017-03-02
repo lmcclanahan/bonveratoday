@@ -1,0 +1,137 @@
+﻿@model CreditCard
+@{
+    ViewBag.Title = Resources.Common.YourPaymentMethods;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div id="view-ccoverview" class="row">
+    <div class="col-sm-3">
+        @Html.Navigation()
+    </div>
+
+    <div class="col-sm-9">
+        <div class="row">
+            <div class="col-sm-9">
+                @using (Html.BeginForm("savecreditcard", "account"))
+                {
+
+                    @Html.HiddenFor(c => c.Type)
+
+                    if (Model.IsUsedInAutoOrders)
+                    {
+                        <div class="alert alert-info">
+                            <h4>@Resources.Common.EditingAutoOrderCreditCards</h4>
+                            @Resources.Common.ChangesToAutoOrderCreditCards.FormatWith(Model.AutoOrderIDs.Length)
+                        </div>
+                    }
+
+
+                    <div class="well">
+                        <div class="row margin-5">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    @Html.LabelFor(c => c.NameOnCard, new { @class = "control-label" })
+                                    @Html.TextBoxFor(c => c.NameOnCard, new
+                                    {
+                                        @class = "form-control",
+                                        placeholder = Resources.Common.NameOnCard
+                                    })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row margin-5">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    @Html.LabelFor(c => c.CardNumber, new { @class = "control-label" })
+                                    @Html.TextBoxFor(c => c.CardNumber, new
+                                    {
+                                        @class = "form-control",
+                                        placeholder = Resources.Common.CardNumber
+                                    })
+                                    @if (Model.Type != CreditCardType.New)
+                                    {
+                                        <small class="help-block">@Resources.Common.ReEnterCardNumber</small>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row margin-5">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(c => c.ExpirationMonth, Resources.Common.ExpirationDate, new { @class = "control-label" })
+                                    @Html.DropDownListFor(c => c.ExpirationMonth, Html.Months(), new
+                                    {
+                                        @class = "form-control"
+                                    })
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="@Html.NameFor(c => c.ExpirationYear)" class="control-label">&nbsp;</label>
+                                    @Html.DropDownListFor(c => c.ExpirationYear, Html.ExpirationYears(), new
+                                    {
+                                        @class = "form-control"
+                                    })
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        @Html.EditorFor(c => Model.BillingAddress)
+
+                    </div>
+
+
+
+                    <button type="submit" class="btn btn-primary" data-loading-text="Loading...">@Resources.Common.SaveChanges</button>
+                    <a href="@Url.Action("PaymentMethodList")" class="btn btn-link">@Resources.Common.Cancel</a>
+
+                    if (Model.Type != CreditCardType.New && !Model.IsUsedInAutoOrders)
+                    {
+                        <span class="pull-right">
+                            <a href="@Url.Action("DeleteCreditCard", new { type = Model.Type })" class="btn btn-default">@Resources.Common.Delete</a>
+                        </span>
+                    }
+
+                }
+            </div>
+            <div class="col-sm-3">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+
+    <script>
+        require(["jquery", "forms", "bootstrap"], function ($) {
+
+            // Settings
+            var context = "#view-ccoverview",
+                $context = $(context);
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $("[type='submit']", $context).on("click", function () {
+                    $(this).button("loading");
+                    if (!$("form", $context).valid()) {
+                        $(this).button("reset");
+                    }
+                });
+            }
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+
+        });
+    </script>
+}

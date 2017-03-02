@@ -1,0 +1,216 @@
+﻿//2015-08-21
+//Ivan S.
+//64467
+//Contextualization for the styles of the Resource Manager
+#resourceManager
+{
+    .src 
+    {
+    max-width: 400px;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+    }
+
+    th.typeHeader
+    {
+        width: 80px;
+    }    
+    /*td.type
+    {
+        width: 80px;
+    }*/ 
+
+    th.descriptionHeader
+    {
+        max-width: 150px;
+    }    
+    td.description
+    {
+        max-width:150px; 
+        -ms-word-wrap:break-word;
+        word-wrap:break-word;
+    }
+
+    th.dateHeader
+    {
+        width: 100px;
+    }    
+    td.date
+    {
+        -ms-word-wrap:break-word;
+        word-wrap:break-word;
+
+    }    
+
+    th.sourceURLHeader
+    {
+        max-width: 145px;
+    }    
+    td.url
+    {
+        max-width:145px; 
+        -ms-word-wrap:break-word;
+        word-wrap:break-word;
+    }
+
+    th.actionsHeader
+    {
+        width: 120px;
+    }    
+
+    .draggableCategory.ui-draggable-dragging 
+    {
+        background:red !important;         
+    }
+
+    .draggableResource.ui-draggable-dragging 
+    {
+        background:red !important;         
+    }
+
+    th.thumb-nail {
+        width: 50px;
+        -ms-word-wrap: break-word;
+        word-wrap: break-word;
+    }
+    
+    td.thumb-nail {
+        max-width: 50px;
+
+        img {
+            max-width: 50px;
+            max-height: 50px;
+            margin: 0 auto;
+        }
+    }
+
+    .pop-over {
+
+        &:hover {
+            .pop-over-content {
+                position: absolute;
+                max-width: 400px;
+                max-height: 400px;
+                background: #fcfcfc;
+                display: block;
+                transform: translate(60px, -10px);
+                z-index: 999;
+                border: 1px solid #dbdbdb;
+                border-radius: 5px;
+
+                img {
+                    margin: 10px;
+                    max-width: 90%;
+                    max-height: 90%;
+                    box-shadow: -6px 6px 6px rgba(200, 200, 200, 0.3);
+                
+                    @media screen and (max-width: 767px) {
+                        margin: 0;
+                        padding: 2px;
+                    }
+                }
+
+                @media screen and (max-width: 767px) {
+                    transform: translate(60px, -10px);
+                }
+            }
+        }
+    }
+
+    .pop-over-content {
+        display: none;
+    }
+
+    .bigger-icon {
+        font-size: 20px;
+
+        @media screen and (max-width: 767px) {
+                        margin: 0;
+                        padding: 2px;
+                        font-size: 32px;
+                    }
+    }
+}
+
+#view-resourcelist {
+    th.thumb-nail {
+        width: 50px;
+        -ms-word-wrap: break-word;
+        word-wrap: break-word;
+    }
+    
+    td.thumb-nail {
+        max-width: 50px;
+
+        img {
+            max-width: 50px;
+            max-height: 50px;
+            margin: 0 auto;
+        }
+    }
+
+    .pop-over {
+
+        &:hover {
+            .pop-over-content {
+                position: absolute;
+                max-width: 400px;
+                max-height: 400px;
+                background: #fcfcfc;
+                display: block;
+                transform: translate(60px, -10px);
+                z-index: 999;
+                border: 1px solid #dbdbdb;
+                border-radius: 5px;
+
+                img {
+                    margin: 10px;
+                    max-width: 90%;
+                    max-height: 90%;
+                    box-shadow: -6px 6px 6px rgba(200, 200, 200, 0.3);
+                
+                    @media screen and (max-width: 767px) {
+                        margin: 0;
+                        padding: 2px;
+                    }
+                }
+            }
+        }
+    }
+
+    .pop-over-content {
+        display: none;
+    }
+
+    th.typeHeader {
+        width: 100px;
+    }
+
+    th.descriptionHeader {
+        max-width: 150px;
+    }
+
+    td.description {
+        max-width: 150px;
+        -ms-word-wrap: break-word;
+        word-wrap: break-word;
+    }
+
+    th.dateHeader {
+        width: 100px;
+    }
+
+    td.date {
+        width: 100px;
+        -ms-word-wrap: break-word;
+        word-wrap: break-word;
+    }
+
+    th.downloadHeader {
+        max-width: 75px;
+    }
+
+    td.download {
+        width: 75px;
+    }
+}

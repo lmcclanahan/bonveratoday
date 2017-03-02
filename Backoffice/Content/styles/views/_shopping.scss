@@ -1,0 +1,161 @@
+@import "../settings/_colors";
+
+#view-shoppingreview {
+    .order-totals {
+        dl { 
+            dt { font-weight: bold; }
+        }
+        .grand{ font-weight: bold; } 
+    }    
+}
+
+#category-banner-container {
+    background-color: #811f36;
+    color: white;
+    width: 100%;
+    margin-bottom: 0;
+    height: 133px;
+    h1, h2, h3, h4, h5, h6 {
+        display: none;
+    }
+    &.itemlist-banner {
+        background: #811f36 url('../images/banners/FrontDoorDelivery.jpg') 50% 50% no-repeat;
+        background-size: auto 170px;
+        background-size: cover;      
+        @media (max-width: 599px) {
+            height: 90px;
+            background-position: 70% 50%;
+        }
+    }
+    &.partnerstores-banner {
+        background: #00635e url('../images/banners/PartnerStore.jpg') 50% 50% no-repeat;
+        background-size: cover;
+        margin-bottom: 20px;
+        @media (max-width: 599px) {
+            height: 90px;
+        }
+    }
+    &.affiliate-banner {
+        background: #00635e url('../images/banners/AffiliateBanner.jpg') 50% 50% no-repeat;
+        height: 133px;
+        margin-bottom: 20px;
+        background-size: cover;
+        @media (max-width: 599px) { height: 90px; }
+    }
+}
+
+//Search Products bar
+#item-search-banner{
+    background-color: #0F416B; 
+    max-width: 100%; 
+    padding: 25px;
+
+    #submitSearch{                                 
+        margin:0;
+        background-color:#286090;
+        border: .5px #286090 solid;
+        color:#fff;
+        font-weight: bold;
+        letter-spacing: 1px;            
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        
+        &:hover{
+            background-color: #286090;
+            border: .5px #46b8da solid;
+
+        }
+    }
+}
+#item-sort-by-banner{
+    padding: 15px;
+    .sort-by-list {
+        background-color: #eee;
+    }
+}
+
+#scroll-to-top {
+    z-index:2000;
+     font-size: 14px;
+     background-color: #0F416B;
+     border: .5px solid #46b8da;
+     color: #fff;
+     width: 100px;
+     position: fixed;
+     display: none;
+     bottom: 25px;
+     right:15px;
+     &:hover{
+        background-color: #337ab7;
+     }
+}
+
+#addtocart-modalcontainer, #will-call-modal {
+    .modal-header { background-color: $logoblue; color: white;
+        button, span { color: white; opacity: 1; text-shadow: none;
+            &:hover { color: #ccc; }
+        }
+    }
+
+    @media (max-width: 600px) {
+        .modal-body { padding: 30px; 
+        #item-description-container { margin-left: 20px; }
+        .select-product {
+            .btn { display:block; margin: 10px; }
+         }
+        }
+    }
+}
+.btn-selector{
+    background-color:  #cccccc;
+}
+#auto-order-choice-container {
+    .auto-order-choice-header-text { font-family: 'raleway'; font-size: 22px; margin-bottom: 40px; }
+    #item-description-container { margin-left: 30px; }
+}
+
+#itemList {
+    .tier-title { font-size: 22px; font-weight: bold; color: #777; border-top: 6px solid #ddd; padding: 15px 0; }
+    .control-container { margin-top: 20px; }
+}
+
+.first-order-pack-added-message { display:none; }
+.price-first-order-discount { line-height: 12px; font-size: 10px; font-weight: bold; font-family: 'raleway'; text-transform:uppercase; margin: 10px;  
+    i { margin-left: -10px; }
+}
+
+
+#will-call-alert { font-size: 15px; }
+
+#view-autoordersettings {
+    .form-group { min-height: 160px; padding-bottom: 10px; }
+    #ship-today-container { margin-bottom: 30px; }
+}
+
+
+// Affiliate Store Pages
+.affiliateStores {
+    .grey-box { border: 1px solid #ccc; display: inline-block; padding: 5px 10px; }
+    .item-fields { margin-top: 10px; margin-bottom: 20px; }
+    .affiliate-node { margin-bottom: 60px; 
+        a:hover { text-decoration: none; }
+    }
+    .hr { margin: 50px auto 40px auto; border-bottom: 1px solid #333; max-width: 75%; }
+}
+
+//Z.M. 76922 5-10-16 Added new img to affiliate store page
+//T.W. 77983 7/6/2016 Fixed margin to have new image fit within border
+//P.M. 80084 9~7~2016 Edited margin-left
+.affiliateStoreBV {
+    @media (min-width: 1200px ) {
+        margin-left: 8px;
+    }
+}
+
+//P.M. 78567 7/19/2016 Added color to BV and reduced font size by two points
+#itemListModule {
+    .bv {
+        color: #00acc8;
+        font-size: .85em;
+    }
+}

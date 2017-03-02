@@ -1,0 +1,119 @@
+﻿@model Address
+@{
+    var contextID = Guid.NewGuid().ToString();
+
+    var defaultCountryCode = (Model.Country.IsNotNullOrEmpty()) ? Model.Country : GlobalSettings.Company.Address.Country;
+    var defaultRegionCode = (Model.State.IsNotNullOrEmpty()) ? Model.State : GlobalSettings.Company.Address.State;
+    var isVerifyable = ViewData["VerifyEnabled"] == null || Convert.ToBoolean(ViewData["VerifyEnabled"]) == true;
+}
+<div class="view-address" id="view-address-@contextID">
+    @Html.HiddenFor(c => c.AddressType, new { data_role = "AddressType" })
+
+    <div class="form-group">
+        @Html.LabelFor(c => c.Country, new { @class = "control-label" })
+        @Html.DropDownListFor(c => c.Country,
+            selectList: Html.Countries(defaultCountryCode),
+            htmlAttributes: new
+            {
+                @class = "form-control",
+                data_region_bind = "#" + Html.IdFor(c => c.State) + "_" + contextID,
+                data_address_bind = "#" + Html.IdFor(c => c.Address2) + "_" + contextID,
+                data_role = "Country"
+            })
+        <span class="text-danger">
+            @Html.ValidationMessageFor(c => c.Country)
+        </span>
+    </div>
+    <div class="space-5"></div>
+    <div class="form-group">
+        @Html.LabelFor(c => c.Address1, new { @class = "control-label" })
+        @Html.TextBoxFor(c => c.Address1, new
+        {
+            @class = "form-control",
+            placeholder = "Street address",
+            data_role = "Address1"
+        })
+        <span class="text-danger">
+            @Html.ValidationMessageFor(c => c.Address1)
+        </span>
+        <div class="space-5"></div>
+        <div class="form-group" @if (defaultCountryCode == "US") { <text> style="display: none;" </text>       }>
+            @Html.TextBoxFor(c => c.Address2, new
+            {
+                @class = "form-control",
+                placeholder = "Apartment, suite, unit, building, floor, etc.",
+                id = Html.IdFor(c => c.Address2) + "_" + contextID,
+                data_role = "Address2"
+            })
+            <span class="text-danger">
+                @Html.ValidationMessageFor(c => c.Address2)
+            </span>
+        </div>
+    </div>
+
+    <label for="@Html.NameFor(c => c.City)" class="control-label hidden-xs">City / State / Zip</label>
+    <div class="row margin-5">
+        <div class="col-xs-4">
+            <div class="form-group">
+                @Html.LabelFor(c => c.City, new { @class = "control-label visible-xs" })
+                @Html.TextBoxFor(c => c.City, new
+                {
+                    @class = "form-control",
+                    placeholder = "City",
+                    data_role = "City"
+                })
+                <span class="text-danger">
+                    @Html.ValidationMessageFor(c => c.City)
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-5">
+            <div class="form-group">
+                @Html.LabelFor(c => c.State, new { @class = "control-label visible-xs" })
+                @Html.DropDownListFor(c => c.State,
+                    selectList: Html.Regions(defaultCountryCode, defaultRegionCode),
+                    htmlAttributes: new
+                    {
+                        @class = "form-control",
+                        id = Html.IdFor(c => c.State) + "_" + contextID,
+                        data_role = "State"
+                    })
+                <span class="text-danger">
+                    @Html.ValidationMessageFor(c => c.State)
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-3">
+            <div class="form-group">
+                @Html.LabelFor(c => c.Zip, new { @class = "control-label visible-xs" })
+                @Html.TextBoxFor(c => c.Zip, new
+                {
+                    @class = "form-control",
+                    placeholder = "Zip code",
+                    data_role = "Zip"
+                })
+                <span class="text-danger">
+                    @Html.ValidationMessageFor(c => c.Zip)
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="space-10"></div>
+    @if (isVerifyable)
+    {
+        <div class="row margin-5">
+            <div class="col-xs-12">
+                <button type="button" class="btn btn-info" data-role="verify">Verify Address</button>
+            </div>
+        </div>
+    }
+</div>
+
+@using (Html.BeginPartialScript())
+{
+    <script>
+        require(["addresses"], function (address) {
+            address.bind('#view-address-@contextID');
+        });
+    </script>
+}

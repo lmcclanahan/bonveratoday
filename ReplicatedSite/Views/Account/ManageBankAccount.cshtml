@@ -1,0 +1,114 @@
+﻿@model BankAccount
+@{
+    ViewBag.Title = "Your Account";
+    Layout = "~/Views/Account/_Layout.cshtml";
+}
+
+<div id="view-bankoverview" class="row">
+    <div class="col-sm-9">
+        @using (Html.BeginForm("savebankaccount", "account"))
+        {
+
+            @Html.HiddenFor(c => c.Type)
+
+            if (Model.IsUsedInAutoOrders)
+            {
+                <div class="alert alert-info">
+                    <h4>@Resources.Common.EditingReplenishBankAccounts</h4>
+                    @Resources.Common.YouHaveReplenishUsingAccount.FormatWith(Model.AutoOrderIDs.Length)
+                </div>
+            }
+
+
+            <div class="well">
+                <div class="row margin-5">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            @Html.LabelFor(c => c.BankName, new { @class = "control-label" })
+                            @Html.EditorFor(c => c.BankName)
+                        </div>
+                    </div>
+                </div>
+                <div class="row margin-5">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            @Html.LabelFor(c => c.NameOnAccount, new { @class = "control-label" })
+                            @Html.EditorFor(c => c.NameOnAccount)
+                        </div>
+                    </div>
+                </div>
+                <div class="row margin-5">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(c => c.AccountNumber, new { @class = "control-label" })
+                            @Html.EditorFor(c => c.AccountNumber)
+                            @if (Model.Type != BankAccountType.New)
+                            {
+                                <small class="help-block">For security purposes, please re-enter your account number.</small>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(c => c.RoutingNumber, new { @class = "control-label" })
+                            @Html.EditorFor(c => c.RoutingNumber)
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                @Html.EditorFor(c => Model.BillingAddress)
+
+            </div>
+
+
+
+            <button type="submit" class="btn btn-primary" data-loading-text="Loading...">Save Changes</button>
+            <a href="@Url.Action("PaymentMethodList")" class="btn btn-link">Cancel</a>
+
+            if (Model.Type != BankAccountType.New && !Model.IsUsedInAutoOrders)
+            {
+                <span class="pull-right">
+                    <a href="@Url.Action("DeleteBankAccount", new { type = Model.Type })" class="btn btn-default">Delete</a>
+                </span>
+            }
+
+        }
+    </div>
+    <div class="col-sm-3">
+
+    </div>
+</div>
+
+@section scripts
+{
+
+    <script>
+        require(["jquery", "forms", "bootstrap"], function ($, forms) {
+
+            // Settings
+            var context = "#view-bankoverview",
+                $context = $(context);
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $("[type='submit']").on("click", function () {
+                    $(this).button("loading");
+                    if (!$("form").valid()) {
+                        $(this).button("reset");
+                    }
+                });
+            }
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+
+        });
+    </script>
+}

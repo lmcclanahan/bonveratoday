@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = Resources.Common.RetailCustomers;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-sm-3">
+        @Html.Navigation()
+    </div>
+
+    <div class="col-sm-9">
+
+        <div id="grid"></div>
+    
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script>
+        require(["kendogrids"], function (kendoGrid) {
+
+            var cultureCode = "@Identity.Current.Market.CultureCode";
+            kendo.culture(cultureCode);
+
+
+            kendoGrid.create("#grid", {
+            columns: [
+                { field: "CustomerID", title: Resources.Common.Customer, type: "number", width: 200, template: kendoGrid.templates.customer("CustomerID", "FirstName", "LastName", "CustomerIDToken") },
+                    { field: "Email", title: Resources.Common.Email, template: "<a href='mailto:#:Email#'>#:Email#</a>" },
+                    { field: "Phone", title: Resources.Common.Phone },
+                    { field: "CreatedDate", title: Resources.Common.StartDate, type: "date", format: "{0:d}", attributes: { "class": "text-right" } }
+            ]
+            });
+        });
+    </script>
+}

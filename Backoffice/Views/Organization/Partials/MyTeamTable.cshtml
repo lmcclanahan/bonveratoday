@@ -1,0 +1,209 @@
+﻿@model MyTeamViewModel
+
+
+@{
+    var style = "";
+}
+<div id="mtTable">
+    <div id="mtTeamSelector">
+       @Html.Partial("Partials/MyTeamTeamSelector",Model)
+    </div>
+    <div class="space-20"></div>
+    <div id="grid"></div>
+
+</div>
+<style>
+    .highlight {
+        background-color: yellow;
+    }
+</style>
+<script>
+    require(["jquery", "ajax", "pubsub", "kendogrids", "urls", "extensions"], function ($, ajax, pubsub, kendoGrid, UrlHelper) {
+
+        // Settings
+
+        var cultureCode = "@Identity.Current.Market.CultureCode",
+            mainUrl = "@Url.Action("FetchMyTeamTable", "organization")",
+            originalCustomerID = "@Model.CurrentTeamMember.CustomerID",
+                              
+            currentPeriod = "@Model.CurrentPeriod";
+        kendo.culture(cultureCode);
+
+
+
+        function onDataBound(arg) {
+            var rows = arg.sender.tbody.children();
+            for (var j = 0; j < rows.length; j++) {
+                var row = $(rows[j]);
+                var dataItem = arg.sender.dataItem(row);
+
+                var enrollerID = dataItem.get("c_EnrollerID");
+                if (enrollerID == $("#currentcustomerid", ".myTeam").val()) {
+                    row.addClass("highlight");
+
+                }
+            }
+        }
+
+
+        kendoGrid.create("#grid", {
+            url: '@Request.Url.AbsolutePath',
+            dataBound: onDataBound,
+            sortable: false,
+            filterable: false,
+            columns: [
+                {
+                    field: "c_CustomerID", title: "Associate", type: "number", template: function (row) {
+
+                        var url = '@Url.Action("index","profile", new { token = "placeholder"})';
+                        url = url.replace("placeholder", row.CustomerIDToken);
+                        html =
+                                "<a class='newest-distributors-profile' href='" + url + "' data-profile=' modal' data-id='" + row.c_CustomerID + "'  data-token=' " + row.CustomerIDToken + "' data-placement='top'>" + row.c_FirstName + " " + row.c_LastName + "</a>";
+
+
+
+
+                        return html;
+                    }
+                },
+                    { field: "c_CustomerID", title: "Bonvera id#", type: "number", attributes: { "class": "text-right" } },
+                                        { field: "v_PBV", title: "PBV", type: "number", attributes: { "class": "text-right" } },
+                    { field: "v_PCBV", title: "PCBV", type: "number", attributes: { "class": "text-right" } },
+
+                        {
+                            field: "c_SponsorID", type: "number", title: "TEAMS", attributes: { "class": "text-right" },
+                            sortable: false,
+                            filterable: false,
+                            template: function (row) {
+                                if (row.t_TeamCount > 1) {
+                                    var html = "";
+
+                                    html += " <select class='custSelect form-dropdown-kendo form-control' data-customerid='" + row.c_CustomerID + "' data-teamcount ='" + row.t_TeamCount + "'>";
+                                    html += "<option  class='text-center'> -Choose- </option>";
+                                    for (var i = 1; i < row.t_TeamCount; i++) {
+                                        var tgbv = 0;
+                                        if (i + 1 == 1) tgbv = row.v_Team1TGBV;
+                                        else if (i + 1 == 2) tgbv = row.v_Team2TGBV;
+                                        else if (i + 1 == 3) tgbv = row.v_Team3TGBV;
+                                        else if (i + 1 == 4) tgbv = row.v_Team4TGBV;
+                                        else if (i + 1 == 5) tgbv = row.v_Team5TGBV;
+                                        else if (i + 1 == 6) tgbv = row.v_Team6TGBV;
+                                        html += "<option class='text-center' value =" + (i + 1) + "> Team " + (i + 1) + " TGBV(" + tgbv + ") </option>";
+                                    }
+                                    html += "</select>"
+
+                                    return html;
+                                }
+                                else {
+                                    return "";
+                                }
+                            },
+
+                        }
+
+            ]
+        });
+        var context = "#mtTable",
+              $context = $(context),
+              $grid = $("#grid", $context);
+        // Event Handlers
+        function registerEventHandlers() {
+
+            window.on("myTeam.ReloadTable", function (data) {
+                $(".team-number-top").val(data.team);
+                $("#currentcustomerid",".myTeam").val(data.id);
+                var period = data.period;
+                $grid.data('kendoGrid').dataSource.transport.options.read.url = actions.refreshGrid(data.id, data.team, data.period);
+                if ($grid.data('kendoGrid').dataSource.page() != 1) {
+                    $grid.data('kendoGrid').dataSource.page(1);
+                }
+                else {
+                    $grid.data('kendoGrid').dataSource.fetch();
+                }
+
+            });
+            $(".team-number-top").on("change", function () {
+                var id = $("#currentcustomerid", ".myTeam").val();
+                var team = $(this).val();
+                var period = $("#periodSelect").val();
+                $grid.data('kendoGrid').dataSource.transport.options.read.url = actions.refreshGrid(id, team, period);
+                if ($grid.data('kendoGrid').dataSource.page() != 1) {
+                    $grid.data('kendoGrid').dataSource.page(1);
+                }
+                else {
+                    $grid.data('kendoGrid').dataSource.fetch();
+                }
+                $(".team-number-top").val(team);
+
+            });
+            $("#grid").on("change", ".custSelect", function () {
+                if ($(this).val() > 0) {
+                    var id = $(this).data('customerid');
+                    var teamCount = $(this).data('teamcount');
+                    $(".return").show();
+                    $(".team-number-top").html("");
+                    for (var i = 1; i <= teamCount; i++) {
+
+                        $(".team-number-top").append("<option value = '" + i + "'> Team " + i + " </option>");
+                    }
+                    $("#currentcustomerid",".myTeam").val(id);
+                    var team = $(this).val();
+
+                    var period = $("#periodSelect").val();
+                    $grid.data('kendoGrid').dataSource.transport.options.read.url = actions.refreshGrid(id, team, period);
+                    if ($grid.data('kendoGrid').dataSource.page() != 1) {
+                        $grid.data('kendoGrid').dataSource.page(1);
+                    }
+                    else {
+                        $grid.data('kendoGrid').dataSource.fetch();
+                    }
+                  
+                    var data = { id: id, team: team };
+                    window.trigger("myTeam.ReloadTeamMember", data);
+                    window.trigger("myTeam.ReloadDashboard", data);
+
+                    $(".team-number-top").val(team);
+                }
+
+            });
+        }
+
+        // Actions
+        var actions = {
+
+            refreshGrid: function (id, team,period) {
+                return helpers.buildUrl(mainUrl, {
+                    "id": id,
+                    "team": team,
+                    "period" : period
+                });
+            }
+        };
+
+        var helpers = {
+            getUrlSeparator: function (url) {
+                return (url.indexOf("?") != -1) ? "&" : "?";
+            },
+            buildUrl: function (url, queries) {
+                if (typeof url !== "string") {
+                    queries = url;
+                    url = UrlHelper.current.source;
+                }
+                queries = queries || {};
+
+                var result = url;
+                for (var key in queries) {
+                    result += helpers.getUrlSeparator(result) + key + "=" + queries[key];
+                }
+
+                return result;
+            }
+        };
+        // Initialization
+        function init() {
+            registerEventHandlers();
+        }
+        init();
+
+    });
+</script>

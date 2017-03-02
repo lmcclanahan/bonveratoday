@@ -1,0 +1,139 @@
+﻿@model ProfileViewModel
+@{
+    var isCurrentIdentity = Model.Customer.CustomerID == Identity.Current.CustomerID;
+    var isPersonallyEnrolled = Model.Customer.EnrollerID == Identity.Current.CustomerID;   
+}
+
+<div id="view-profile">
+    <div class="row">
+        <div class="col-sm-2">
+            <img src="@Url.Avatar(Model.Customer.CustomerID, AvatarType.Large)" class="avatar" />
+
+            @if (isCurrentIdentity)
+            {
+                <div class="text-center">
+                    <small><a href="@Url.Action("avatar", "account")">@Resources.Common.EditAvatar</a></small>
+                </div>
+            }
+        </div>
+        <div class="col-sm-10">
+            <h3>
+                <strong>@Model.Customer.FullName</strong> <small class="text-muted">#@Model.Customer.CustomerID</small><br />
+                <small class="text-muted">@Model.Customer.CustomerType.CustomerTypeDescription since @Model.Customer.CreatedDate.ToShortDateString()</small><br />
+                @if (Model.Customer.CustomerTypeID == CustomerTypes.Associate)
+                {<small class="text-muted">Lifetime Rank: @CommonResources.Ranks(Model.Customer.HighestAchievedRank.RankID)</small>}<br />
+                @*T.W. 77251 6/10/2016 If user is a Senior Director or above than user is able to see phone number and email as long as that profile has accepted email notifications*@
+                @*79056 08/03/2016 PM Changed CurrentPeriodRank to HighestPaidRankInAnyPeriod*@
+                @if (Identity.Current.Ranks.HighestPaidRankInAnyPeriod.RankID >= 40 && Model.Customer.IsOptedIn)
+                {<small class="text-muted">Phone: @Model.Customer.PrimaryPhone</small><br />
+                <small class="text-muted">Email: @Model.Customer.Email</small>}<br />
+            </h3>
+        </div>
+    </div>
+
+    <div class="space-30"></div>
+
+    <ul class="nav nav-tabs">
+        @if (Model.Customer.CustomerTypeID == CustomerTypes.Associate) { 
+        <li><a id="volumes" href="#tab-3" data-action="@Url.Action("volumeslist", "profile", new { id = Model.Customer.CustomerID })" data-toggle="tab">@Resources.Common.Volumes</a></li>
+        }
+        <li><a id="orderslist" href="#tab-5" data-action="@Url.Action("orderslist", "profile", new { id = Model.Customer.CustomerID })" data-toggle="tab">@Resources.Common.Orders</a></li>
+        <li><a href="#tab-6" data-action="@Url.Action("autoorderslist", "profile", new { id = Model.Customer.CustomerID })" data-toggle="tab">@Resources.Common.AutoOrders</a></li>
+    </ul>
+
+    <div class="space-30"></div>
+    <div class="tab-content">
+        <div class="tab-pane active" id="tab-1">
+            <p class="text-center">
+                <img src="@Url.Content("~/content/images/loading/circle-64.gif")" />
+            </p>
+        </div>
+
+        <script type="text/x-handlebars-template" id="tab-template">
+            <div class="tab-pane" id="{{id}}">
+                <div class="space-30"></div>
+                <div class="text-center">
+                    <img src="@Url.Content("~/content/images/loading/circle-64.gif")" /><br />
+                    <div class="loading-status">@Resources.Common.Loading</div>
+                </div>
+            </div>
+        </script>
+    </div>
+</div>
+
+
+
+<script>
+    require(["jquery", "ajax", "handlebars", "bootstrap"], function ($, ajax, Handlebars) {
+
+        // Settings
+        var context = "#view-profile",
+            $context = $(context),
+            isAssociate = @Html.Raw(Json.Encode((Model.Customer.CustomerTypeID == CustomerTypes.Associate))).ToString().ToLower();
+
+
+        // Event Handlers
+        function registerEventHandlers() {
+            $('a[data-toggle="tab"]').on('show.bs.tab', function (event) {
+                var $tablink = $(event.target),
+                    tabSelector = $tablink.attr('href'),
+                    $tab = $(tabSelector);
+
+                if ($tab.length == 0) {
+                    var source = $("#tab-template", $context).html();
+                    var template = Handlebars.compile(source);
+                    var context = { id: tabSelector.replace('#', '') }
+                    var html = template(context);
+
+                    $('.tab-pane:last').after(html);
+
+                    var action = $tablink.data('action');
+                    actions.loadTab(tabSelector, action);
+                }
+            });
+        }
+
+
+        // Actions
+        var actions = {
+            loadTab: function (selector, url) {
+                ajax.html({
+                    url: url,
+                    interval: 3000,
+                    maxAttempts: 20,
+                    success: function (response) {
+                        $(selector, $context).html(response);
+                    },
+                    repeat: function (attempts) {
+                        if (attempts == 5) {
+                            $(selector, $context).find('.loading-status').html("@Resources.Common.CalculationTakingLonger");
+                        }
+                    },
+                    fail: function () {
+                        $(selector, $context).html("@Resources.Common.LoadingFailed");
+                    }
+                });
+            }
+        };
+
+
+        // Initialization
+        function init() {
+            registerEventHandlers();
+
+
+
+
+            if (isAssociate) {
+                //click the volumes tab to give the appearance this loaded first
+                $("#volumes").click();
+            }
+            else {
+                $("#orderslist").click();
+
+            }
+        }
+        init();
+
+    });
+</script>

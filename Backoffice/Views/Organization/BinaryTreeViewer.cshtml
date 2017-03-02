@@ -1,0 +1,460 @@
+﻿@section styles
+{
+    <link href="~/Content/scripts/vendor/jorgchart/jquery.jOrgChart.css" rel="stylesheet" />
+}
+<div id="view-tree-viewer">
+    <div class="row">
+        <div class="col-sm-8">
+
+            <!-- Customer Details -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Customer Details</h3>
+                </div>
+                <div class="panel-body">
+                    <div id="customer-details-container">
+                        Loading...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tree -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Binary Tree Viewer
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <a class="btn btn-primary" data-role="uplevel">Up One Level</a>
+                    <a class="btn btn-primary pull-right" data-role="treetop">Back to Top</a>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="panel-body">
+                    <div id="view-binary-viewer" style="width: 100%; height: 415px; overflow: auto;">
+                        Loading...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Key</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row margin-10">
+                        <div class="col-sm-4">
+                            <div class="row margin-10">
+                                <div class="col-sm-2">
+                                    <span class="key-item rank-0"></span>
+                                </div>
+                                <div class="col-sm-10">
+                                    Rank 0
+                                </div>
+                            </div>
+                            <div class="space-10"></div>
+                            <div class="row margin-10">
+                                <div class="col-sm-2">
+                                    <span class="key-item rank-1"></span>
+                                </div>
+                                <div class="col-sm-10">
+                                    Rank 1
+                                </div>
+                            </div>
+                            <div class="space-10"></div>
+                            <div class="row margin-10">
+                                <div class="col-sm-2">
+                                    <span class="key-item rank-2"></span>
+                                </div>
+                                <div class="col-sm-10">
+                                    Rank 2
+                                </div>
+                            </div>
+                            <div class="space-10"></div>
+                            <div class="row margin-10">
+                                <div class="col-sm-2">
+                                    <span class="key-item rank-3"></span>
+                                </div>
+                                <div class="col-sm-10">
+                                    Rank 3
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="row margin-10">
+                                <div class="col-sm-2">
+                                    <span class="key-item rank-4"></span>
+                                </div>
+                                <div class="col-sm-10">
+                                    Rank 4
+                                </div>
+                            </div>
+                            <div class="space-10"></div>
+                            <div class="row margin-10">
+                                <div class="col-sm-2">
+                                    <span class="key-item rank-5"></span>
+                                </div>
+                                <div class="col-sm-10">
+                                    Rank 5
+                                </div>
+                            </div>
+                            <div class="space-10"></div>
+                            <div class="row margin-10">
+                                <div class="col-sm-2">
+                                    <span class="key-item rank-6"></span>
+                                </div>
+                                <div class="col-sm-10">
+                                    Rank 6
+                                </div>
+                            </div>
+                            <div class="space-10"></div>
+                            <div class="row margin-10">
+                                <div class="col-sm-2">
+                                    <span class="key-item rank-7"></span>
+                                </div>
+                                <div class="col-sm-10">
+                                    Rank 7
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="row margin-10">
+                                <div class="col-sm-2">
+                                    <span class="key-item rank-8"></span>
+                                </div>
+                                <div class="col-sm-10">
+                                    Rank 8
+                                </div>
+                            </div>
+                            <div class="space-10"></div>
+                            <div class="row margin-10">
+                                <div class="col-sm-2">
+                                    <span class="key-item rank-9"></span>
+                                </div>
+                                <div class="col-sm-10">
+                                    Rank 9
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+
+
+
+
+                    @*<div class="row">
+                            @for (int i = 1; i <= 15; i++)
+                            {
+                            <div class="col-sm-3">
+                                <div class="legend">
+                                    <div class="legend-item">
+                                        <div class="legend-object"><i class="fa-dashboard"></i></div>
+                                        <div class="legend-body">My Value</div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                        </div>*@
+
+
+
+
+
+
+                    <div class="row margin-10">
+                        <div class="col-sm-4">
+                            <div class="row margin-10">
+                                <div class="col-sm-2">
+                                    <span class="key-item icon fa-plus-circle"></span>
+                                </div>
+                                <div class="col-sm-10">
+                                    Open Position
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="row margin-10">
+                                <div class="col-sm-2">
+                                    <span class="key-item icon fa-repeat"></span>
+                                </div>
+                                <div class="col-sm-10">
+                                    @Resources.Common.HasReplenish
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="row margin-10">
+                                <div class="col-sm-2">
+                                    <span class="key-item icon fa-heart"></span>
+                                </div>
+                                <div class="col-sm-10">
+                                    Personally Enrolled
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-4">
+
+
+
+
+
+            <!-- Search -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Search</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="search-field">
+                        <a class="input-group-addon btn btn-primary" data-role="search"><span class="fa-search"></span></a>
+                    </div>
+                </div>
+
+
+                <div id="search-results-container">
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID#</th>
+                                        <th>First</th>
+                                        <th>Last</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="search-results"></tbody>
+                            </table>
+                            <script id="search-results-template" data-target="#search-results" type="text/x-handlebars-template">
+                                {{#each results}}
+                                <tr data-id="{{CustomerID}}">
+                                    <td>{{CustomerID}}</td>
+                                    <td>{{FirstName}}</td>
+                                    <td>{{LastName}}</td>
+                                </tr>
+                                {{/each}}
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+
+            <!-- Upline Viewer -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Upline Viewer</h3>
+                </div>
+                <div id="upline-container">
+                    Loading...
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+
+    <script>
+        require(["jquery", "ajax", "app", "handlebars", "jquery-scrollto", "trees"], function ($, ajax, app, Handlebars) {
+
+            // Settings
+            var context         = "#view-binary-viewer",
+                $context        = $(context),
+                mousemoveLocked = false,
+                topCustomerID   = @Identity.Current.CustomerID;
+
+            // State
+            var state = {
+                selectedCustomerId: 0
+            };
+
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $('.jOrgChart').on('click', '.node-body', function () {
+                    actions.scrollToNode($(this));
+                });
+
+                // Tree top
+                $('[data-role="treetop"]').on('click', function () {
+                    actions.fetchTree();
+                });
+
+                // Up one level
+                $('[data-role="uplevel"]').on('click', function () {
+                    if (state.selectedCustomerId == topCustomerID) { return; }
+                    actions.upOneLevel(state.selectedCustomerId);
+                });
+
+                // Search and Upline row click
+                $('#view-tree-viewer').on('click', '[data-id]', function () {
+                    var id = $(this).data("id");
+
+                    actions.fetchTree(id);
+                });
+
+                // Search when Enter is pressed
+                $('#search-field').on("keypress", function (e) {
+                    if (e.which == 13) {
+                        e.preventDefault();
+                        $('[data-role="search"]').click();
+                    }
+                });
+             
+                // Search
+                $('[data-role="search"]').on('click', function () {
+                    var query = $('#search-field').val();
+
+                    if (query != "") {
+                        actions.search(query);
+                    }
+                    else {
+                        $('#search-field').focus();
+                    }
+                });
+
+                // Handle click for tree nodes
+                $context.on('click', '.node', function () {
+                    var $this = $(this),
+                        id = $this.data('id');
+
+
+                    if ($this.hasClass('null-node')) {
+                        console.log("null node");
+                        return;
+                    }
+                    else if ($this.hasClass('open-node')) {
+                        console.log("open node");
+                        return;
+                    }
+                    else {
+
+                        $this.find('.node-body').first().html('<div class="text-center"><img src="@Url.Content("~/Content/images/circle-white-24.gif")" style="position: relative; top: 18px;" /></div>');
+
+                        actions.fetchTree(id);
+                    }
+                });
+
+            }
+
+
+            // Actions
+            var actions = {
+                fetchTree: function (id) {
+                    var nodeId = id || 0;
+
+                    $.ajax({
+                        url: '@Url.Action("FetchBinaryTree", "organization", new { id = 0 })'.slice(0, -1) + nodeId,
+                        type: 'GET',
+                        cache: false,
+                        success: function (response) {
+
+                            $context.html(response.treehtml);
+                            $('#customer-details-container').html(response.customerdetailshtml);
+                            $('#upline-container').html(response.uplinehtml);
+                            actions.scrollToNode($('.jOrgChart .node:first'));
+                            state.selectedCustomerId = response.id;
+                        },
+                        error: function(xhr) {
+                            console.log(xhr.responseText);
+                        }
+                    });
+                },
+                search: function (query) {
+                    ajax.json({
+                        url: "@Url.Action("search", "organization")",
+                        data: { query: query },
+                        beforeSend: function () {
+                            var loadingimg = "<tr><td colspan='3'><div class='text-center'><img src=@Url.Content("~/Content/images/circle-24.gif") /></div></td></tr>";
+                            $("#search-results").html(loadingimg);
+                        },
+                        success: function (response) {
+                            if (response.success) {
+
+                                if (response.results.length == 0) {
+                                    $("#search-results-container").hide();
+                                    $("#search-field").val("");
+                                    app.throwError("This search returned no results.");
+                                    return;
+                                }
+
+                                var source = $("#search-results-template").html();
+                                var template = Handlebars.compile(source);
+                                var html = template(response);
+                                $("#search-results").html(html);
+
+                                if(!$("#search-results-container").is(":visible")){
+                                    $("#search-results-container").show();
+                                }
+                            }
+                            else {
+                                console.log("message", response.message);
+                                $("#search-results-container").hide();
+                                app.throwError("This search returned no results.");
+                            }
+                        }
+                    });
+                },
+                upOneLevel: function(id){
+                    var nodeId = id || 0;
+              
+                    $.ajax({
+                        url: '@Url.Action("uponelevel", "organization", new { id = 0 })'.slice(0, -1) + nodeId,
+                        type: 'GET',
+                        cache: false,
+                        success: function (response) {
+                            if (response.success) {
+                                actions.fetchTree(response.parentId);
+                            }
+                            else {
+                                console.log(response.message);
+                            }
+                        },
+                    });
+                },
+                scrollToNode: function ($element, lockMouseMove) {
+                    lockMouseMove = lockMouseMove || false;
+
+                    if (lockMouseMove) mousemoveLocked = true;
+
+                    if ($element.length == 0) return;
+
+                    $context.stop().scrollTo($element, 500, {
+                        offset: function () { return { top: 0, left: ($element.width() / 2) - ($context.width() / 2) }; },
+                        onAfter: function () {
+                            if (lockMouseMove) {
+                                setTimeout(function () {
+                                    mousemoveLocked = false;
+                                }, 1000);
+                            }
+                        }
+                    });
+                }
+
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+                actions.fetchTree();
+            }
+            init();
+
+        });
+    </script>
+}

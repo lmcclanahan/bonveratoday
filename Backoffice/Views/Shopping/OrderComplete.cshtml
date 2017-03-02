@@ -1,0 +1,36 @@
+﻿@model OrderCompleteViewModel
+@{
+    ViewBag.Title = "Thank You";
+}
+
+<div class="container cart complete shop">
+    <div class="row">
+        <div class="col-sm-12">
+            <h2 class="hidden-print">Thank You!</h2>
+                <p class="hidden-print">We have received your order.</p>
+
+            @if (Model.OrderID > 1)
+            {
+                <h3 class="hidden-print">Your Order</h3>
+                if (Model.Order.ShipMethodID == Model.WillCallShipMethodID)
+                {
+                    <div class="alert alert-success alert-dismissible" role="alert" id="will-call-alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        @Html.Raw(Resources.Common.WillCallCompleteMessage)
+                    </div>
+                }
+
+                @Html.Partial("../Orders/_OrderInvoice", Model.Order)
+
+
+                <p class="hidden-print">Click <a href="@Url.Action("OrderList", "orders")">@Resources.Common.OrderHistory</a> to view all of your orders.</p>
+            }
+            else if(Model.AutoOrderID > 1)
+            {
+                <p>Your Replenish was successfully created. Click <a href="@Url.Action("AutoOrderPreferences", "AutoOrders")">@Resources.Common.AutoOrderManager</a> to view all of your Replenish profiles.</p>
+            }
+            <div class="space-60"></div>
+
+        </div>
+    </div>
+</div>

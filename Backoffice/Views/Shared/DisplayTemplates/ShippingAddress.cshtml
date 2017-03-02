@@ -1,0 +1,8 @@
+﻿@model ShippingAddress
+
+<div class="view-shippingaddress">
+    @Model.FirstName @Model.LastName<br />
+    @Html.Partial("~/Views/Shared/DisplayTemplates/Address.cshtml", Model)
+    <i class="fa-phone"></i> @Model.Phone<br />
+    <i class="fa-envelope"></i> @Model.Email<br />
+</div> 

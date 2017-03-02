@@ -1,0 +1,92 @@
+﻿
+<div id="auto-order-container">
+    @Resources.Common.Loading...
+    <div class="space-10"></div>
+</div>
+<div class="modal-footer">
+
+</div>
+
+<script>
+    require(["jquery", "ajax", "toastr", "pubsub", "extensions"], function ($, ajax, toastr) {
+        var context                = "#addtocart-modalcontainer",
+            $context               = $(context),
+            getAutoOrderUrl        = "@Url.Action("GetAutoOrderChoiceDetails", "shopping")",
+            cancelupdateUrl        = "@Url.Action("cancelautoorderupdate", "shopping")",
+            cartUrl                = "@Url.Action("cart", "shopping")",
+            getautoordermodalUrl   = "@Url.Action("getautoordermodal", "shopping")",
+            modalContainerSelector = "#addtocart-modalcontainer #auto-order-container";
+
+        function registerEventHandlers() {
+            // Set the header of the loading modal on initial load
+            $("#view-item .modal-header h4").html("@Resources.Common.AutoShip");
+
+            $context.on("click", ".choice-panel", function () {
+                var $this = $(this),
+                    autoshipID = $this.data("autoorderid");
+
+                if (autoshipID == 0) {
+                    // Redirect to cart page to start checkout process
+                    window.location = cartUrl;
+                    //$("#addtocart-modalcontainer .modal").modal("hide");
+                } else {
+                    // If we have selected the option to use a current auto order, then we have to load up the appropriate modal to perform the update function
+                    actions.triggerUpdateModal(autoshipID);
+                }
+            });
+
+        }
+
+        var actions = {
+            getChoiceContent: function () {
+                ajax.json({
+                    url: getAutoOrderUrl,
+                    cache: false,
+                    success: function (response) {
+
+                        if (response.success) {
+                            $(modalContainerSelector).html(response.html);
+                        } else {
+                            console.log("actions.getautoship failed: ", response.message);
+                        }
+                    }
+                });
+            },
+            triggerUpdateModal: function (autoshipID) {
+                ajax.json({
+                    url: getautoordermodalUrl,
+                    data: { autoshipID: autoshipID },
+                    success: function (response) {
+                        if (response.success) {
+                            $("#addtocart-modalcontainer .modal-body").html("");
+                            $("#addtocart-modalcontainer .modal-body").html(response.html);
+                            $("#addtocart-modalcontainer .modal").modal();
+                        } else {
+                            console.log("showautoordermodal failed: ", response);
+                        }
+                    },
+                    error: function (xhr, error, status) {
+                        console.log("showautoordermodal failed: ", xhr);
+                    }
+                });
+            },
+            cancelupdate: function () {
+                ajax.json({
+                    url: cancelupdateUrl,
+                    success: function () {
+                        console.log("successful cancel");
+                    }
+                });
+            }
+        };
+
+
+        function _init() {
+            registerEventHandlers();
+
+            actions.getChoiceContent();
+        }
+        _init();
+    });
+</script>
+

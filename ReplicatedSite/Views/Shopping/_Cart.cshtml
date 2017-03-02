@@ -1,0 +1,51 @@
+﻿@model CartViewModel
+@{
+    var firstOrderPackItemCode = ViewBag.FirstOrderPackItemCode;
+}
+
+@if (Model.Items.Count() == 0)
+{
+    <p>@Resources.Common.NoItemsInCart</p>
+}
+else
+{
+    var orderItems = Model.Items.Where(c => c.Type == ShoppingCartItemType.Order);
+    var autoOrderItems = Model.Items.Where(c => c.Type == ShoppingCartItemType.AutoOrder);
+
+    <div class="row">
+        <div class="col-sm-9">
+            @if (orderItems.Count() > 0)
+            {
+                @Html.Partial("Partials/Cart/PaneledCart", orderItems, new ViewDataDictionary {
+                                                                { "PanelTitle", GlobalUtilities.Capitalize(Resources.Common.ItemsToBuyNow) },
+                                                                { "Type", ShoppingCartItemType.Order },
+                                                                { "FirstOrderPackItemCode", firstOrderPackItemCode }
+                                                            })
+            }
+
+            @if (autoOrderItems.Count() > 0)
+            {
+                @Html.Partial("Partials/Cart/PaneledCart", autoOrderItems, new ViewDataDictionary {
+                                                                { "PanelTitle", Resources.Common.ReplenishItems},
+                                                                { "Type", ShoppingCartItemType.AutoOrder },
+                                                                { "FirstOrderPackItemCode", firstOrderPackItemCode }
+                                                            })
+            }
+        </div>
+        <div class="col-sm-3">
+            <div class="panel panel-default">
+                <div class="panel-body well">
+                    @if (Model.Items.Where(c => c.Type == ShoppingCartItemType.Order).Count() > 0)
+                    {
+                        <div class="text-center">
+                            <div class="lead">@Resources.Common.Subtotal (<span data-text="orderquantity">@orderItems.Sum(c => c.Quantity).ToString("N0")</span> @Resources.Common.Items.ToLower()):<br /><strong><span data-text="ordersubtotal">@orderItems.Sum(c => c.Quantity * c.Price).ToString("C")</span></strong></div>
+                        </div>
+                    }
+                    <div class="text-center">
+                        <a href="@Url.Action("Checkout")" class="btn btn-primary btn-block">@Resources.Common.Checkout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

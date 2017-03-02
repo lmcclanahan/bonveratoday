@@ -1,0 +1,3375 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Bonus_1_001" xml:space="preserve">
+    <value>Retail Commission</value>
+  </data>
+  <data name="Bonus_1_002" xml:space="preserve">
+    <value>First Order Bonus</value>
+  </data>
+  <data name="Bonus_1_003" xml:space="preserve">
+    <value>Dual Team Commissions</value>
+  </data>
+  <data name="Bonus_1_004" xml:space="preserve">
+    <value>Matching Bonus</value>
+  </data>
+  <data name="Bonus_1_005" xml:space="preserve">
+    <value>Bulk Order Bonus</value>
+  </data>
+  <data name="Bonus_1_006" xml:space="preserve">
+    <value>LifeStyle bonus</value>
+  </data>
+  <data name="Bonus_1_007" xml:space="preserve">
+    <value>Leadership Pool</value>
+  </data>
+  <data name="Bonus_1_008" xml:space="preserve">
+    <value>Founders Pool</value>
+  </data>
+  <data name="Bonus_1_009" xml:space="preserve">
+    <value>Business Builder Bonus</value>
+  </data>
+  <data name="Bonus_1_010" xml:space="preserve">
+    <value>Fast Track Bonus</value>
+  </data>
+  <data name="Bonus_1_011" xml:space="preserve">
+    <value>c3 Bonus</value>
+  </data>
+  <data name="Bonus_1_013" xml:space="preserve">
+    <value>Performace Bonus</value>
+  </data>
+  <data name="Bonus_1_014" xml:space="preserve">
+    <value>Retails Sales Override</value>
+  </data>
+  <data name="Bonus_1_015" xml:space="preserve">
+    <value>Enroller Bonus</value>
+  </data>
+  <data name="Bonus_1_099" xml:space="preserve">
+    <value>Rank Payout Caps</value>
+  </data>
+  <data name="Bonus_1_100" xml:space="preserve">
+    <value>Overall Cap</value>
+  </data>
+  <data name="CreditCardType_01" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="CreditCardType_02" xml:space="preserve">
+    <value>Visa</value>
+  </data>
+  <data name="CreditCardType_03" xml:space="preserve">
+    <value>MasterCard</value>
+  </data>
+  <data name="CreditCardType_04" xml:space="preserve">
+    <value>Amex</value>
+  </data>
+  <data name="CreditCardType_05" xml:space="preserve">
+    <value>Discover</value>
+  </data>
+  <data name="CreditCardType_06" xml:space="preserve">
+    <value>Switch</value>
+  </data>
+  <data name="CreditCardType_07" xml:space="preserve">
+    <value>Solo</value>
+  </data>
+  <data name="CreditCardType_08" xml:space="preserve">
+    <value>JCB</value>
+  </data>
+  <data name="CreditCardType_09" xml:space="preserve">
+    <value>Maestro</value>
+  </data>
+  <data name="CreditCardType_10" xml:space="preserve">
+    <value>Delta</value>
+  </data>
+  <data name="CreditCardType_11" xml:space="preserve">
+    <value>Laser</value>
+  </data>
+  <data name="CreditCardType_12" xml:space="preserve">
+    <value>ECMC</value>
+  </data>
+  <data name="CreditCardType_13" xml:space="preserve">
+    <value>BHS</value>
+  </data>
+  <data name="CreditCardType_14" xml:space="preserve">
+    <value>IKEA</value>
+  </data>
+  <data name="CreditCardType_15" xml:space="preserve">
+    <value>Diners</value>
+  </data>
+  <data name="CreditCardType_16" xml:space="preserve">
+    <value>CB</value>
+  </data>
+  <data name="CreditCardType_17" xml:space="preserve">
+    <value>Carte Bleue</value>
+  </data>
+  <data name="CreditCardType_18" xml:space="preserve">
+    <value>Dankort</value>
+  </data>
+  <data name="CreditCardType_19" xml:space="preserve">
+    <value>Aurore</value>
+  </data>
+  <data name="CreditCardType_20" xml:space="preserve">
+    <value>GE Capital</value>
+  </data>
+  <data name="CreditCardType_21" xml:space="preserve">
+    <value>AirPlus</value>
+  </data>
+  <data name="CreditCardType_22" xml:space="preserve">
+    <value>UATP</value>
+  </data>
+  <data name="CreditCardType_23" xml:space="preserve">
+    <value>Carte Blanche</value>
+  </data>
+  <data name="CreditCardType_24" xml:space="preserve">
+    <value>Visa Electron</value>
+  </data>
+  <data name="CreditCardType_25" xml:space="preserve">
+    <value>JAL</value>
+  </data>
+  <data name="CreditCardType_26" xml:space="preserve">
+    <value>GE Money</value>
+  </data>
+  <data name="CreditCardType_27" xml:space="preserve">
+    <value>En Route</value>
+  </data>
+  <data name="CreditCardType_28" xml:space="preserve">
+    <value>Carta Si</value>
+  </data>
+  <data name="CreditCardType_29" xml:space="preserve">
+    <value>Galeria</value>
+  </data>
+  <data name="CreditCardType_30" xml:space="preserve">
+    <value>CRM Falabella</value>
+  </data>
+  <data name="CreditCardType_31" xml:space="preserve">
+    <value>Debito Maestro</value>
+  </data>
+  <data name="CreditCardType_32" xml:space="preserve">
+    <value>V PAY</value>
+  </data>
+  <data name="CreditCardType_33" xml:space="preserve">
+    <value>China UnionPay</value>
+  </data>
+  <data name="CustomerStatus_00" xml:space="preserve">
+    <value>Deleted</value>
+  </data>
+  <data name="CustomerStatus_01" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="CustomerStatus_02" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="CustomerStatus_03" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="CustomerStatus_04" xml:space="preserve">
+    <value>Cart Abandoned</value>
+  </data>
+  <data name="CustomerStatus_05" xml:space="preserve">
+    <value>Open Party</value>
+  </data>
+  <data name="CustomerStatus_06" xml:space="preserve">
+    <value>Closed Party</value>
+  </data>
+  <data name="CustomerStatus_07" xml:space="preserve">
+    <value>Cancelled Party</value>
+  </data>
+  <data name="CustomerStatus_08" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="CustomerType_01" xml:space="preserve">
+    <value>Retail Customer</value>
+  </data>
+  <data name="CustomerType_02" xml:space="preserve">
+    <value>Preferred Customer</value>
+  </data>
+  <data name="CustomerType_03" xml:space="preserve">
+    <value>Distributor</value>
+  </data>
+  <data name="CustomerType_04" xml:space="preserve">
+    <value>Brand Ambassador</value>
+  </data>
+  <data name="CustomerType_05" xml:space="preserve">
+    <value>IL Distributor</value>
+  </data>
+  <data name="CustomerType_06" xml:space="preserve">
+    <value>Employee</value>
+  </data>
+  <data name="CustomerType_07" xml:space="preserve">
+    <value>Reserved WebAlias</value>
+  </data>
+  <data name="CustomerType_08" xml:space="preserve">
+    <value>AU Distributor</value>
+  </data>
+  <data name="CustomerType_09" xml:space="preserve">
+    <value>CA Distributor</value>
+  </data>
+  <data name="CustomerType_10" xml:space="preserve">
+    <value>SG Distributor</value>
+  </data>
+  <data name="CustomerType_11" xml:space="preserve">
+    <value>Party Host/Hostess</value>
+  </data>
+  <data name="CustomerType_12" xml:space="preserve">
+    <value>Prospect or Lead</value>
+  </data>
+  <data name="FrequencyType_01" xml:space="preserve">
+    <value>Weekly</value>
+  </data>
+  <data name="FrequencyType_02" xml:space="preserve">
+    <value>Every Two Weeks</value>
+  </data>
+  <data name="FrequencyType_03" xml:space="preserve">
+    <value>Monthly</value>
+  </data>
+  <data name="FrequencyType_04" xml:space="preserve">
+    <value>Quarterly</value>
+  </data>
+  <data name="FrequencyType_05" xml:space="preserve">
+    <value>Twice a Year</value>
+  </data>
+  <data name="FrequencyType_06" xml:space="preserve">
+    <value>Yearly</value>
+  </data>
+  <data name="FrequencyType_07" xml:space="preserve">
+    <value>Bi-Monthly</value>
+  </data>
+  <data name="FrequencyType_08" xml:space="preserve">
+    <value>Every 4 weeks</value>
+  </data>
+  <data name="FrequencyType_09" xml:space="preserve">
+    <value>Every 6 Weeks</value>
+  </data>
+  <data name="FrequencyType_10" xml:space="preserve">
+    <value>Every 8 Weeks</value>
+  </data>
+  <data name="FrequencyType_11" xml:space="preserve">
+    <value>Every 12 Weeks</value>
+  </data>
+  <data name="Language_000" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Language_001" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="Language_002" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="Language_003" xml:space="preserve">
+    <value>Korean</value>
+  </data>
+  <data name="Language_004" xml:space="preserve">
+    <value>Belorussian</value>
+  </data>
+  <data name="Language_005" xml:space="preserve">
+    <value>Japanese</value>
+  </data>
+  <data name="Language_006" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="Language_007" xml:space="preserve">
+    <value>Mandarin</value>
+  </data>
+  <data name="Language_008" xml:space="preserve">
+    <value>Chinese-Taiwan</value>
+  </data>
+  <data name="Language_009" xml:space="preserve">
+    <value>Thai</value>
+  </data>
+  <data name="Language_010" xml:space="preserve">
+    <value>Tagalec-Phillipino</value>
+  </data>
+  <data name="Language_011" xml:space="preserve">
+    <value>Hungarian</value>
+  </data>
+  <data name="Language_012" xml:space="preserve">
+    <value>Finnish</value>
+  </data>
+  <data name="Language_013" xml:space="preserve">
+    <value>Norsk</value>
+  </data>
+  <data name="Language_014" xml:space="preserve">
+    <value>Malay</value>
+  </data>
+  <data name="Language_015" xml:space="preserve">
+    <value>Indonesian</value>
+  </data>
+  <data name="Language_016" xml:space="preserve">
+    <value>Portuguese</value>
+  </data>
+  <data name="Language_017" xml:space="preserve">
+    <value>Italian</value>
+  </data>
+  <data name="Language_018" xml:space="preserve">
+    <value>Dutch</value>
+  </data>
+  <data name="Language_019" xml:space="preserve">
+    <value>Russian</value>
+  </data>
+  <data name="Language_020" xml:space="preserve">
+    <value>Slovakia</value>
+  </data>
+  <data name="Language_021" xml:space="preserve">
+    <value>Cyrillic</value>
+  </data>
+  <data name="Language_022" xml:space="preserve">
+    <value>Estonian</value>
+  </data>
+  <data name="Language_203" xml:space="preserve">
+    <value>Czech Republic</value>
+  </data>
+  <data name="OrderStatus_00" xml:space="preserve">
+    <value>Incomplete</value>
+  </data>
+  <data name="OrderStatus_01" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="OrderStatus_02" xml:space="preserve">
+    <value>CC Declined</value>
+  </data>
+  <data name="OrderStatus_03" xml:space="preserve">
+    <value>ACH Declined</value>
+  </data>
+  <data name="OrderStatus_04" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="OrderStatus_05" xml:space="preserve">
+    <value>CC Pending</value>
+  </data>
+  <data name="OrderStatus_06" xml:space="preserve">
+    <value>ACH Pending</value>
+  </data>
+  <data name="OrderStatus_07" xml:space="preserve">
+    <value>Accepted</value>
+  </data>
+  <data name="OrderStatus_08" xml:space="preserve">
+    <value>Printed</value>
+  </data>
+  <data name="OrderStatus_09" xml:space="preserve">
+    <value>Shipped</value>
+  </data>
+  <data name="OrderStatus_10" xml:space="preserve">
+    <value>Pending Inventory</value>
+  </data>
+  <data name="PayableType_00" xml:space="preserve">
+    <value>Cash</value>
+  </data>
+  <data name="PayableType_01" xml:space="preserve">
+    <value>Credit Card</value>
+  </data>
+  <data name="PayableType_02" xml:space="preserve">
+    <value>Check</value>
+  </data>
+  <data name="PayableType_03" xml:space="preserve">
+    <value>Credit Voucher</value>
+  </data>
+  <data name="PayableType_04" xml:space="preserve">
+    <value>Net 30</value>
+  </data>
+  <data name="PayableType_05" xml:space="preserve">
+    <value>Net 60</value>
+  </data>
+  <data name="PayableType_06" xml:space="preserve">
+    <value>Use Credit</value>
+  </data>
+  <data name="PayableType_07" xml:space="preserve">
+    <value>ACH Debit</value>
+  </data>
+  <data name="PayableType_08" xml:space="preserve">
+    <value>Bank Draft</value>
+  </data>
+  <data name="PayableType_09" xml:space="preserve">
+    <value>Wire Transfer</value>
+  </data>
+  <data name="PayableType_10" xml:space="preserve">
+    <value>Point Redemption</value>
+  </data>
+  <data name="PayableType_11" xml:space="preserve">
+    <value>COD</value>
+  </data>
+  <data name="PayableType_12" xml:space="preserve">
+    <value>Money Order</value>
+  </data>
+  <data name="PayableType_13" xml:space="preserve">
+    <value>Bank Deposit</value>
+  </data>
+  <data name="PayableType_14" xml:space="preserve">
+    <value>Other 1</value>
+  </data>
+  <data name="PayableType_15" xml:space="preserve">
+    <value>Other 2</value>
+  </data>
+  <data name="PayableType_16" xml:space="preserve">
+    <value>Other 3</value>
+  </data>
+  <data name="PayableType_17" xml:space="preserve">
+    <value>Wallet</value>
+  </data>
+  <data name="PaymentType_00" xml:space="preserve">
+    <value>Cash</value>
+  </data>
+  <data name="PaymentType_01" xml:space="preserve">
+    <value>Credit Card</value>
+  </data>
+  <data name="PaymentType_02" xml:space="preserve">
+    <value>Check</value>
+  </data>
+  <data name="PaymentType_03" xml:space="preserve">
+    <value>Credit Voucher</value>
+  </data>
+  <data name="PaymentType_04" xml:space="preserve">
+    <value>Net 30</value>
+  </data>
+  <data name="PaymentType_05" xml:space="preserve">
+    <value>Net 60</value>
+  </data>
+  <data name="PaymentType_06" xml:space="preserve">
+    <value>Use Credit</value>
+  </data>
+  <data name="PaymentType_07" xml:space="preserve">
+    <value>ACH Debit</value>
+  </data>
+  <data name="PaymentType_08" xml:space="preserve">
+    <value>Bank Draft</value>
+  </data>
+  <data name="PaymentType_09" xml:space="preserve">
+    <value>Wire Transfer</value>
+  </data>
+  <data name="PaymentType_10" xml:space="preserve">
+    <value>Point Redemption</value>
+  </data>
+  <data name="PaymentType_11" xml:space="preserve">
+    <value>COD</value>
+  </data>
+  <data name="PaymentType_12" xml:space="preserve">
+    <value>Money Order</value>
+  </data>
+  <data name="PaymentType_13" xml:space="preserve">
+    <value>Bank Deposit</value>
+  </data>
+  <data name="PaymentType_14" xml:space="preserve">
+    <value>Other 1</value>
+  </data>
+  <data name="PaymentType_15" xml:space="preserve">
+    <value>Other 2</value>
+  </data>
+  <data name="PaymentType_16" xml:space="preserve">
+    <value>Other 3</value>
+  </data>
+  <data name="PaymentType_17" xml:space="preserve">
+    <value>Wallet</value>
+  </data>
+  <data name="PeriodType_001" xml:space="preserve">
+    <value>Weekly</value>
+  </data>
+  <data name="PointAccount_01" xml:space="preserve">
+    <value>Referral Points</value>
+  </data>
+  <data name="PointAccount_02" xml:space="preserve">
+    <value>Rewards Program</value>
+  </data>
+  <data name="PointAccount_03" xml:space="preserve">
+    <value>Wallet Account US</value>
+  </data>
+  <data name="PointAccount_04" xml:space="preserve">
+    <value>Wallet Account Pesos</value>
+  </data>
+  <data name="PointAccount_05" xml:space="preserve">
+    <value>Party Plan Credits</value>
+  </data>
+  <data name="PointAccount_06" xml:space="preserve">
+    <value>Virtual Bank</value>
+  </data>
+  <data name="PointAccount_07" xml:space="preserve">
+    <value>Cleanings</value>
+  </data>
+  <data name="Rank_00" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Rank_01" xml:space="preserve">
+    <value>Apprentice</value>
+  </data>
+  <data name="Rank_10" xml:space="preserve">
+    <value>Builder</value>
+  </data>
+  <data name="Rank_20" xml:space="preserve">
+    <value>Senior Builder</value>
+  </data>
+  <data name="Rank_30" xml:space="preserve">
+    <value>Director</value>
+  </data>
+  <data name="Rank_40" xml:space="preserve">
+    <value>Senior Director</value>
+  </data>
+  <data name="Rank_50" xml:space="preserve">
+    <value>Professional</value>
+  </data>
+  <data name="Rank_60" xml:space="preserve">
+    <value>Senior Professional</value>
+  </data>
+  <data name="Rank_70" xml:space="preserve">
+    <value>Executive</value>
+  </data>
+  <data name="Rank_80" xml:space="preserve">
+    <value>Senior Executive</value>
+  </data>
+  <data name="Rank_90" xml:space="preserve">
+    <value>Ambassador</value>
+  </data>
+  <data name="Rank_100" xml:space="preserve">
+    <value>Presidential Ambassador</value>
+  </data>
+  <data name="Subscription_01" xml:space="preserve">
+    <value>Backoffice Features</value>
+  </data>
+  <data name="Subscription_02" xml:space="preserve">
+    <value>Renewal</value>
+  </data>
+  <data name="Subscription_03" xml:space="preserve">
+    <value>Replicated Site</value>
+  </data>
+  <data name="Subscription_04" xml:space="preserve">
+    <value>Accum Test</value>
+  </data>
+  <data name="Subscription_05" xml:space="preserve">
+    <value>Pay Forward Test</value>
+  </data>
+  <data name="Subscription_06" xml:space="preserve">
+    <value>Reset Test</value>
+  </data>
+  <data name="Subscription_07" xml:space="preserve">
+    <value>Cleanings</value>
+  </data>
+  <data name="Subscription_08" xml:space="preserve">
+    <value>TEST</value>
+  </data>
+  <data name="Subscription_09" xml:space="preserve">
+    <value>BOSS</value>
+  </data>
+  <data name="Subscription_10" xml:space="preserve">
+    <value>Test For Ryte</value>
+  </data>
+  <data name="Volume_043" xml:space="preserve">
+    <value>Active Distributors in Enrollment Tree</value>
+  </data>
+  <data name="Volume_042" xml:space="preserve">
+    <value>Personal Retail Volume</value>
+  </data>
+  <data name="Volume_041" xml:space="preserve">
+    <value>Returned BV</value>
+  </data>
+  <data name="Volume_040" xml:space="preserve">
+    <value>Weekly BV Total</value>
+  </data>
+  <data name="Volume_039" xml:space="preserve">
+    <value>Personally Enrolled Dist Volume</value>
+  </data>
+  <data name="Volume_038" xml:space="preserve">
+    <value>Personal Enrollment Group Volume</value>
+  </data>
+  <data name="Volume_037" xml:space="preserve">
+    <value>Personal Retail Customers</value>
+  </data>
+  <data name="Volume_036" xml:space="preserve">
+    <value>Personally Enrolled Distributors</value>
+  </data>
+  <data name="Volume_035" xml:space="preserve">
+    <value>Qualified C-500 Legs</value>
+  </data>
+  <data name="Volume_034" xml:space="preserve">
+    <value>Performance Pack</value>
+  </data>
+  <data name="Volume_033" xml:space="preserve">
+    <value>NRGV Before Adjustments</value>
+  </data>
+  <data name="Volume_032" xml:space="preserve">
+    <value>NLGV Before Adjustments</value>
+  </data>
+  <data name="Volume_031" xml:space="preserve">
+    <value>12 week Retail Volume</value>
+  </data>
+  <data name="Volume_030" xml:space="preserve">
+    <value>PCV For 4 Week Period</value>
+  </data>
+  <data name="Volume_029" xml:space="preserve">
+    <value>Qualified Backoffice</value>
+  </data>
+  <data name="Volume_028" xml:space="preserve">
+    <value>Excess Volume PCV Amount</value>
+  </data>
+  <data name="Volume_027" xml:space="preserve">
+    <value>Excess Volume This Period</value>
+  </data>
+  <data name="Volume_026" xml:space="preserve">
+    <value>Starter Pack Purchase</value>
+  </data>
+  <data name="Volume_025" xml:space="preserve">
+    <value>PE Active Right Leg</value>
+  </data>
+  <data name="Volume_024" xml:space="preserve">
+    <value>PE Active Left Leg</value>
+  </data>
+  <data name="Volume_023" xml:space="preserve">
+    <value>High Performance Item Purchased</value>
+  </data>
+  <data name="Volume_022" xml:space="preserve">
+    <value>Retail Customer PV</value>
+  </data>
+  <data name="Volume_021" xml:space="preserve">
+    <value>Credit Card Total</value>
+  </data>
+  <data name="Volume_020" xml:space="preserve">
+    <value>Active Replenish</value>
+  </data>
+  <data name="Volume_019" xml:space="preserve">
+    <value>Personally Enrolled Active Distributors</value>
+  </data>
+  <data name="Volume_018" xml:space="preserve">
+    <value>Period PCV</value>
+  </data>
+  <data name="Volume_017" xml:space="preserve">
+    <value>Lesser Leg Volume Added</value>
+  </data>
+  <data name="Volume_016" xml:space="preserve">
+    <value>PCBV</value>
+  </data>
+  <data name="Volume_015" xml:space="preserve">
+    <value>New Right Group Volume</value>
+  </data>
+  <data name="Volume_014" xml:space="preserve">
+    <value>New Left Group Volume</value>
+  </data>
+  <data name="Volume_013" xml:space="preserve">
+    <value>Carry Forward Right Group Volume</value>
+  </data>
+  <data name="Volume_012" xml:space="preserve">
+    <value>Carry Forward Left Group Volume</value>
+  </data>
+  <data name="Volume_011" xml:space="preserve">
+    <value>Right Group Volume</value>
+  </data>
+  <data name="Volume_010" xml:space="preserve">
+    <value>Left Group Volume</value>
+  </data>
+  <data name="Volume_009" xml:space="preserve">
+    <value>Binary Matches</value>
+  </data>
+  <data name="Volume_008" xml:space="preserve">
+    <value>Binary Flush</value>
+  </data>
+  <data name="Volume_007" xml:space="preserve">
+    <value>Binary Bankable</value>
+  </data>
+  <data name="Volume_006" xml:space="preserve">
+    <value>Binary Qualified</value>
+  </data>
+  <data name="Volume_005" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Volume_004" xml:space="preserve">
+    <value>TGBV</value>
+  </data>
+  <data name="Volume_003" xml:space="preserve">
+    <value>GCV</value>
+  </data>
+  <data name="Volume_002" xml:space="preserve">
+    <value>PBV</value>
+  </data>
+  <data name="Volume_001" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="AddItemsText" xml:space="preserve">
+    <value>Add additional items to your Replenish below. You can adjust the quantities from the Your Cart tab once an item has been added.</value>
+  </data>
+  <data name="AddItemUppercase" xml:space="preserve">
+    <value>ADD ITEM</value>
+  </data>
+  <data name="AddNewAddress" xml:space="preserve">
+    <value>Add a new address</value>
+  </data>
+  <data name="AnUnexpectedErrorHasOccurred" xml:space="preserve">
+    <value>An unexpected error has occurred.</value>
+  </data>
+  <data name="AutoOrderItemsUpdated" xml:space="preserve">
+    <value>Replenish Items Updated</value>
+  </data>
+  <data name="AutoOrderPreference" xml:space="preserve">
+    <value>Manage My Replenish</value>
+  </data>
+  <data name="AutoOrderSetting" xml:space="preserve">
+    <value>Replenish Settings</value>
+  </data>
+  <data name="BasicInfo" xml:space="preserve">
+    <value>Basic Information</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CancelUppercase" xml:space="preserve">
+    <value>CANCEL</value>
+  </data>
+  <data name="Card" xml:space="preserve">
+    <value>Card</value>
+  </data>
+  <data name="CardEndingIn" xml:space="preserve">
+    <value>Card ending in</value>
+  </data>
+  <data name="CardNumber" xml:space="preserve">
+    <value>Card number</value>
+  </data>
+  <data name="CashPayments" xml:space="preserve">
+    <value>Cash Payments</value>
+  </data>
+  <data name="ClickToAdd" xml:space="preserve">
+    <value>Click to add product to Replenish</value>
+  </data>
+  <data name="ClickToManagePayments" xml:space="preserve">
+    <value>Click to modify your credit cards</value>
+  </data>
+  <data name="CommissionSetting" xml:space="preserve">
+    <value>Commission Settings</value>
+  </data>
+  <data name="ContactInfo" xml:space="preserve">
+    <value>Contact Information</value>
+  </data>
+  <data name="CreditCardType" xml:space="preserve">
+    <value>Credit Card Type</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="EditAddToOrder" xml:space="preserve">
+    <value>Edit/Add to Order</value>
+  </data>
+  <data name="EditingAutoOrderBankAccounts" xml:space="preserve">
+    <value>Editing Replenish Bank Accounts</value>
+  </data>
+  <data name="EditingAutoOrderCreditCards" xml:space="preserve">
+    <value>Editing Replenish Credit Cards</value>
+  </data>
+  <data name="EditPaymentMethod" xml:space="preserve">
+    <value>Edit Payment Method</value>
+  </data>
+  <data name="EditProcessDate" xml:space="preserve">
+    <value>Edit Processing Date</value>
+  </data>
+  <data name="EditShipMethod" xml:space="preserve">
+    <value>Edit Ship Method</value>
+  </data>
+  <data name="EditShippingAddress" xml:space="preserve">
+    <value>Edit Shipping Address</value>
+  </data>
+  <data name="EnrollerSponsor" xml:space="preserve">
+    <value>Enroller/Sponsor</value>
+  </data>
+  <data name="ExpirationDate" xml:space="preserve">
+    <value>Expiration Date</value>
+  </data>
+  <data name="ExpirationMonth" xml:space="preserve">
+    <value>Expiration Month</value>
+  </data>
+  <data name="Expires" xml:space="preserve">
+    <value>Expires</value>
+  </data>
+  <data name="FrequencyUppercase" xml:space="preserve">
+    <value>FREQUENCY</value>
+  </data>
+  <data name="Items" xml:space="preserve">
+    <value>Items</value>
+  </data>
+  <data name="ItemsUppercase" xml:space="preserve">
+    <value>ITEMS</value>
+  </data>
+  <data name="Monthly" xml:space="preserve">
+    <value>Monthly</value>
+  </data>
+  <data name="NameOnCard" xml:space="preserve">
+    <value>Name on your card</value>
+  </data>
+  <data name="NextProcessDate" xml:space="preserve">
+    <value>Next Process Date</value>
+  </data>
+  <data name="Order" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="OrderNumber" xml:space="preserve">
+    <value>Order Number</value>
+  </data>
+  <data name="OrderUppercase" xml:space="preserve">
+    <value>ORDER</value>
+  </data>
+  <data name="PaidWith" xml:space="preserve">
+    <value>Paid with</value>
+  </data>
+  <data name="Payment" xml:space="preserve">
+    <value>Payment</value>
+  </data>
+  <data name="PaymentMethod" xml:space="preserve">
+    <value>Payment Method</value>
+  </data>
+  <data name="PaymentMethodUpdated" xml:space="preserve">
+    <value>Payment Method Updated</value>
+  </data>
+  <data name="PrimaryCardOnFile" xml:space="preserve">
+    <value>Primary Card on file</value>
+  </data>
+  <data name="ProblemWithInformationText" xml:space="preserve">
+    <value>There was a problem with the information you entered, please try again.</value>
+  </data>
+  <data name="ProcessDateUpdate" xml:space="preserve">
+    <value>Processing Date Updated</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>Processing</value>
+  </data>
+  <data name="ProcessingOn" xml:space="preserve">
+    <value>Processing on</value>
+  </data>
+  <data name="ProductUppercase" xml:space="preserve">
+    <value>PRODUCT</value>
+  </data>
+  <data name="QTY" xml:space="preserve">
+    <value>QTY</value>
+  </data>
+  <data name="SaveChanges" xml:space="preserve">
+    <value>Save Changes</value>
+  </data>
+  <data name="SavedPaymentMethods" xml:space="preserve">
+    <value>SAVED PAYMENT METHODS</value>
+  </data>
+  <data name="SavePrimaryAddress" xml:space="preserve">
+    <value>Save this as my primary address</value>
+  </data>
+  <data name="SaveUppercase" xml:space="preserve">
+    <value>SAVE</value>
+  </data>
+  <data name="SecondaryCardOnFile" xml:space="preserve">
+    <value>Secondary Card on file</value>
+  </data>
+  <data name="SecurityReEnterAccountNumber" xml:space="preserve">
+    <value>For security purposes, please re-enter your account number</value>
+  </data>
+  <data name="SetPrimary" xml:space="preserve">
+    <value>Set as primary</value>
+  </data>
+  <data name="ShipMethod" xml:space="preserve">
+    <value>Ship Method</value>
+  </data>
+  <data name="ShipMethodUpdated" xml:space="preserve">
+    <value>Ship Method Updated</value>
+  </data>
+  <data name="ShippingAddress" xml:space="preserve">
+    <value>Shipping Address</value>
+  </data>
+  <data name="ShippingAddressUpdated" xml:space="preserve">
+    <value>Shipping Address Updated</value>
+  </data>
+  <data name="ShipTo" xml:space="preserve">
+    <value>Ship to</value>
+  </data>
+  <data name="Sorry" xml:space="preserve">
+    <value>Sorry</value>
+  </data>
+  <data name="SorryErrorText" xml:space="preserve">
+    <value>Sorry, there was an error.</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="UnitPriceUppercase" xml:space="preserve">
+    <value>UNIT PRICE</value>
+  </data>
+  <data name="UPCNumber" xml:space="preserve">
+    <value>UPC #</value>
+  </data>
+  <data name="UPCPound" xml:space="preserve">
+    <value>UPC #</value>
+  </data>
+  <data name="WhatIsYourEmail" xml:space="preserve">
+    <value>What's Your Email Address</value>
+  </data>
+  <data name="WhatIsYourFacebook" xml:space="preserve">
+    <value>What's your Facebook username?</value>
+  </data>
+  <data name="WhatURLIsYourImage" xml:space="preserve">
+    <value>What URL is your image found at?</value>
+  </data>
+  <data name="YouDoNotHaveAnyAutoOrder" xml:space="preserve">
+    <value>You do not have any Replenish at this time.</value>
+  </data>
+  <data name="YourAccount" xml:space="preserve">
+    <value>Your Account</value>
+  </data>
+  <data name="YourAOPS" xml:space="preserve">
+    <value>Your Replenish</value>
+  </data>
+  <data name="YourCartUppercase" xml:space="preserve">
+    <value>YOUR CART</value>
+  </data>
+  <data name="YourOrder" xml:space="preserve">
+    <value>Your Order</value>
+  </data>
+  <data name="YourProfilePicture" xml:space="preserve">
+    <value>Your Profile Picture</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="AccountEndingIn" xml:space="preserve">
+    <value>account ending in</value>
+  </data>
+  <data name="AccountNumber" xml:space="preserve">
+    <value>Account Number</value>
+  </data>
+  <data name="AccountNumberError" xml:space="preserve">
+    <value>Please validate that your account number is correct.</value>
+  </data>
+  <data name="AccountNumberRules" xml:space="preserve">
+    <value>Account Number</value>
+  </data>
+  <data name="AccountSettings" xml:space="preserve">
+    <value>Account Settings</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="Activity" xml:space="preserve">
+    <value>Activity</value>
+  </data>
+  <data name="AddBankAccount" xml:space="preserve">
+    <value>Add a checking account</value>
+  </data>
+  <data name="AddCard" xml:space="preserve">
+    <value>Add a card</value>
+  </data>
+  <data name="AddNewBankAccount" xml:space="preserve">
+    <value>Add a new bank account</value>
+  </data>
+  <data name="AddNewCreditCard" xml:space="preserve">
+    <value>Add a new credit card</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="Address2Placeholder" xml:space="preserve">
+    <value>Apartment, suite, unit, building, floor, etc.</value>
+  </data>
+  <data name="Addresses" xml:space="preserve">
+    <value>Addresses</value>
+  </data>
+  <data name="AddToCart" xml:space="preserve">
+    <value>Add to Cart</value>
+  </data>
+  <data name="After" xml:space="preserve">
+    <value>After</value>
+  </data>
+  <data name="Agenda" xml:space="preserve">
+    <value>Agenda</value>
+  </data>
+  <data name="AllDay" xml:space="preserve">
+    <value>All day</value>
+  </data>
+  <data name="AllOrders" xml:space="preserve">
+    <value>All Orders</value>
+  </data>
+  <data name="AmountPaid" xml:space="preserve">
+    <value>Amount Paid</value>
+  </data>
+  <data name="AutoOrder" xml:space="preserve">
+    <value>Replenish</value>
+  </data>
+  <data name="AutoOrderBankAccount" xml:space="preserve">
+    <value>Replenish Bank Account</value>
+  </data>
+  <data name="AutoOrderBankAccountCannotBeDeleted" xml:space="preserve">
+    <value>This bank account cannot be deleted while it is still being used by a Replenish.</value>
+  </data>
+  <data name="AutoOrderCannotProcess_MissingPaymentMethod" xml:space="preserve">
+    <value>This Replenish cannot be processed because it is missing a valid payment method.</value>
+  </data>
+  <data name="AutoOrderCreditCard" xml:space="preserve">
+    <value>Replenish Card</value>
+  </data>
+  <data name="AutoOrderCreditCardCannotBeDeleted" xml:space="preserve">
+    <value>This credit card cannot be deleted while it is still being used by a Replenish.</value>
+  </data>
+  <data name="AutoOrderNotScheduled" xml:space="preserve">
+    <value>This auto order is not scheduled to process at this time.</value>
+  </data>
+  <data name="AutoOrders" xml:space="preserve">
+    <value>Replenish</value>
+  </data>
+  <data name="Avatar" xml:space="preserve">
+    <value>Avatar</value>
+  </data>
+  <data name="BackToTop" xml:space="preserve">
+    <value>Back to top</value>
+  </data>
+  <data name="BalanceForwarded" xml:space="preserve">
+    <value>Balance Forwarded</value>
+  </data>
+  <data name="BankAccountUsedAsAutoOrderPaymentMethod" xml:space="preserve">
+    <value>This bank account is being used as the payment method for {0} of your Replenish.</value>
+    <comment>{0} = Replenish count</comment>
+  </data>
+  <data name="BankName" xml:space="preserve">
+    <value>Bank Name</value>
+  </data>
+  <data name="BasicInformation" xml:space="preserve">
+    <value>Basic Information</value>
+  </data>
+  <data name="BilledTo" xml:space="preserve">
+    <value>Billed to</value>
+  </data>
+  <data name="BillingAddress" xml:space="preserve">
+    <value>Billing Address</value>
+  </data>
+  <data name="BillingAddressSameAsShipping" xml:space="preserve">
+    <value>My billing address is the same as my shipping address</value>
+  </data>
+  <data name="BinaryTreeViewer" xml:space="preserve">
+    <value>Binary Tree Viewer</value>
+    <comment>Dashboard Header</comment>
+  </data>
+  <data name="Blog" xml:space="preserve">
+    <value>Blog</value>
+  </data>
+  <data name="Bonus" xml:space="preserve">
+    <value>Bonus</value>
+  </data>
+  <data name="BonusID" xml:space="preserve">
+    <value>Bonus ID</value>
+  </data>
+  <data name="BV" xml:space="preserve">
+    <value>BV</value>
+  </data>
+  <data name="By" xml:space="preserve">
+    <value>By</value>
+  </data>
+  <data name="Calendar" xml:space="preserve">
+    <value>Calendar</value>
+  </data>
+  <data name="CancelAutoOrder" xml:space="preserve">
+    <value>Cancel Replenish</value>
+  </data>
+  <data name="CancelledOrders" xml:space="preserve">
+    <value>Cancelled Orders</value>
+  </data>
+  <data name="CancelOrder" xml:space="preserve">
+    <value>Cancel order</value>
+  </data>
+  <data name="Cart" xml:space="preserve">
+    <value>Cart</value>
+  </data>
+  <data name="ChangeSettings" xml:space="preserve">
+    <value>Change settings</value>
+  </data>
+  <data name="ChangesToAutoOrderBankAccounts" xml:space="preserve">
+    <value>You have {0} Replenish(s) using this bank account. Any changes will be automatically applied automatically to them.</value>
+    <comment>{0} = autoorder count</comment>
+  </data>
+  <data name="ChangesToAutoOrderCreditCards" xml:space="preserve">
+    <value>You have {0} Replenish using this credit card. Any changes will be automatically applied automatically to them.</value>
+    <comment>{0} = autoorder count</comment>
+  </data>
+  <data name="CheckingAccount" xml:space="preserve">
+    <value>Checking Account</value>
+  </data>
+  <data name="Checkout" xml:space="preserve">
+    <value>Checkout</value>
+  </data>
+  <data name="ChoosePassword" xml:space="preserve">
+    <value>Please choose a password</value>
+  </data>
+  <data name="ChoosePaymentMethod" xml:space="preserve">
+    <value>Choose a payment method</value>
+  </data>
+  <data name="ChooseShippingMethod" xml:space="preserve">
+    <value>Choose a shipping speed</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="CityStateZip" xml:space="preserve">
+    <value>City/State/Zip</value>
+  </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="CommissionPayout" xml:space="preserve">
+    <value>Commission Payout</value>
+  </data>
+  <data name="CompanyNews" xml:space="preserve">
+    <value>What's Happening</value>
+  </data>
+  <data name="Complete" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Please re-enter your password</value>
+  </data>
+  <data name="ContactInformation" xml:space="preserve">
+    <value>Contact Information</value>
+  </data>
+  <data name="CopyToCalendar" xml:space="preserve">
+    <value>Copy to my calendar</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="CreateAutoOrder" xml:space="preserve">
+    <value>Create your Replenish</value>
+  </data>
+  <data name="CreateEvent" xml:space="preserve">
+    <value>Create Event</value>
+  </data>
+  <data name="CreateNewEvent" xml:space="preserve">
+    <value>Create a new event...</value>
+  </data>
+  <data name="CreditCardUsedAsAutoOrderPaymentMethod" xml:space="preserve">
+    <value>This card is being used as the payment method for {0} of your Replenish.</value>
+    <comment>{0} = autoorder count</comment>
+  </data>
+  <data name="CreditDebitCards" xml:space="preserve">
+    <value>Credit/Debit Cards</value>
+  </data>
+  <data name="CurrentCommissions" xml:space="preserve">
+    <value>Current Commissions</value>
+  </data>
+  <data name="CurrentlyReceivingNotificationsAt" xml:space="preserve">
+    <value>You are currently receiving email notifications at</value>
+  </data>
+  <data name="CurrentRank" xml:space="preserve">
+    <value>Current Rank</value>
+  </data>
+  <data name="Customer" xml:space="preserve">
+    <value>Customer</value>
+  </data>
+  <data name="CV" xml:space="preserve">
+    <value>CV</value>
+  </data>
+  <data name="Daily" xml:space="preserve">
+    <value>Daily</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>Day</value>
+  </data>
+  <data name="DayOfMonth" xml:space="preserve">
+    <value>Day of the month</value>
+  </data>
+  <data name="DayOfWeek" xml:space="preserve">
+    <value>Day of the week</value>
+  </data>
+  <data name="Days" xml:space="preserve">
+    <value>Days</value>
+  </data>
+  <data name="DeclinedOrders" xml:space="preserve">
+    <value>Declined Orders</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="DirectDeposit" xml:space="preserve">
+    <value>Direct Deposit</value>
+  </data>
+  <data name="DistributorSince" xml:space="preserve">
+    <value>Distributor since</value>
+  </data>
+  <data name="DoNotRepeatEvent" xml:space="preserve">
+    <value>Do not repeat this event</value>
+  </data>
+  <data name="DontHaveDDText" xml:space="preserve">
+    <value>You do not have direct deposit information on file, click Create to set up your direct deposit bank account.</value>
+  </data>
+  <data name="DownlineAutoOrders" xml:space="preserve">
+    <value>Downline's Replenish</value>
+  </data>
+  <data name="DownlineOrders" xml:space="preserve">
+    <value>Downline's Orders</value>
+  </data>
+  <data name="DownlineRanks" xml:space="preserve">
+    <value>Downline Ranks</value>
+  </data>
+  <data name="Earned" xml:space="preserve">
+    <value>Earned</value>
+  </data>
+  <data name="Earnings" xml:space="preserve">
+    <value>Earnings</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="EditAvatar" xml:space="preserve">
+    <value>Edit Avatar</value>
+  </data>
+  <data name="EditEvent" xml:space="preserve">
+    <value>Edit event</value>
+  </data>
+  <data name="EditSeries" xml:space="preserve">
+    <value>Edit series</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="EmailVerified" xml:space="preserve">
+    <value>Thank you! Your email has been verified, and you will now receive notifications.</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="Ends" xml:space="preserve">
+    <value>Ends</value>
+  </data>
+  <data name="Enroller" xml:space="preserve">
+    <value>Enroller</value>
+  </data>
+  <data name="EnrollNew" xml:space="preserve">
+    <value>Enroll new</value>
+  </data>
+  <data name="EnterAPersonalMessage" xml:space="preserve">
+    <value>Enter a personal message to display on your site.</value>
+  </data>
+  <data name="EnterLocation" xml:space="preserve">
+    <value>Enter a location</value>
+  </data>
+  <data name="EssentialReports" xml:space="preserve">
+    <value>Essential Reports</value>
+    <comment>DashboardHeader</comment>
+  </data>
+  <data name="Estimated" xml:space="preserve">
+    <value>Estimated</value>
+  </data>
+  <data name="EstimatedTotal" xml:space="preserve">
+    <value>Estimated Total</value>
+  </data>
+  <data name="Event" xml:space="preserve">
+    <value>Event</value>
+  </data>
+  <data name="EventDetails" xml:space="preserve">
+    <value>Event Details</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>Events</value>
+  </data>
+  <data name="EventType" xml:space="preserve">
+    <value>Event Type</value>
+  </data>
+  <data name="EventTypes" xml:space="preserve">
+    <value>Event Types</value>
+  </data>
+  <data name="Expired" xml:space="preserve">
+    <value>Expired</value>
+  </data>
+  <data name="Facebook" xml:space="preserve">
+    <value>Facebook</value>
+  </data>
+  <data name="Fax" xml:space="preserve">
+    <value>Fax</value>
+  </data>
+  <data name="Faxes" xml:space="preserve">
+    <value>Faxes</value>
+  </data>
+  <data name="Fee" xml:space="preserve">
+    <value>Fee</value>
+  </data>
+  <data name="FindSponsorByNameOrID" xml:space="preserve">
+    <value>Find a sponsor by name or ID...</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="Go" xml:space="preserve">
+    <value>Go</value>
+  </data>
+  <data name="GoBack" xml:space="preserve">
+    <value>Go Back</value>
+  </data>
+  <data name="GrandTotal" xml:space="preserve">
+    <value>Grand Total</value>
+  </data>
+  <data name="Gravatar" xml:space="preserve">
+    <value>Gravatar</value>
+  </data>
+  <data name="Hours" xml:space="preserve">
+    <value>Hours</value>
+  </data>
+  <data name="ID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Invoice" xml:space="preserve">
+    <value>Invoice</value>
+  </data>
+  <data name="ItemsToBuyNow" xml:space="preserve">
+    <value>item(s) to buy now</value>
+  </data>
+  <data name="ItemsWillProcessOn" xml:space="preserve">
+    <value>{0} item(s) will process on:</value>
+    <comment>{0} = item quantity</comment>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+  <data name="LastProcessDate" xml:space="preserve">
+    <value>Last Process Date</value>
+  </data>
+  <data name="LeadSource" xml:space="preserve">
+    <value>Lead Source</value>
+  </data>
+  <data name="Level" xml:space="preserve">
+    <value>Level</value>
+  </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="ManagePaymentMethods" xml:space="preserve">
+    <value>Manage your payment methods</value>
+  </data>
+  <data name="ManageResources" xml:space="preserve">
+    <value>Manage Resources</value>
+    <comment>Dashboard / Navigation Header</comment>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="Minutes" xml:space="preserve">
+    <value>Minutes</value>
+  </data>
+  <data name="Month" xml:space="preserve">
+    <value>Month</value>
+  </data>
+  <data name="Months" xml:space="preserve">
+    <value>Months</value>
+  </data>
+  <data name="MorePaymentOptions" xml:space="preserve">
+    <value>More Payment Options</value>
+  </data>
+  <data name="MustBePlacedBy" xml:space="preserve">
+    <value>Must be placed by</value>
+    <comment>Waiting Room</comment>
+  </data>
+  <data name="MyCart" xml:space="preserve">
+    <value>My Cart</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="NameOfBank" xml:space="preserve">
+    <value>Name of your bank</value>
+  </data>
+  <data name="NameOnAccount" xml:space="preserve">
+    <value>Name on your account</value>
+  </data>
+  <data name="NameOnYourAccount" xml:space="preserve">
+    <value>Name on your account</value>
+  </data>
+  <data name="Never" xml:space="preserve">
+    <value>Never</value>
+  </data>
+  <data name="NewCopiedEvent" xml:space="preserve">
+    <value>New Copied Event</value>
+  </data>
+  <data name="NewDistributorsList" xml:space="preserve">
+    <value>New Associates List</value>
+  </data>
+  <data name="Newer" xml:space="preserve">
+    <value>Newer</value>
+  </data>
+  <data name="NewEvent" xml:space="preserve">
+    <value>New Event</value>
+  </data>
+  <data name="NextRank" xml:space="preserve">
+    <value>Next Rank</value>
+  </data>
+  <data name="NoAutoOrderFound" xml:space="preserve">
+    <value>No Replenish found.</value>
+    <comment>Conditional statement if page is empty</comment>
+  </data>
+  <data name="NoItemsInCart" xml:space="preserve">
+    <value>You don't have any items in your cart yet.</value>
+  </data>
+  <data name="NoItemsPurchased" xml:space="preserve">
+    <value>* No items were purchased with this order *</value>
+  </data>
+  <data name="NoItemsPurchasedInOrder" xml:space="preserve">
+    <value>No items were purchased with this order</value>
+  </data>
+  <data name="NoOrdersFound" xml:space="preserve">
+    <value>No orders found</value>
+  </data>
+  <data name="NoPaymentMethod" xml:space="preserve">
+    <value>No payment method</value>
+  </data>
+  <data name="NoRecentActivity" xml:space="preserve">
+    <value>Your team has no recent activity.</value>
+    <comment>Conditional statement if page is empty</comment>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="NotificationStatus" xml:space="preserve">
+    <value>Notification Status</value>
+  </data>
+  <data name="NotificationSubscriptionInstructions" xml:space="preserve">
+    <value>To subscribe to company emails, click the "Subscribe" button below. An email will be sent to verify your email address.</value>
+    <comment>S</comment>
+  </data>
+  <data name="Occurrences" xml:space="preserve">
+    <value>Occrrences</value>
+  </data>
+  <data name="Older" xml:space="preserve">
+    <value>Older</value>
+  </data>
+  <data name="On" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="OpenOrders" xml:space="preserve">
+    <value>Open Orders</value>
+  </data>
+  <data name="OrderComplete" xml:space="preserve">
+    <value>Order Complete</value>
+  </data>
+  <data name="OrderDate" xml:space="preserve">
+    <value>Order Date</value>
+  </data>
+  <data name="Ordered" xml:space="preserve">
+    <value>Ordered</value>
+  </data>
+  <data name="OrderHistory" xml:space="preserve">
+    <value>Order History</value>
+  </data>
+  <data name="Orders" xml:space="preserve">
+    <value>Orders</value>
+  </data>
+  <data name="OrdersFound" xml:space="preserve">
+    <value>Orders found</value>
+  </data>
+  <data name="OrderSummary" xml:space="preserve">
+    <value>Order Summary</value>
+  </data>
+  <data name="OrEnterNewAddress" xml:space="preserve">
+    <value>Or enter a new address</value>
+  </data>
+  <data name="Organization" xml:space="preserve">
+    <value>Organization</value>
+  </data>
+  <data name="PageNotFound" xml:space="preserve">
+    <value>Page Not Found</value>
+  </data>
+  <data name="PageNotFoundInstructions" xml:space="preserve">
+    <value>We couldn't find the page you were looking for.</value>
+  </data>
+  <data name="PaidLevel" xml:space="preserve">
+    <value>Paid Level</value>
+  </data>
+  <data name="PaidRank" xml:space="preserve">
+    <value>Paid Rank</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="PathFullfullment" xml:space="preserve">
+    <value>Fulfillment of any path below will qualify you.</value>
+    <comment>Rank Advancement</comment>
+  </data>
+  <data name="PaymentMethods" xml:space="preserve">
+    <value>Payment Methods</value>
+  </data>
+  <data name="PayWithThisAccount" xml:space="preserve">
+    <value>Pay with this account</value>
+  </data>
+  <data name="PayWithThisCard" xml:space="preserve">
+    <value>Pay with this card</value>
+  </data>
+  <data name="Period" xml:space="preserve">
+    <value>Period</value>
+  </data>
+  <data name="Period1" xml:space="preserve">
+    <value>Period</value>
+  </data>
+  <data name="PersonallyEnrolledTeam" xml:space="preserve">
+    <value>Personally Enrolled Team</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="PhoneNumbers" xml:space="preserve">
+    <value>Phone Numbers</value>
+  </data>
+  <data name="Place" xml:space="preserve">
+    <value>Place</value>
+    <comment>Waiting Room</comment>
+  </data>
+  <data name="PlaceOrder" xml:space="preserve">
+    <value>Place your order</value>
+  </data>
+  <data name="PreferredCustomers" xml:space="preserve">
+    <value>Preferred Customers</value>
+  </data>
+  <data name="PreviousBalance" xml:space="preserve">
+    <value>Previous Balance</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="PricePerUnit" xml:space="preserve">
+    <value>Price per unit</value>
+  </data>
+  <data name="Primary" xml:space="preserve">
+    <value>Primary</value>
+  </data>
+  <data name="Print" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="PrintInvoice" xml:space="preserve">
+    <value>Print invoice</value>
+  </data>
+  <data name="Privacy" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="Private" xml:space="preserve">
+    <value>Private</value>
+  </data>
+  <data name="ProceedToCheckout" xml:space="preserve">
+    <value>Proceed to Checkout</value>
+  </data>
+  <data name="ProductDescription" xml:space="preserve">
+    <value>Product Description</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>Products</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Public" xml:space="preserve">
+    <value>Public</value>
+  </data>
+  <data name="Qualified" xml:space="preserve">
+    <value>Qualified</value>
+  </data>
+  <data name="QualifiedAs" xml:space="preserve">
+    <value>Qualified as</value>
+  </data>
+  <data name="QualifyingAs" xml:space="preserve">
+    <value>Qualifying as</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="Rank" xml:space="preserve">
+    <value>Rank</value>
+  </data>
+  <data name="RankAdvancement" xml:space="preserve">
+    <value>Rank Advancement</value>
+  </data>
+  <data name="RecentActivityList" xml:space="preserve">
+    <value>Recent Activity List</value>
+  </data>
+  <data name="ReEnterAccountNumber" xml:space="preserve">
+    <value>For security purposes, please re-enter your account number.</value>
+  </data>
+  <data name="ReEnterCardNumber" xml:space="preserve">
+    <value>For security purposes, please re-enter your credit card number.</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Repeat" xml:space="preserve">
+    <value>Repeat</value>
+  </data>
+  <data name="RepeatBy" xml:space="preserve">
+    <value>Repeat by</value>
+  </data>
+  <data name="RepeatEvery" xml:space="preserve">
+    <value>Repeat every</value>
+  </data>
+  <data name="RepeatOn" xml:space="preserve">
+    <value>Repeat on</value>
+  </data>
+  <data name="Repeats" xml:space="preserve">
+    <value>Repeats</value>
+  </data>
+  <data name="RepeatSettings" xml:space="preserve">
+    <value>Repeat Settings</value>
+  </data>
+  <data name="Requirements" xml:space="preserve">
+    <value>Requirements</value>
+  </data>
+  <data name="Resources" xml:space="preserve">
+    <value>Resources</value>
+  </data>
+  <data name="ResourcesLibrary" xml:space="preserve">
+    <value>Resources Library</value>
+    <comment>Dashboard / Navigation Header</comment>
+  </data>
+  <data name="RetailCustomers" xml:space="preserve">
+    <value>Retail Customers</value>
+  </data>
+  <data name="ReturnedOrders" xml:space="preserve">
+    <value>Returned Orders</value>
+  </data>
+  <data name="Review" xml:space="preserve">
+    <value>Review</value>
+  </data>
+  <data name="ReviewYourAutoOrder" xml:space="preserve">
+    <value>Review your Replenish</value>
+  </data>
+  <data name="ReviewYourOrder" xml:space="preserve">
+    <value>Review your order</value>
+  </data>
+  <data name="RoutingNumber" xml:space="preserve">
+    <value>Routing Number</value>
+  </data>
+  <data name="RoutingNumberError" xml:space="preserve">
+    <value>Please validate that your routing number is correct.</value>
+  </data>
+  <data name="SaveAsPrimaryAddress" xml:space="preserve">
+    <value>Save this as my primary address</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="SearchResults" xml:space="preserve">
+    <value>Search Results</value>
+  </data>
+  <data name="Secondary" xml:space="preserve">
+    <value>Secondary</value>
+  </data>
+  <data name="SelectPaymentMethod" xml:space="preserve">
+    <value>Select a payment method</value>
+  </data>
+  <data name="SelectShippingAddress" xml:space="preserve">
+    <value>Select a shipping address</value>
+  </data>
+  <data name="SendFaxesTo" xml:space="preserve">
+    <value>Send faxes to</value>
+  </data>
+  <data name="SendTextsTo" xml:space="preserve">
+    <value>Send texts to</value>
+  </data>
+  <data name="SetAsPrimary" xml:space="preserve">
+    <value>Set as primary</value>
+  </data>
+  <data name="Shipped" xml:space="preserve">
+    <value>Shipped</value>
+  </data>
+  <data name="ShippedOrders" xml:space="preserve">
+    <value>Shipped Orders</value>
+  </data>
+  <data name="ShippedTo" xml:space="preserve">
+    <value>Shipped to</value>
+  </data>
+  <data name="Shipping" xml:space="preserve">
+    <value>Shipping</value>
+  </data>
+  <data name="ShippingAndHandling" xml:space="preserve">
+    <value>Shipping &amp; handling</value>
+  </data>
+  <data name="ShipToThisAddress" xml:space="preserve">
+    <value>Ship to this address</value>
+  </data>
+  <data name="Shopping" xml:space="preserve">
+    <value>Shopping</value>
+  </data>
+  <data name="SignIn" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="SignOut" xml:space="preserve">
+    <value>Sign out</value>
+  </data>
+  <data name="SKU" xml:space="preserve">
+    <value>SKU</value>
+  </data>
+  <data name="SocialMedia" xml:space="preserve">
+    <value>Social Media</value>
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="Sponsor" xml:space="preserve">
+    <value>Sponsor</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="StartNewAutoOrder" xml:space="preserve">
+    <value>Start a new Replenish...</value>
+  </data>
+  <data name="StartsOn" xml:space="preserve">
+    <value>Starts on</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="Store" xml:space="preserve">
+    <value>Store</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="Subscribe" xml:space="preserve">
+    <value>Subscribe</value>
+  </data>
+  <data name="Subscriptions" xml:space="preserve">
+    <value>Subscriptions</value>
+  </data>
+  <data name="Subtotal" xml:space="preserve">
+    <value>Sub Total</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Success!</value>
+  </data>
+  <data name="Summary" xml:space="preserve">
+    <value>Summary</value>
+  </data>
+  <data name="Tax" xml:space="preserve">
+    <value>Tax</value>
+  </data>
+  <data name="TextMessages" xml:space="preserve">
+    <value>Text Messages</value>
+  </data>
+  <data name="Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="TimeZone" xml:space="preserve">
+    <value>Time zone</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>Today</value>
+  </data>
+  <data name="ToggleNavigation" xml:space="preserve">
+    <value>Toggle Navigation</value>
+  </data>
+  <data name="Tomorrow" xml:space="preserve">
+    <value>Tomorrow</value>
+  </data>
+  <data name="TotalBeforeTax" xml:space="preserve">
+    <value>Total before tax</value>
+  </data>
+  <data name="Tracking" xml:space="preserve">
+    <value>Tracking</value>
+  </data>
+  <data name="TrackYourOrder" xml:space="preserve">
+    <value>Track your order</value>
+  </data>
+  <data name="TreePlacementRequired" xml:space="preserve">
+    <value>Tree Placement Required</value>
+  </data>
+  <data name="TreePlacementRequiredInstructions" xml:space="preserve">
+    <value>You must be in the tree to use this feature.</value>
+  </data>
+  <data name="Twitter" xml:space="preserve">
+    <value>Twitter</value>
+  </data>
+  <data name="UnableToDelete" xml:space="preserve">
+    <value>Unable to Delete</value>
+  </data>
+  <data name="UnexpectedError" xml:space="preserve">
+    <value>Unexpected Error</value>
+  </data>
+  <data name="UnexpectedErrorInstructions" xml:space="preserve">
+    <value>Something went wrong with that last click. We're not sure exactly what happened, but we've let our tech guys know.</value>
+  </data>
+  <data name="Unsubscribe" xml:space="preserve">
+    <value>Unsubscribe</value>
+  </data>
+  <data name="UntitledEvent" xml:space="preserve">
+    <value>Untitled event</value>
+  </data>
+  <data name="UpcomingPromotions" xml:space="preserve">
+    <value>Upcoming Promotions</value>
+  </data>
+  <data name="UpdatedDDInfo" xml:space="preserve">
+    <value>We have updated your direct deposit information.</value>
+  </data>
+  <data name="Upload" xml:space="preserve">
+    <value>Upload</value>
+  </data>
+  <data name="UploadFromURL" xml:space="preserve">
+    <value>Upload from URL</value>
+  </data>
+  <data name="UploadImageFromComputer" xml:space="preserve">
+    <value>Upload an image from your computer</value>
+  </data>
+  <data name="URL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="UseFacebookImage" xml:space="preserve">
+    <value>Use your Facebook profile picture</value>
+  </data>
+  <data name="UseGravatarImage" xml:space="preserve">
+    <value>Use your Gravatar profile image</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="UsingNewPaymentMethod" xml:space="preserve">
+    <value>Using a new payment method?</value>
+  </data>
+  <data name="ViewAllOrders" xml:space="preserve">
+    <value>View all orders</value>
+    <comment>Dashboard</comment>
+  </data>
+  <data name="ViewAllRecentActivity" xml:space="preserve">
+    <value>View all recent activity</value>
+    <comment>Dashboard</comment>
+  </data>
+  <data name="ViewAllUpcomingPromotions" xml:space="preserve">
+    <value>View all upcoming promotions</value>
+    <comment>Dashboard</comment>
+  </data>
+  <data name="ViewAllVolumes" xml:space="preserve">
+    <value>View all volumes</value>
+    <comment>Dashboard</comment>
+  </data>
+  <data name="ViewCart" xml:space="preserve">
+    <value>View Cart</value>
+  </data>
+  <data name="ViewCurrentEarnings" xml:space="preserve">
+    <value>View current earnings</value>
+    <comment>Dashboard</comment>
+  </data>
+  <data name="ViewInvoice" xml:space="preserve">
+    <value>View invoice</value>
+  </data>
+  <data name="ViewNewestDistributors" xml:space="preserve">
+    <value>View newest distributors</value>
+    <comment>Dashboard</comment>
+  </data>
+  <data name="ViewProfile" xml:space="preserve">
+    <value>View Profile</value>
+  </data>
+  <data name="ViewPromotionDetails" xml:space="preserve">
+    <value>View promotion details</value>
+    <comment>Dashboard</comment>
+  </data>
+  <data name="Volumes" xml:space="preserve">
+    <value>Volumes</value>
+  </data>
+  <data name="WaitingRoom" xml:space="preserve">
+    <value>Waiting Room</value>
+  </data>
+  <data name="WaitingRoomEmpty" xml:space="preserve">
+    <value>Your waiting room is empty.</value>
+  </data>
+  <data name="WaysToQualify" xml:space="preserve">
+    <value>There are {0} ways to qualify as a {1}</value>
+    <comment>Rank Advancement
+{0}=qualification leg count, {1}=rank description</comment>
+  </data>
+  <data name="Website" xml:space="preserve">
+    <value>Website</value>
+  </data>
+  <data name="WebsiteInformation" xml:space="preserve">
+    <value>Website Information</value>
+  </data>
+  <data name="Week" xml:space="preserve">
+    <value>Week</value>
+  </data>
+  <data name="Weekly" xml:space="preserve">
+    <value>Weekly</value>
+  </data>
+  <data name="Weeks" xml:space="preserve">
+    <value>Weeks</value>
+  </data>
+  <data name="WhatIsGravatar" xml:space="preserve">
+    <value>What is Gravatar?</value>
+  </data>
+  <data name="WhatsYourEmailAddress" xml:space="preserve">
+    <value>What's your email address?</value>
+  </data>
+  <data name="WhatsYourFacebookUsername" xml:space="preserve">
+    <value>What's your Facebook username?</value>
+  </data>
+  <data name="When" xml:space="preserve">
+    <value>When</value>
+  </data>
+  <data name="Where" xml:space="preserve">
+    <value>Where</value>
+  </data>
+  <data name="Yearly" xml:space="preserve">
+    <value>Yearly</value>
+  </data>
+  <data name="Years" xml:space="preserve">
+    <value>Years</value>
+  </data>
+  <data name="YouArePurchasing" xml:space="preserve">
+    <value>You are purchasing</value>
+  </data>
+  <data name="YourAccountNumber" xml:space="preserve">
+    <value>Your account number</value>
+  </data>
+  <data name="YourAutoOrder" xml:space="preserve">
+    <value>Your Replenish</value>
+  </data>
+  <data name="YourBankAccounts" xml:space="preserve">
+    <value>Your Bank Accounts</value>
+  </data>
+  <data name="YourCreditCards" xml:space="preserve">
+    <value>Your Credit Cards</value>
+  </data>
+  <data name="YourCurrentEarnings" xml:space="preserve">
+    <value>My {0} Earnings</value>
+    <comment>Dashboard Header</comment>
+  </data>
+  <data name="YourCustomers" xml:space="preserve">
+    <value>Your Customers</value>
+  </data>
+  <data name="YourLeads" xml:space="preserve">
+    <value>Your Leads</value>
+  </data>
+  <data name="YourMetrics" xml:space="preserve">
+    <value>My {0} Metrics</value>
+    <comment>Dashboard Header</comment>
+  </data>
+  <data name="YourName" xml:space="preserve">
+    <value>Your Name</value>
+  </data>
+  <data name="YourNewestDistributors" xml:space="preserve">
+    <value>My Newest Associates</value>
+    <comment>Dashboard Header</comment>
+  </data>
+  <data name="YourPaymentMethods" xml:space="preserve">
+    <value>Your Payment Methods</value>
+  </data>
+  <data name="YourPrimaryPhoneNumber" xml:space="preserve">
+    <value>Your primary phone number</value>
+  </data>
+  <data name="YourPromotionStatus" xml:space="preserve">
+    <value>My Promotion Status</value>
+    <comment>Dashboard Header</comment>
+  </data>
+  <data name="YourRecentOrders" xml:space="preserve">
+    <value>My Recent Orders</value>
+    <comment>DashboardHeader</comment>
+  </data>
+  <data name="YourRoutingNumber" xml:space="preserve">
+    <value>Your routing number</value>
+  </data>
+  <data name="YourSecondaryPhoneNumber" xml:space="preserve">
+    <value>Your secondary phone number</value>
+  </data>
+  <data name="YourTeam" xml:space="preserve">
+    <value>Your Team</value>
+  </data>
+  <data name="YourTeamsRecentActivity" xml:space="preserve">
+    <value>My Team's Recent Activity</value>
+    <comment>Dashboard Header</comment>
+  </data>
+  <data name="YouTube" xml:space="preserve">
+    <value>YouTube</value>
+  </data>
+  <data name="Calculating" xml:space="preserve">
+    <value>Calculating...</value>
+  </data>
+  <data name="CalculationTakingLonger" xml:space="preserve">
+    <value>This is taking a bit longer than usual - bear with us a bit longer...</value>
+  </data>
+  <data name="ConfirmCancelAutoOrder" xml:space="preserve">
+    <value>Are you sure you want to cancel this Replenish?</value>
+  </data>
+  <data name="ConfirmCancelOrder" xml:space="preserve">
+    <value>Are you sure you want to cancel this order?</value>
+  </data>
+  <data name="Failed" xml:space="preserve">
+    <value>Failed</value>
+  </data>
+  <data name="GeneralError" xml:space="preserve">
+    <value>Something went wrong. Please try again.</value>
+  </data>
+  <data name="LoadingFailed" xml:space="preserve">
+    <value>We weren't able to get what you requested. Do us a favor and check back in a few minutes and try again.</value>
+  </data>
+  <data name="LoginFailed" xml:space="preserve">
+    <value>Login Failed</value>
+  </data>
+  <data name="LoginNameNotAvailable" xml:space="preserve">
+    <value>'{0}' is already taken. Please choose another username and try again.</value>
+  </data>
+  <data name="PasswordNotAvailable" xml:space="preserve">
+    <value>'{0}' is already taken. Please choose another password and try again.</value>
+    <comment>{0} = attempted password</comment>
+  </data>
+  <data name="RankAdvancementFailed" xml:space="preserve">
+    <value>Your ranks are taking longer to calculate than we expected. Do us a favor and check back in a few minutes - we'll keep calculating while you work.</value>
+  </data>
+  <data name="SendVerificationEmailFailure" xml:space="preserve">
+    <value>We were unable to send you a verification email</value>
+  </data>
+  <data name="SendVerificationEmailSuccess" xml:space="preserve">
+    <value>An email has been sent to you. Click the link in your email to start receiving notifications.</value>
+  </data>
+  <data name="UploadImageFailed" xml:space="preserve">
+    <value>We were unable to upload your image. Please try again.</value>
+  </data>
+  <data name="WaitingRoomPlacementSuccessful" xml:space="preserve">
+    <value>Your placement has been made successfully!</value>
+  </data>
+  <data name="_ToViewAllOfYourOrders" xml:space="preserve">
+    <value>To View All Of Your Orders.</value>
+  </data>
+  <data name="AccountInfo" xml:space="preserve">
+    <value>Account Info</value>
+  </data>
+  <data name="AddCollector" xml:space="preserve">
+    <value>Add a Collector payment</value>
+  </data>
+  <data name="AddInvoice" xml:space="preserve">
+    <value>Add an Invoice</value>
+  </data>
+  <data name="AddItems" xml:space="preserve">
+    <value>Add Items</value>
+  </data>
+  <data name="AddItemToCart" xml:space="preserve">
+    <value>Add item to cart</value>
+  </data>
+  <data name="AddNewInvoice" xml:space="preserve">
+    <value>Add a new invoice</value>
+  </data>
+  <data name="AddNewWebAccount" xml:space="preserve">
+    <value>Add a new Web Account payment</value>
+  </data>
+  <data name="AddToAutoShip" xml:space="preserve">
+    <value>Add to Replenish</value>
+  </data>
+  <data name="AgreeToPrivacyPolicy" xml:space="preserve">
+    <value>Agree to Privacy Policy</value>
+  </data>
+  <data name="AgreeToTerms" xml:space="preserve">
+    <value>Agree to Terms and Conditions</value>
+  </data>
+  <data name="AgreeToTermsShipping" xml:space="preserve">
+    <value>Agree to the Terms and Conditions for Shipping</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Applicant" xml:space="preserve">
+    <value>Applicant</value>
+  </data>
+  <data name="artQuantity" xml:space="preserve">
+    <value>(Qty: {0})</value>
+    <comment>{0} = number of items</comment>
+  </data>
+  <data name="AutoShip" xml:space="preserve">
+    <value>Replenish</value>
+  </data>
+  <data name="AutoshipDetails" xml:space="preserve">
+    <value>Replenish Details</value>
+  </data>
+  <data name="BillingPayment" xml:space="preserve">
+    <value>Billing / Payment</value>
+  </data>
+  <data name="BillTo" xml:space="preserve">
+    <value>Bill to</value>
+  </data>
+  <data name="BillToThisAddress" xml:space="preserve">
+    <value>Bill to this address</value>
+  </data>
+  <data name="Birthday" xml:space="preserve">
+    <value>Birthday</value>
+  </data>
+  <data name="CartContainsNoItems" xml:space="preserve">
+    <value>Your cart does not contain any items</value>
+  </data>
+  <data name="CartItem" xml:space="preserve">
+    <value>Item</value>
+    <comment>Shopping Cart Header</comment>
+  </data>
+  <data name="CartQuantity" xml:space="preserve">
+    <value>(qty {0})</value>
+  </data>
+  <data name="Categories" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="CheckForDifferentBilling" xml:space="preserve">
+    <value>Check here if different than billing</value>
+  </data>
+  <data name="Choose" xml:space="preserve">
+    <value>Choose</value>
+  </data>
+  <data name="ChooseCountry" xml:space="preserve">
+    <value>Choose Country</value>
+  </data>
+  <data name="ChooseLang" xml:space="preserve">
+    <value>Choose your Language</value>
+  </data>
+  <data name="Click" xml:space="preserve">
+    <value>Click</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="CoApplicant" xml:space="preserve">
+    <value>Co-Applicant</value>
+  </data>
+  <data name="CoApplicantFirstName" xml:space="preserve">
+    <value>Co-Applicant First Name</value>
+  </data>
+  <data name="CoApplicantLastName" xml:space="preserve">
+    <value>Co-Applicant Last Name</value>
+  </data>
+  <data name="CoApplicantMiddle" xml:space="preserve">
+    <value>Co-Applicant Middle Initial</value>
+  </data>
+  <data name="Collector" xml:space="preserve">
+    <value>Collector</value>
+  </data>
+  <data name="Company" xml:space="preserve">
+    <value>Company</value>
+  </data>
+  <data name="CompanyLegalName" xml:space="preserve">
+    <value>Company Legal Name</value>
+  </data>
+  <data name="CompanyRegisteredForVat" xml:space="preserve">
+    <value>Company Registered for VAT?</value>
+  </data>
+  <data name="CompanyRegistrationNumber" xml:space="preserve">
+    <value>Company Registration Number</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Contact</value>
+    <comment>ie: "contact" info</comment>
+  </data>
+  <data name="ContactFirstName" xml:space="preserve">
+    <value>Contact Person First Name</value>
+  </data>
+  <data name="ContactLastName" xml:space="preserve">
+    <value>Contact Person Last Name</value>
+  </data>
+  <data name="ContactMiddle" xml:space="preserve">
+    <value>Contact Person Middle Initial</value>
+  </data>
+  <data name="ContactUs" xml:space="preserve">
+    <value>Contact Us</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continue</value>
+  </data>
+  <data name="ContinueShopping" xml:space="preserve">
+    <value>Continue Shopping</value>
+    <comment>Shopping Cart Header/Option</comment>
+  </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>Copyright©</value>
+  </data>
+  <data name="CountryOfResidence" xml:space="preserve">
+    <value>Country of residence</value>
+  </data>
+  <data name="CreditCardEnding" xml:space="preserve">
+    <value>Credit Card Ending</value>
+  </data>
+  <data name="CreditDebitCardEndingIn" xml:space="preserve">
+    <value>Credit/Debit card ending in</value>
+  </data>
+  <data name="CreditEarned" xml:space="preserve">
+    <value>Credit Earned</value>
+    <comment>Shopping Cart Header</comment>
+  </data>
+  <data name="Customize" xml:space="preserve">
+    <value>Customize</value>
+  </data>
+  <data name="Danish" xml:space="preserve">
+    <value>Danish</value>
+  </data>
+  <data name="DoYouWishToUpdateAutoOrder" xml:space="preserve">
+    <value>Do You Wish To Update Your Existing Auto Order?</value>
+    <comment>Auto order popup modal</comment>
+  </data>
+  <data name="Dutch" xml:space="preserve">
+    <value>Dutch</value>
+  </data>
+  <data name="EditItems" xml:space="preserve">
+    <value>Edit Items</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="ExigoCredit" xml:space="preserve">
+    <value>Exigo Credit</value>
+    <comment>Shopping Cart Header</comment>
+  </data>
+  <data name="FIENumber" xml:space="preserve">
+    <value>FIE Number</value>
+  </data>
+  <data name="FindRepresentative" xml:space="preserve">
+    <value>Find Representative</value>
+  </data>
+  <data name="FindYourReferrer" xml:space="preserve">
+    <value>Find Your Referrer</value>
+  </data>
+  <data name="Finnish" xml:space="preserve">
+    <value>Finnish</value>
+  </data>
+  <data name="French" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="Frequency" xml:space="preserve">
+    <value>Frequency</value>
+  </data>
+  <data name="FrequencyType" xml:space="preserve">
+    <value>Frequency Type</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="HasBeenAddedToYour" xml:space="preserve">
+    <value>{0} has been added to your {1}!</value>
+    <comment>used in javascript for toastr</comment>
+  </data>
+  <data name="Heading" xml:space="preserve">
+    <value>Heading</value>
+  </data>
+  <data name="HoldersAccountEndingIn" xml:space="preserve">
+    <value>{0}'s account ending in</value>
+    <comment>{0} = accoung holder's name</comment>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+    <comment>shopping breadcrumbs</comment>
+  </data>
+  <data name="HomePhone" xml:space="preserve">
+    <value>Home Phone</value>
+  </data>
+  <data name="HowOftenDoYouWantToReceive" xml:space="preserve">
+    <value>How Often Do You Want To Receive These Items?</value>
+  </data>
+  <data name="IncludingTaxAbbreviated" xml:space="preserve">
+    <value>Incl Tax</value>
+  </data>
+  <data name="Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="InvoiceFor" xml:space="preserve">
+    <value>Invoice for</value>
+  </data>
+  <data name="ItemQty" xml:space="preserve">
+    <value>Quantity</value>
+    <comment>Shopping Cart Header</comment>
+  </data>
+  <data name="IWouldLikeToReceiveEmails" xml:space="preserve">
+    <value>I Would Like To Receive Special Promotional Emails.</value>
+  </data>
+  <data name="Join" xml:space="preserve">
+    <value>Join</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Log In</value>
+  </data>
+  <data name="MiddleName" xml:space="preserve">
+    <value>Middle Name</value>
+  </data>
+  <data name="MyAccount" xml:space="preserve">
+    <value>My Account</value>
+  </data>
+  <data name="NetAxept" xml:space="preserve">
+    <value>NetAxept</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="NextRunDate" xml:space="preserve">
+    <value>Next Run Date</value>
+  </data>
+  <data name="NoAutoShipsFound" xml:space="preserve">
+    <value>No Replenish found.</value>
+    <comment>Conditional statement if page is empty</comment>
+  </data>
+  <data name="Norsk" xml:space="preserve">
+    <value>Norsk</value>
+  </data>
+  <data name="OptedInStatus" xml:space="preserve">
+    <value>You are currently opted in.</value>
+  </data>
+  <data name="OptedOutStatus" xml:space="preserve">
+    <value>You are currently opted out.</value>
+  </data>
+  <data name="or" xml:space="preserve">
+    <value>or</value>
+  </data>
+  <data name="OrderDetails" xml:space="preserve">
+    <value>Order Details</value>
+  </data>
+  <data name="OrderSubtotal" xml:space="preserve">
+    <value>Order Subtotal</value>
+    <comment>Shopping Cart Header</comment>
+  </data>
+  <data name="OrderTotal" xml:space="preserve">
+    <value>Order Total</value>
+  </data>
+  <data name="OurBestProducts" xml:space="preserve">
+    <value>Our Bestselling Products</value>
+  </data>
+  <data name="PayLater" xml:space="preserve">
+    <value>Pay with a Credit Card later</value>
+  </data>
+  <data name="PaymentInfo" xml:space="preserve">
+    <value>Payment Info</value>
+  </data>
+  <data name="PaymentOptions" xml:space="preserve">
+    <value>Payment Options</value>
+  </data>
+  <data name="PersonalDiscount" xml:space="preserve">
+    <value>Personal Use Discount</value>
+    <comment>Shopping Cart Header</comment>
+  </data>
+  <data name="PersonalIdentityNumber" xml:space="preserve">
+    <value>Personal Identity Number (PIN)</value>
+  </data>
+  <data name="PersonalInformation" xml:space="preserve">
+    <value>Personal Information</value>
+  </data>
+  <data name="PersonalQty" xml:space="preserve">
+    <value>Personal Use Quantity</value>
+    <comment>Shopping Cart Header</comment>
+  </data>
+  <data name="PersonalTotal" xml:space="preserve">
+    <value>Personal Use Discount</value>
+    <comment>Shopping Cart Header</comment>
+  </data>
+  <data name="PersonalWebLogin" xml:space="preserve">
+    <value>Your Personal Website &amp; Login</value>
+  </data>
+  <data name="PreferredCustomer" xml:space="preserve">
+    <value>Preferred Customer</value>
+  </data>
+  <data name="PreferredName" xml:space="preserve">
+    <value>Preferred Name</value>
+  </data>
+  <data name="PremiumCustomer" xml:space="preserve">
+    <value>Premium Customer</value>
+  </data>
+  <data name="PricingInformation" xml:space="preserve">
+    <value>Pricing Information</value>
+  </data>
+  <data name="PrimaryApplicantFirstName" xml:space="preserve">
+    <value>Primary Applicant First Name</value>
+  </data>
+  <data name="PrimaryApplicantLastName" xml:space="preserve">
+    <value>Primary Applicant Last Name</value>
+  </data>
+  <data name="PrimaryApplicantMiddle" xml:space="preserve">
+    <value>Primary Applicant Middle Initial</value>
+  </data>
+  <data name="Procede" xml:space="preserve">
+    <value>Procede</value>
+  </data>
+  <data name="Proceed" xml:space="preserve">
+    <value>Proceed</value>
+  </data>
+  <data name="QuickShop" xml:space="preserve">
+    <value>Quick Shop</value>
+  </data>
+  <data name="RecentlyAddedItems" xml:space="preserve">
+    <value>Recently added item(s)</value>
+  </data>
+  <data name="RecentlyAddedItSearchForYourReferrer" xml:space="preserve">
+    <value>Search for you referrer by entering their Customer ID, First or Last name</value>
+  </data>
+  <data name="RecognitionName" xml:space="preserve">
+    <value>Recognition Name</value>
+  </data>
+  <data name="RemainingPersonalBalance" xml:space="preserve">
+    <value>Remaining Personal Use Balance</value>
+    <comment>Shopping Cart Header</comment>
+  </data>
+  <data name="RetailCustomer" xml:space="preserve">
+    <value>Retail Customer</value>
+  </data>
+  <data name="RetailCustomerPricingInfo" xml:space="preserve">
+    <value>{Retail Customer Pricing Info Placeholder}</value>
+  </data>
+  <data name="RetailQty" xml:space="preserve">
+    <value>Retail Quantity</value>
+    <comment>Shopping Cart Header</comment>
+  </data>
+  <data name="RetailTotal" xml:space="preserve">
+    <value>Retail Total</value>
+    <comment>Shopping Cart Header</comment>
+  </data>
+  <data name="SearchForYourReferrer" xml:space="preserve">
+    <value>Search for your referrer by entering their Customer ID, First or Last name</value>
+  </data>
+  <data name="SearchNoResults" xml:space="preserve">
+    <value>This search returned no results.</value>
+  </data>
+  <data name="SelectBillingAddress" xml:space="preserve">
+    <value>Select a billing address</value>
+  </data>
+  <data name="SelectCountLang" xml:space="preserve">
+    <value>Select your country and language</value>
+  </data>
+  <data name="SelectCountry" xml:space="preserve">
+    <value>Select your country</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>Select Language</value>
+  </data>
+  <data name="ShippingAddressMessage" xml:space="preserve">
+    <value>This will be used as your shipping address for today's order.</value>
+  </data>
+  <data name="ShippingInformation" xml:space="preserve">
+    <value>Shipping Information</value>
+  </data>
+  <data name="Shop" xml:space="preserve">
+    <value>Shop</value>
+    <comment>shopping breadcrumbs</comment>
+  </data>
+  <data name="ShopNow" xml:space="preserve">
+    <value>Shop Now</value>
+  </data>
+  <data name="ShoppingCart" xml:space="preserve">
+    <value>Shopping Cart</value>
+    <comment>Shopping Cart Header</comment>
+  </data>
+  <data name="ShowMyPassword" xml:space="preserve">
+    <value>Show my password</value>
+  </data>
+  <data name="Spanish" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="StartingOn" xml:space="preserve">
+    <value>Starting On</value>
+  </data>
+  <data name="Support" xml:space="preserve">
+    <value>Support</value>
+  </data>
+  <data name="Swedish" xml:space="preserve">
+    <value>Swedish</value>
+  </data>
+  <data name="TaxableAmount" xml:space="preserve">
+    <value>Taxable Amount</value>
+    <comment>Shopping Cart Header</comment>
+  </data>
+  <data name="TermsAndConditions" xml:space="preserve">
+    <value>Terms and Conditions</value>
+  </data>
+  <data name="ThankYou" xml:space="preserve">
+    <value>Thank You!</value>
+  </data>
+  <data name="TodaysOrder" xml:space="preserve">
+    <value>Today's Order</value>
+  </data>
+  <data name="TotalPrice" xml:space="preserve">
+    <value>Total Price</value>
+    <comment>Shoppign Cart Header</comment>
+  </data>
+  <data name="TrackPackages" xml:space="preserve">
+    <value>Track Packages</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="UseCollector" xml:space="preserve">
+    <value>Use Collector</value>
+  </data>
+  <data name="UseShippingAddress" xml:space="preserve">
+    <value>Use Shipping Address</value>
+  </data>
+  <data name="VATNumber" xml:space="preserve">
+    <value>VAT Number</value>
+  </data>
+  <data name="VerifyAddress" xml:space="preserve">
+    <value>Verify Address</value>
+  </data>
+  <data name="ViewAllItems" xml:space="preserve">
+    <value>View All {0} items</value>
+    <comment>{0} = number of items</comment>
+  </data>
+  <data name="ViewFullProductDetails" xml:space="preserve">
+    <value>View Full Product Details</value>
+  </data>
+  <data name="ViewProductDetails" xml:space="preserve">
+    <value>View Full Product Details</value>
+  </data>
+  <data name="WebAliasRules" xml:space="preserve">
+    <value>Your username is for your login and also for your replicated site</value>
+  </data>
+  <data name="WeHaveReceivedYourOrder" xml:space="preserve">
+    <value>We Have Received Your Order.</value>
+  </data>
+  <data name="WereSorry" xml:space="preserve">
+    <value>We're sorry</value>
+  </data>
+  <data name="WorkPhone" xml:space="preserve">
+    <value>Work Phone</value>
+  </data>
+  <data name="YouMayAlsoLike" xml:space="preserve">
+    <value>You May Also Like</value>
+  </data>
+  <data name="YourAddress" xml:space="preserve">
+    <value>Your Address</value>
+  </data>
+  <data name="YourCartIsEmpty" xml:space="preserve">
+    <value>Your Cart is Empty</value>
+  </data>
+  <data name="YourCustomerID" xml:space="preserve">
+    <value>Your Customer ID is</value>
+  </data>
+  <data name="YourEnroller" xml:space="preserve">
+    <value>Your Enroller</value>
+  </data>
+  <data name="YourOrders" xml:space="preserve">
+    <value>Your Orders</value>
+  </data>
+  <data name="AutoShipIDUpdated" xml:space="preserve">
+    <value>Replenish ID# {0} has been updated</value>
+    <comment>{0} = Replenish ID</comment>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="HasBeenAddedToBackupOrder" xml:space="preserve">
+    <value>has been added to your backup order!</value>
+  </data>
+  <data name="HasBeenAddedToOrder" xml:space="preserve">
+    <value>has been added to your order!</value>
+  </data>
+  <data name="HasBeenAddedToYourOrder" xml:space="preserve">
+    <value>has been added to your order!</value>
+  </data>
+  <data name="InvalidPaymentType" xml:space="preserve">
+    <value>Invalid payment type was added.</value>
+  </data>
+  <data name="InvalidWebAlias" xml:space="preserve">
+    <value>Invalid Web Alias</value>
+  </data>
+  <data name="LoadingSummary" xml:space="preserve">
+    <value>Loading Summary</value>
+  </data>
+  <data name="MustBeReff" xml:space="preserve">
+    <value>You must be referred to visit the page.</value>
+  </data>
+  <data name="Oops" xml:space="preserve">
+    <value>Oops!</value>
+  </data>
+  <data name="SelectAddressError" xml:space="preserve">
+    <value>Please select an address before proceeding</value>
+  </data>
+  <data name="SomethingWentWrong" xml:space="preserve">
+    <value>Something went wrong with that last click.</value>
+  </data>
+  <data name="UnableAddPack" xml:space="preserve">
+    <value>We were unable to add this pack.</value>
+  </data>
+  <data name="UnableCompleteOrder" xml:space="preserve">
+    <value>We were unable to complete your order at this time.</value>
+  </data>
+  <data name="UnableRemoveItem" xml:space="preserve">
+    <value>We were unable to remove the item from your cart.</value>
+  </data>
+  <data name="UnableUpdateQuantity" xml:space="preserve">
+    <value>We were unable to update the items quantity.</value>
+  </data>
+  <data name="WebAliasRequired" xml:space="preserve">
+    <value>Web Alias Required</value>
+  </data>
+  <data name="WeCouldFind" xml:space="preserve">
+    <value>We could find who referred you. Please check the website name you were given and try again.</value>
+  </data>
+  <data name="WeCouldntFind" xml:space="preserve">
+    <value>We couldn't find the page you were looking for.</value>
+  </data>
+  <data name="WereNotSure" xml:space="preserve">
+    <value>We're not sure exactly what happened, but we've let our tech guys know.</value>
+  </data>
+  <data name="WeWereUnableToComplete" xml:space="preserve">
+    <value>We were unable to complete your order at this time.</value>
+  </data>
+  <data name="WeWereUnableToRemove" xml:space="preserve">
+    <value>We were unable to remove the item from your cart.</value>
+  </data>
+  <data name="WeWereUnableToUpdate" xml:space="preserve">
+    <value>We were unable to update the items quantity.</value>
+  </data>
+  <data name="Commissions" xml:space="preserve">
+    <value>Commissions</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="ToolTips" xml:space="preserve">
+    <value>Tool Tips</value>
+  </data>
+  <data name="ClickingOnThe" xml:space="preserve">
+    <value>Clicking on the</value>
+  </data>
+  <data name="CreateNewCategory" xml:space="preserve">
+    <value>Create New Category</value>
+  </data>
+  <data name="CreateNewResource" xml:space="preserve">
+    <value>Create New Resource</value>
+  </data>
+  <data name="DragAndDropResources" xml:space="preserve">
+    <value>You can now drag and drop elements to re-order the list of categories and resources.</value>
+  </data>
+  <data name="IfAResource" xml:space="preserve">
+    <value>If a resource is under the section, "Other Resources", this means it was not assigned a category or the category was deleted. These resource items will need to be reassigned a category ID in order for it to show on the Resource page.</value>
+  </data>
+  <data name="IfYouDelete" xml:space="preserve">
+    <value>If you delete a category, you will need to edit the resource items to use an existing category in order for it to render to the Resource page.</value>
+  </data>
+  <data name="MoveDown" xml:space="preserve">
+    <value>Move Down</value>
+    <comment>Resources Manager</comment>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>Move Up</value>
+    <comment>Resources Manager</comment>
+  </data>
+  <data name="PasteLink" xml:space="preserve">
+    <value>Paste the hosted hyperlink in the text</value>
+  </data>
+  <data name="Resource" xml:space="preserve">
+    <value>Resource</value>
+  </data>
+  <data name="ResourceCategories" xml:space="preserve">
+    <value>Resource Categories</value>
+  </data>
+  <data name="ResourceCategory" xml:space="preserve">
+    <value>Resource Category</value>
+  </data>
+  <data name="WhenCreatingEditing" xml:space="preserve">
+    <value>When creating or editing a video or audio file, you will need to paste the hosted url in the "Src" field. (i.e. Soundcloud.com)</value>
+  </data>
+  <data name="WillPerDelete" xml:space="preserve">
+    <value>will permanently delete the Resource Category.</value>
+  </data>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="AboutUs" xml:space="preserve">
+    <value>About Us</value>
+  </data>
+  <data name="OurProducts" xml:space="preserve">
+    <value>Our Products</value>
+  </data>
+  <data name="PartnerStores" xml:space="preserve">
+    <value>Partner Stores</value>
+  </data>
+  <data name="SmartShopper" xml:space="preserve">
+    <value>Smart Shopper</value>
+  </data>
+  <data name="IndependentAssociate" xml:space="preserve">
+    <value>Independent Associate</value>
+  </data>
+  <data name="RegisterNow" xml:space="preserve">
+    <value>Register Now</value>
+  </data>
+  <data name="AllProducts" xml:space="preserve">
+    <value>All Products</value>
+  </data>
+  <data name="AutoOrderFrequencyMessage" xml:space="preserve">
+    <value>You will receive your Replenish every month starting</value>
+  </data>
+  <data name="CompanyOverview" xml:space="preserve">
+    <value>Company Overview</value>
+  </data>
+  <data name="FAQ" xml:space="preserve">
+    <value>FAQ</value>
+  </data>
+  <data name="ProductSection" xml:space="preserve">
+    <value>Product Section</value>
+  </data>
+  <data name="OurMission" xml:space="preserve">
+    <value>Our Mission</value>
+  </data>
+  <data name="ShoppingCanPay" xml:space="preserve">
+    <value>Shopping Can Pay</value>
+  </data>
+  <data name="TheCompensatedMarket" xml:space="preserve">
+    <value>The Compensated Marketplace&amp;#8482; </value>
+  </data>
+  <data name="BusinessOwnershipStands" xml:space="preserve">
+    <value>Business ownership stands close to the heart of the American dream. Over the years, such ownership has inspired millions of Americans, enabling them to escape the financial gridlock of traditional employment. Bonvera now offers you a route to freedom, both personally and financially, at minimal cost, and limitless potential rewards.</value>
+  </data>
+  <data name="BonverasLeadersHave" xml:space="preserve">
+    <value>Bonvera’s leaders have built successful businesses across varied endeavors defined by a common passion: sharing the promise of genuine entrepreneurship with others.</value>
+  </data>
+  <data name="BuildASustainable" xml:space="preserve">
+    <value>Build a sustainable company, crossing generations.</value>
+  </data>
+  <data name="ShareProfitsWith" xml:space="preserve">
+    <value>Share profits with Associates.</value>
+  </data>
+  <data name="PutTheAssociates" xml:space="preserve">
+    <value>Put the Associates in charge, the executive team always answerable.</value>
+  </data>
+  <data name="PositionTheCompany" xml:space="preserve">
+    <value>Position the company for global success.</value>
+  </data>
+  <data name="BonveraWillBringYour" xml:space="preserve">
+    <value>Bonvera will bring your customers the everyday essentials they buy week after week -- no obscure, over-priced products. Bonvera will limit the profit the company itself can retain.  An Independent Community Advisory Association with real powers of oversight will function independent of the leadership.  Bonvera will make shopping convenient for everyone.</value>
+  </data>
+  <data name="CommitToPersonalIntegrity" xml:space="preserve">
+    <value>Commit to personal integrity, openness in all areas.</value>
+  </data>
+  <data name="ANewStandard" xml:space="preserve">
+    <value>A New Standard in Retail</value>
+  </data>
+  <data name="BonverasLeadersKnow" xml:space="preserve">
+    <value>Bonvera’s leaders know the big-box companies, the Wal-Marts and the Targets. They understand online giants such as Amazon. They value the irresistible pull of discount prices and easy, at-home buying. They’ve also learned that consumers find many retailers ruthless in their pursuit of profits at any cost.</value>
+  </data>
+  <data name="AndSoHaveBonveras" xml:space="preserve">
+    <value>And so Bonvera’s vision is simple, straightforward and revolutionary: &amp;#8220;Let’s create effortless access to everyday essentials while giving profits back to Associates. Reward the people who supply, distribute and buy our products&amp;#8221;.</value>
+  </data>
+  <data name="BonveraCallsThisUnique" xml:space="preserve">
+    <value>Bonvera calls this unique concept of shopping &amp;#8220;The Compensated Marketplace &amp;#8482;&amp;#8221;.</value>
+  </data>
+  <data name="TheUltimateShopping" xml:space="preserve">
+    <value>The Ultimate Shopping Experience</value>
+  </data>
+  <data name="BonveraTapsInto" xml:space="preserve">
+    <value>Bonvera taps into the magic of online shopping – it’s at-home ordering and prompt front-door delivery – with a fast-growing assortment of familiar brands in household goods, packaged groceries, hygiene and personal care products. These are the essentials your customers need day after day. And then, winning loyalty and trust from associates and customers alike, comes Bonvera’s promise to share profits.</value>
+  </data>
+  <data name="ShopSaveShare" xml:space="preserve">
+    <value>Shop. Save. Share. It’s really that simple.</value>
+  </data>
+  <data name="BonverasOwnSuperBrand" xml:space="preserve">
+    <value>Bonvera’s Own Super-Brand</value>
+  </data>
+  <data name="BonveraHasCreated" xml:space="preserve">
+    <value>Bonvera has created a brand of healthful, nutritious products, uniquely our own.</value>
+  </data>
+  <data name="FirstUpANatural" xml:space="preserve">
+    <value>First up: a natural, low-calorie energy drink leading to a gradual, fully sustained lift with none of the roller-coaster ups and downs of cheaper caffeine.  No toxic chemicals here . . . none! . . . but rather a high concentration of fruit juice with naturally occurring caffeine, ready to charge-up without subsequent burn-out.</value>
+  </data>
+  <data name="NextANutrition" xml:space="preserve">
+    <value>Next: a nutrition-packed protein bar, a meal replacement for the weight–conscious. A handy and healthful snack for everyone with a rich mix of vitamins, minerals and protein.</value>
+  </data>
+  <data name="OurePrivatLabelProducts" xml:space="preserve">
+    <value>Our private-label products compete and win against those popular energy drinks and protein bars on the shelves of any supermarket.</value>
+  </data>
+  <data name="EndlessPossibilities" xml:space="preserve">
+    <value>Endless Possibilities</value>
+  </data>
+  <data name="BonveraEmbraces" xml:space="preserve">
+    <value>Bonvera embraces the real meaning of “possibility.” Fair rewards offered for your efforts, without fear or favor. With reverence for your dreams in a business context of absolute simplicity where your interests come first, where your profitability matters most. In a home-based enterprise, you can turn your everyday spending into everyday earning. Then, intuitively, you share the good news of Bonvera with friends and family, offering them money-saving products of exceptional quality arriving with on-line speed and convenience.</value>
+  </data>
+  <data name="BonveraAssumesMost" xml:space="preserve">
+    <value>Bonvera assumes most of the sharing process with a welcoming website for your customers’ use, in addition to videos, testimonials, and other tools that explain Bonvera’s benefits in meaningful, personal terms.</value>
+  </data>
+  <data name="LiveYourWishes" xml:space="preserve">
+    <value>Live your wishes and dreams. Freedom is waiting for you!</value>
+  </data>
+  <data name="FamilyFirstLast" xml:space="preserve">
+    <value>Family First, Last and Always</value>
+  </data>
+  <data name="BonverasLeadershipTeam" xml:space="preserve">
+    <value>Bonvera’s leadership team exalts the values of America’s heartland: modesty, hard work, straight talk, and honest dealing. Above all, the team shares a love of family that spills into an inevitable way of doing business, a logical extension of trust and goodwill. Above all, we honor community. Our products, the business opportunities we offer, our operational systems – all serve the greater good of our extended family.</value>
+  </data>
+  <data name="YourNextStep" xml:space="preserve">
+    <value>Your Next Step</value>
+  </data>
+  <data name="WeAreMenAndWomen" xml:space="preserve">
+    <value>We are men and women who agree on the basics: taking care of yourself, your family, and your friends. We can help you become the owner of a successful business that will benefit both your customers and your community. We place a premium on everyday products that promote good health. We believe that social shopping represents the future, and we want you to participate in this massive shift in commerce.</value>
+  </data>
+  <data name="ShopPeriod" xml:space="preserve">
+    <value>Shop.</value>
+  </data>
+  <data name="SavePeriod" xml:space="preserve">
+    <value>Save.</value>
+  </data>
+  <data name="SharePeriod" xml:space="preserve">
+    <value>Share.</value>
+  </data>
+  <data name="BonveraPeriod" xml:space="preserve">
+    <value>Bonvera.</value>
+  </data>
+  <data name="BonveraIsABusiness" xml:space="preserve">
+    <value>Bonvera is a business for the masses: everyday products and services that the marketplace wants and needs, delivered to front doors across America. An Independent Community Advisory Association directs Bonvera’s business activity. It is an association made up of people from the community, elected by the community, to guide the company into the future.</value>
+  </data>
+  <data name="BonveraGivesYou" xml:space="preserve">
+    <value>Bonvera gives you the opportunity to become an entrepreneur, leveraging systems and distribution to create an income based on your effort, your will to succeed. Expect a level playing field rewarding courage and perseverance in a marketplace hungry for innovation and convenience.</value>
+  </data>
+  <data name="BonveraWasDesigned" xml:space="preserve">
+    <value>Bonvera was designed for you. Here’s to success that will reward your work ethic.</value>
+  </data>
+  <data name="WelcomeToBonvera" xml:space="preserve">
+    <value>Welcome to Bonvera!</value>
+  </data>
+  <data name="FAQ1Question" xml:space="preserve">
+    <value>What does the name Bonvera mean?</value>
+  </data>
+  <data name="FAQ1Answer" xml:space="preserve">
+    <value>The name was created especially for this business. The name Bonvera reaches across several languages whose common meaning is &amp;#8220;good faith&amp;#8221;.</value>
+  </data>
+  <data name="FAQ2Question" xml:space="preserve">
+    <value>When was Bonvera started?</value>
+  </data>
+  <data name="FAQ2Answer" xml:space="preserve">
+    <value>Bonvera was launched on February 15th, 2016.</value>
+  </data>
+  <data name="FAQ3Question" xml:space="preserve">
+    <value>Where is the company’s headquarters?</value>
+  </data>
+  <data name="FAQ3Answer" xml:space="preserve">
+    <value>Wichita, Kansas.</value>
+  </data>
+  <data name="FAQ4Question" xml:space="preserve">
+    <value>What about shipping costs?</value>
+  </data>
+  <data name="FAQ4Answer" xml:space="preserve">
+    <value>Shipping costs will be extremely competitive. As our volume increases, they will be driven even lower. Bonvera will be passing the savings on to its customers and associates.</value>
+  </data>
+  <data name="FAQ5Question" xml:space="preserve">
+    <value>How long will it take for my order to arrive?</value>
+  </data>
+  <data name="FAQ5Answer" xml:space="preserve">
+    <value>For most locations in the United States, your order will arrive within two full business days after the order has been processed.  Weather and other uncontrollable events can delay shipments.</value>
+  </data>
+  <data name="FAQ6Question" xml:space="preserve">
+    <value>How can I track my order?</value>
+  </data>
+  <data name="FAQ6Answer" xml:space="preserve">
+    <value>After the order has been packed and labeled, a tracking number will be available on your website.</value>
+  </data>
+  <data name="FAQ7Question" xml:space="preserve">
+    <value>What do I do if an item was damaged during shipping?</value>
+  </data>
+  <data name="FAQ7Answer" xml:space="preserve">
+    <value>If an item is damaged during shipping, please send an email to &lt;a href="mailto:support@bonvera.com" target="_top"&gt;support@bonvera.com&lt;/a&gt;. You will be issued a return authorization number and instructions on how to return your item, including the address to ship.</value>
+  </data>
+  <data name="FAQ8Question" xml:space="preserve">
+    <value>What needs to be done if I have to return an item?</value>
+  </data>
+  <data name="FAQ8Answer" xml:space="preserve">
+    <value>&lt;p&gt;If an item needs to be returned, please send an email to &lt;a href="mailto:support@bonvera.com" target="_top"&gt;support@bonvera.com&lt;/a&gt;. You will be issued a return authorization number and instructions on how to return your item, including the address to ship.&lt;/p&gt;
+            &lt;label&gt;Return Policy&lt;/label&gt;
+            &lt;div style="margin-left: 15px;"&gt;
+                &lt;p&gt;If an Associate elects to return products, all of the following conditions apply:&lt;/p&gt;
+                &lt;p&gt;Returns must be returned within 90 days of purchase with shipping cost paid by the Associate or customer. Returns must be accompanied by Return Authorization Form (including receipt showing proof of purchase). Returns must be in the original case quantity, new condition, in season and not expired or discontinued.&lt;/p&gt;
+                &lt;p&gt;The repurchase shall be the original net cost to the participant returning such goods, taking into account any sales made by or through such participant prior to notification to the Company, minus a 15% restocking fee. Buyback is 12 months in Massachusetts, Maryland, Montana, Georgia, Louisiana, Wyoming, Texas, Oklahoma, Idaho, Utah, Washington and Puerto Rico.  In addition, the Company will honor statutory mandated buyback requirements of every jurisdiction.  A Montana resident may cancel his or her Agreement within 15 days from the date of enrollment, and may return his or her starter kit for a full refund within such time period.&lt;/p&gt;
+            &lt;/div&gt;</value>
+  </data>
+  <data name="FAQ9Question" xml:space="preserve">
+    <value>Why would I become an Associate?</value>
+  </data>
+  <data name="FAQ9Answer" xml:space="preserve">
+    <value>Registering as an Associate allows you to build a community of customers and other Associates. Based on the volume that group produces on a monthly basis, you can earn compensation as outlined in the Compensation Plan.</value>
+  </data>
+  <data name="FAQ10Question" xml:space="preserve">
+    <value>Can I register under a business name?</value>
+  </data>
+  <data name="FAQ10Answer" xml:space="preserve">
+    <value>Yes. The details are found in the Policies and Procedures.</value>
+  </data>
+  <data name="FAQ11Question" xml:space="preserve">
+    <value>How old does someone need to be to get started as an Associate?</value>
+  </data>
+  <data name="FAQ11Answer" xml:space="preserve">
+    <value>This varies by state. In many states the minimum age is 18. Check with your state for details.</value>
+  </data>
+  <data name="FAQ12Question" xml:space="preserve">
+    <value>Is my business willable?</value>
+  </data>
+  <data name="FAQ12Answer" xml:space="preserve">
+    <value>Yes. The details are found in the Policies and Procedures.</value>
+  </data>
+  <data name="FAQ13Question" xml:space="preserve">
+    <value>What is the difference between a customer and a Smart Shopper?</value>
+  </data>
+  <data name="FAQ13Answer" xml:space="preserve">
+    <value>A customer has access to all of the products and services at retail pricing. A Smart Shopper has the same access as a customer, but receives wholesale pricing which are discounts up to 20% on their purchases after paying $19.95 per year or by placing items that they want replenished monthly in a re-stock order during the registration process.</value>
+  </data>
+  <data name="FAQ14Question" xml:space="preserve">
+    <value>How do I get credit for customer purchases?</value>
+  </data>
+  <data name="FAQ14Answer" xml:space="preserve">
+    <value>As an Associate, the Bonvera software tracks every order that each one of your registered customers and Smart Shoppers might place. These purchases will show up as part of your Group Business Volume (GBV). The breakdown of customer purchases are available on your personal website back office.</value>
+  </data>
+  <data name="FAQ15Question" xml:space="preserve">
+    <value>How do I qualify for compensation?</value>
+  </data>
+  <data name="FAQ15Answer" xml:space="preserve">
+    <value>To qualify for compensation, you must have a minimum of 5 retail customers who purchase every month, or at least 2 Smart Shoppers who purchase every month. The required retail sales grace period is the first 12 months after enrollment. See the Policies and Procedures for complete details.</value>
+  </data>
+  <data name="FAQ16Question" xml:space="preserve">
+    <value>How can I find out what my compensation will be?</value>
+  </data>
+  <data name="FAQ16Answer" xml:space="preserve">
+    <value>Your compensation for a current month will be available in your back office. There is also an income calculator in your back office where you can plug in your goals for the month and see what compensation that volume could produce.</value>
+  </data>
+  <data name="FAQ17Question" xml:space="preserve">
+    <value>When do commissions get paid?</value>
+  </data>
+  <data name="FAQ17Answer" xml:space="preserve">
+    <value>Commissions will be paid once a month, within a reasonable time after the close of the month, which will occur on the last day of the calendar month.</value>
+  </data>
+  <data name="FAQ18Question" xml:space="preserve">
+    <value>How do I learn more about building Bonvera as a business?</value>
+  </data>
+  <data name="FAQ18Answer" xml:space="preserve">
+    <value>Stay in touch with the person who introduced you to Bonvera. To find a local Introductory Meeting, go to &lt;a href="https://extroda.com" target="_blank"&gt;Extroda.com&lt;/a&gt; for location details.</value>
+  </data>
+  <data name="FAQ19Question" xml:space="preserve">
+    <value>How do I explain Bonvera to others?</value>
+  </data>
+  <data name="FAQ19Answer" xml:space="preserve">
+    <value>The person who introduced you to Bonvera will be able to help or be able to connect you to the person that is helping them. &lt;a href="https://extroda.com" target="_blank"&gt;Extroda.com&lt;/a&gt; offers resources helpful for training.</value>
+  </data>
+  <data name="FAQ20Question" xml:space="preserve">
+    <value>How can I find introductory meetings in my area?</value>
+  </data>
+  <data name="FAQ20Answer" xml:space="preserve">
+    <value>Go to &lt;a href="https://extroda.com" target="_blank"&gt;Extroda.com</value>
+  </data>
+  <data name="FAQ21Question" xml:space="preserve">
+    <value>How much time will it take to build this business?</value>
+  </data>
+  <data name="FAQ21Answer" xml:space="preserve">
+    <value>This depends on your goals, timing and commitment level. Most Associates build Bonvera in their discretionary time. It is your business and when and how you build your business is up to you.</value>
+  </data>
+  <data name="FAQ22Question" xml:space="preserve">
+    <value>When will Bonvera be available in other countries?</value>
+  </data>
+  <data name="FAQ22Answer" xml:space="preserve">
+    <value>Bonvera will expand to other countries as it makes sense to do so. If you know people in other countries, keep them in mind for the future, and think about all the people in the country(s) where we currently operate.</value>
+  </data>
+  <data name="FAQ23Question" xml:space="preserve">
+    <value>How do I get a product or company to be a part of Bonvera’s offerings?</value>
+  </data>
+  <data name="FAQ23Answer" xml:space="preserve">
+    <value>We want to expand into different products and services, and you will be our best connections into companies that offer what our community buys. There is a link on our website that will direct your suggestions to the people responsible for expanding our offerings.</value>
+  </data>
+  <data name="FAQ24Question" xml:space="preserve">
+    <value>How do I learn about the different terms and words?</value>
+  </data>
+  <data name="FAQ24Answer" xml:space="preserve">
+    <value>There is a Glossary of Terms in the back of the Compensation Plan brochure that covers most of the company specific terms. The “Playbook” from &lt;a href="https://extroda.com" target="_blank"&gt;Extroda.com&lt;/a&gt; explains all of the terms specific to building Bonvera as a business.</value>
+  </data>
+  <data name="ResetPassword" xml:space="preserve">
+    <value>Reset Password</value>
+  </data>
+  <data name="TeamPlacement" xml:space="preserve">
+    <value>Team Placement</value>
+  </data>
+  <data name="Team" xml:space="preserve">
+    <value>Team</value>
+  </data>
+  <data name="NoReplenishFound" xml:space="preserve">
+    <value>No Replenish Found</value>
+  </data>
+  <data name="YouDoNotHaveAnyActive" xml:space="preserve">
+    <value>You do not have any active Replenish.</value>
+  </data>
+  <data name="StopReplenish" xml:space="preserve">
+    <value>Delete Replenish</value>
+  </data>
+  <data name="AreYouSureYouWouldLike" xml:space="preserve">
+    <value>Are you sure you would like to delete your Replenish?</value>
+  </data>
+  <data name="HasReplenish" xml:space="preserve">
+    <value>Has Replenish</value>
+  </data>
+  <data name="ConfigureYourReplenish" xml:space="preserve">
+    <value>Configure your Replenish</value>
+  </data>
+  <data name="ReplenishItems" xml:space="preserve">
+    <value>Replenish Item(s)</value>
+  </data>
+  <data name="AddToReplenish" xml:space="preserve">
+    <value>Add to Replenish</value>
+  </data>
+  <data name="EditingReplenishBankAccounts" xml:space="preserve">
+    <value>Editing Replenish Bank Accounts</value>
+  </data>
+  <data name="YouHaveReplenishUsingAccount" xml:space="preserve">
+    <value>You have {0} using this bank account. Any changes will be automatically applied automatically to them.</value>
+  </data>
+  <data name="EditingReplenishCreditCards" xml:space="preserve">
+    <value>Editing Replenish Credit Cards</value>
+  </data>
+  <data name="YouHaveReplenishUsingCard" xml:space="preserve">
+    <value>You have {0} Replenish using this credit card. Any changes will be automatically applied automatically to them.</value>
+  </data>
+  <data name="ReplenishCard" xml:space="preserve">
+    <value>Replenish Card</value>
+  </data>
+  <data name="ThisCardIsBeingUsed" xml:space="preserve">
+    <value>This card is being used as the payment method for {0} of your Replenish.</value>
+  </data>
+  <data name="ThisCardCannotBeDeleted" xml:space="preserve">
+    <value>This credit card cannot be deleted while it is still being used by a Replenish.</value>
+  </data>
+  <data name="ReplenishBankAccount" xml:space="preserve">
+    <value>Replenish Bank Account</value>
+  </data>
+  <data name="ThisBankAccountIsBeingUsed" xml:space="preserve">
+    <value>This bank account is being used as the payment method for {0} of your Replenish.</value>
+  </data>
+  <data name="ThisBankAccountCannotBeDeleted" xml:space="preserve">
+    <value>This bank account cannot be deleted while it is still being used by a Replenish.</value>
+  </data>
+  <data name="FutureReplenish" xml:space="preserve">
+    <value>Future Replenish</value>
+  </data>
+  <data name="ReplenishDetails" xml:space="preserve">
+    <value>Replenish Details</value>
+  </data>
+  <data name="YourFutureReplenish" xml:space="preserve">
+    <value>Your future Replenish</value>
+  </data>
+  <data name="YouCanModifyTheRunDate" xml:space="preserve">
+    <value>You can modify the run date of your Replenish, once it is created, in your Replenish manager</value>
+  </data>
+  <data name="UseThisPaymentMethodForReplenish" xml:space="preserve">
+    <value>Use this Payment method for your Replenish</value>
+  </data>
+  <data name="ReplenishHasBeenDeleted" xml:space="preserve">
+    <value>Replenish has been deleted.</value>
+  </data>
+  <data name="ThereWasAProblemDeleting" xml:space="preserve">
+    <value>There was a problem deleting your Replenish</value>
+  </data>
+  <data name="ReplenishHasBeenUpdated" xml:space="preserve">
+    <value>Replenish # {0} has been updated.</value>
+  </data>
+  <data name="ThereWasAProblemUpdating" xml:space="preserve">
+    <value>There was a problem updating your Replenish: {0}</value>
+  </data>
+  <data name="MyTeam" xml:space="preserve">
+    <value>My Team</value>
+  </data>
+  <data name="EnrollmentOption1" xml:space="preserve">
+    <value>Access to the Bonvera website shopping experience</value>
+  </data>
+  <data name="EnrollmentOption2" xml:space="preserve">
+    <value>Access to Bonvera Private Brand products</value>
+  </data>
+  <data name="EnrollmentOption3" xml:space="preserve">
+    <value>Discounted pricing on all Tier 2 and Tier 3 products, services and stores</value>
+  </data>
+  <data name="EnrollmentOption4" xml:space="preserve">
+    <value>Up to 20% discount on Bonvera Private Brand products</value>
+  </data>
+  <data name="EnrollmentOption5" xml:space="preserve">
+    <value>A replicated custom website for your customers and Smart Shoppers</value>
+  </data>
+  <data name="EnrollmentOption6" xml:space="preserve">
+    <value>Eligibility to carve out YOUR Compensated Marketplace</value>
+  </data>
+  <data name="EnrollmentOption7" xml:space="preserve">
+    <value>Eligibility to earn commissions</value>
+  </data>
+  <data name="EnrollmentOption8" xml:space="preserve">
+    <value>1st 30 days of back-office features and benefits</value>
+  </data>
+  <data name="EnrollmentOption9" xml:space="preserve">
+    <value>Access to all of the necessary information and forms to build YOUR business in Your personal website</value>
+  </data>
+  <data name="EnrollmentOption10" xml:space="preserve">
+    <value>Registration Kit with: 
+&lt;ol&gt;
+ &lt;li&gt;Brochure/Portfolio&lt;/li&gt;
+ &lt;li&gt;Welcome Letter&lt;/li&gt;
+ &lt;li&gt;Company Overview&lt;/li&gt;
+ &lt;li&gt;Start Here brochure&lt;/li&gt;
+ &lt;li&gt;Product Section brochure&lt;/li&gt;
+ &lt;li&gt;FAQ &amp; Answers&lt;/li&gt;
+&lt;/ol&gt;</value>
+  </data>
+  <data name="Volume_055" xml:space="preserve">
+    <value>Team 1 TGBV</value>
+  </data>
+  <data name="Volume_056" xml:space="preserve">
+    <value>Team 2 TGBV</value>
+  </data>
+  <data name="Volume_057" xml:space="preserve">
+    <value>Team 3 TGBV</value>
+  </data>
+  <data name="Volume_058" xml:space="preserve">
+    <value>Team 4 TGBV</value>
+  </data>
+  <data name="Volume_059" xml:space="preserve">
+    <value>Team 5 TGBV</value>
+  </data>
+  <data name="AutoOrderManager" xml:space="preserve">
+    <value>Manage My Replenish</value>
+  </data>
+  <data name="PersonalCustomers" xml:space="preserve">
+    <value>Personal Customers</value>
+  </data>
+  <data name="ViewNewestAssociates" xml:space="preserve">
+    <value>View Newest Associates</value>
+  </data>
+  <data name="PauseReplenish" xml:space="preserve">
+    <value>Pause Replenish</value>
+  </data>
+  <data name="PauseAreYouSure" xml:space="preserve">
+    <value>Are you sure you would like to pause your Replenish?</value>
+  </data>
+  <data name="ActivateReplenish" xml:space="preserve">
+    <value>Activate Replenish</value>
+  </data>
+  <data name="ActivateAreYouSure" xml:space="preserve">
+    <value>Are you sure you would like to activate your Replenish?</value>
+  </data>
+  <data name="MessageUs" xml:space="preserve">
+    <value>Message Us</value>
+  </data>
+  <data name="FirstOrderPackCheckoutPriceText" xml:space="preserve">
+    <value>First Order discount applied at checkout</value>
+  </data>
+  <data name="ShopNowText" xml:space="preserve">
+    <value>More Details</value>
+  </data>
+  <data name="HasBeenAddedToYourAutoOrder" xml:space="preserve">
+    <value>{0} has been added to your Replenish! Click on the cart icon to finish setting up your replenish profile.</value>
+  </data>
+  <data name="WillCallConfirmMessage" xml:space="preserve">
+    <value>Are you sure you would like to pick up at our warehouse at 1815 E. Central, Wichita, KS 67214.
+
+Business hours for pick up are between 9am-4pm CT Monday-Friday. Orders must be placed before 2pm CT in order for them to be picked up next day. No same day pick up please.
+</value>
+  </data>
+  <data name="WillCallMessage" xml:space="preserve">
+    <value>By choosing Wichita Will Call as your method of shipment, you are confirming you would like to pick up at our warehouse at 1815 E. Central, Wichita, KS 67214</value>
+  </data>
+  <data name="Volume_091" xml:space="preserve">
+    <value>Team 6 TGBV</value>
+  </data>
+  <data name="AffiliateStores" xml:space="preserve">
+    <value>Affiliate Stores</value>
+  </data>
+  <data name="WillCallCompleteMessage" xml:space="preserve">
+    <value>You chose the Will Call option. Our pick-up location is 1815 E. Central, Wichita, KS 67214. Business hours for pick up are between 9am-4pm CT Monday-Friday. Orders must be placed before 2pm CT in order for them to be picked up next day. No same day pick up please. Please print this order confirmation and bring it with you to pick up your order. You can call us at 316 260 2225 during business hours if you have any questions.</value>
+  </data>
+  <data name="CompensationPlanOverview" xml:space="preserve">
+    <value>Compensation Plan Overview</value>
+  </data>
+  <data name="AffiliateStoreMessage" xml:space="preserve">
+    <value>The Bonvera affiliate program is robust and rewards our customers who shop, save and share every day. Through specially negotiated partnerships with these affiliates, we award BV with credit to your commission schedule following receipt of all transactions. &lt;br /&gt;&lt;strong style='color:black'&gt;Affiliate store BV might take up to 120 days to be credited to associate's account. The % of BV varies from store to store and Bonvera would not know until the Affiliates have reported the sales back to us.&lt;/strong&gt;</value>
+  </data>
+  <data name="PartnerStoreMessage" xml:space="preserve">
+    <value />
+  </data>
+  <data name="AffiliateStoreCurrentStoresMessage" xml:space="preserve">
+    <value>Active Affiliates</value>
+  </data>
+  <data name="AffiliateStoreFutureStoresMessage" xml:space="preserve">
+    <value>Coming Soon!</value>
+  </data>
+  <data name="EmailNotAvailable" xml:space="preserve">
+    <value>This email is already in use in our system with a different account</value>
+  </data>
+  <data name="TotalBV" xml:space="preserve">
+    <value>Total BV</value>
+  </data>
+  <data name="DeleteReplenish" xml:space="preserve">
+    <value>Delete Replenish</value>
+  </data>
+  <data name="CorporateBlog" xml:space="preserve">
+    <value>Corporate Blog</value>
+  </data>
+  <data name="JoinBonvera" xml:space="preserve">
+    <value>Join Bonvera</value>
+  </data>
+  <data name="BonveraProducts" xml:space="preserve">
+    <value>Bonvera Products</value>
+  </data>
+  <data name="AssociateEnrollmentForm" xml:space="preserve">
+    <value>Associate Enrollment Form</value>
+  </data>
+  <data name="SmartShopperEnrollmentForm" xml:space="preserve">
+    <value>Smart Shopper Enrollment Form</value>
+  </data>
+  <data name="TotalBVForThisOrder" xml:space="preserve">
+    <value>Total BV for this order</value>
+  </data>
+  <data name="ApplyShippingDiscountForReducedBV" xml:space="preserve">
+    <value>Apply shipping discount for reduced BV?</value>
+  </data>
+  <data name="ShippingDiscount" xml:space="preserve">
+    <value>Shipping Discount</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="OrderBusinessCards" xml:space="preserve">
+    <value>Order Business Cards</value>
+  </data>
+  <data name="FullerBrushDescription" xml:space="preserve">
+    <value>Fuller Brush and Stanley Home Products with nearly 200 years of experience . . . make Home Cleaning much faster, better . . . and easier.  These 2 Iconic Brands represent the highest quality products with exceptional value . . . including Brushes, Brooms, Mops, Dusters, Disinfectants, Cleansers, and many Personal Care items . . . all designed to work and crafted to last!  Check out nearly 40 unique Kitchenware items.  Try our new Dermatologist Formulated EssentialsRx . . . a high efficacy Skincare Line that will literally change your appearance in 60 to 90 days!  Pair EssentialsRx with our Sonic Cleansing Brush to achieve more vibrant, youthful skin.  Outstanding 75% BV on ALL Products!  Visit us and take advantage of Monthly Special Offers, along with Wednesday through Friday 72 Hour Flash Sales!</value>
+  </data>
+  <data name="IsabelleLightingDescription" xml:space="preserve">
+    <value>Family owned and operated since 1970, at IsabellesLighting.com, we specialize in helping busy home owners like you complete a more comfortable atmosphere in your home with lighting and home décor that compliments your style. Free shipping at $99. Small things or big things, it doesn't matter to us. Our local Vermont staff team of lighting and home décor specialists are ready to serve you 24/7 any day!</value>
+  </data>
+  <data name="TaxID" xml:space="preserve">
+    <value>Tax ID</value>
+  </data>
+  <data name="NoSSN" xml:space="preserve">
+    <value>Your SSN has not been set.</value>
+  </data>
+  <data name="InvalidZipCode" xml:space="preserve">
+    <value>Invalid ZipCode</value>
+  </data>
+  <data name="WhenItComesToPurchasingPreciousMetals" xml:space="preserve">
+    <value>When it comes to purchasing precious metals, United Gold Supply is the industry "Gold Standard" for compliant precious metal purchases. We believe in full transparency on every transaction and simply don't sell your products we don't look forward to buying back!</value>
+  </data>
+  <data name="BonveraPoliciesAndProcedures" xml:space="preserve">
+    <value> Bonvera Policies and Procedures</value>
+  </data>
+  <data name="DateFrom" xml:space="preserve">
+    <value>Date From</value>
+  </data>
+  <data name="DateTo" xml:space="preserve">
+    <value>Date To</value>
+  </data>
+  <data name="SearchByDate" xml:space="preserve">
+    <value>Search By Date</value>
+  </data>
+  <data name="SearchByOrderID" xml:space="preserve">
+    <value>Search By Order ID</value>
+  </data>
+  <data name="AllBonveraOrders" xml:space="preserve">
+    <value>All Bonvera Orders</value>
+  </data>
+  <data name="PartnersAndAffiliates" xml:space="preserve">
+    <value>Partners &amp; Affiliates</value>
+  </data>
+  <data name="FeesAndServices" xml:space="preserve">
+    <value>Fees &amp; Services</value>
+  </data>
+  <data name="QuilbedDescription" xml:space="preserve">
+    <value>Quilbed.com intends to transform the mattress shopping experience. The unique Quilgel Memory Foam design is found throughout the collection of products and provides a sleep experience focused on optimized comfort, support and temperature regulation. Find Quilbed, Quilpillow and Quilsheets all with a 100-night risk free trial and direct residential delivery across the country. And our partnership with Bonvera allows us to reward associates with 37.5% BV!&lt;br /&gt;&lt;br/&gt;Superior products and bold guarantees… You have nothing to lose sleep over with Quilbed.com.</value>
+  </data>
+</root>

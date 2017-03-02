@@ -1,0 +1,10 @@
+﻿@{
+    Layout = "~/Views/Shared/_DefaultLayout.cshtml";
+}
+@section header { @RenderSection("header", required: false) }
+@section scripts { @RenderSection("scripts", required: false) }
+
+@*@Html.Partial("Partials/Navigation/_CheckoutSteps")*@
+
+@RenderBody()
+

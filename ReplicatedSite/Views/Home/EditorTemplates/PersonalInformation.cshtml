@@ -1,0 +1,76 @@
+﻿@model Customer
+@{
+    var contextID = Guid.NewGuid();
+    var defaultCountryCode = GlobalSettings.Company.Address.Country;
+    var defaultRegionCode = GlobalSettings.Company.Address.Country;
+}
+
+<div id="view-personalinformation-@contextID">
+
+    <div class="row margin-5">
+        <div class="col-sm-12 col-xs-6">
+            <div class="form-group">
+                @Html.EditorFor(c => c.FullName, new { @placeholder = "Name" })
+                @Html.ValidationMessageFor(c => c.FullName)
+            </div>
+        </div>
+    </div>
+
+    <div class="space-5"></div>
+
+    <div class="row margin-5">
+        <div class="col-sm-12 col-xs-6">
+            <div class="form-group">
+                @Html.EditorFor(c => c.PrimaryPhone, new { @placeholder = "Phone" })
+            </div>
+        </div>
+
+    </div>
+    <div class="row margin-5">
+        <div class="col-sm-12 col-xs-12">
+            <div class="form-group">
+                <input class="form-control"
+                       data-val="true"
+                       data-val-required="The Email Address field is required."
+                       id="@Html.IdFor(c => c.Email)"
+                       name="@(Html.NameFor(c => c.Email))"
+                       placeholder="Email"
+                       type="email"
+                       value="" />
+                <span class="field-validation-valid" data-valmsg-for="@(Html.NameFor(c => c.Email))" data-valmsg-replace="true"></span>
+            </div>
+
+        </div>
+    </div>
+    <div class="row margin-5">
+
+        <div class="col-xs-4">
+            <div class="form-group">
+                @Html.LabelFor(c => c.MainAddress.City, new { @class = "control-label visible-xs" })
+                @Html.EditorFor(c => c.MainAddress.City, new { data_role = "City" })
+            </div>
+        </div>
+        <div class="col-xs-5">
+            <div class="form-group">
+                @Html.LabelFor(c => c.MainAddress.City, new { @class = "control-label visible-xs" })
+                @Html.DropDownListFor(c => c.MainAddress.City,
+                    selectList: Html.Regions(defaultRegionCode, defaultCountryCode),
+                    htmlAttributes: new
+                    {
+                        @class = "form-control",
+                        id = Html.IdFor(c => c.MainAddress.City) + "_" + contextID,
+                        data_role = "State"
+                    })
+                @Html.ValidationMessageFor(c => c.MainAddress.City)
+            </div>
+        </div>
+
+        <div class="col-xs-3">
+            <div class="form-group">
+                @Html.LabelFor(c => c.MainAddress.Zip, new { @class = "control-label visible-xs" })
+                @Html.EditorFor(c => c.MainAddress.Zip, new { data_role = "Zip", data_restrict_input = "zipcode" })
+            </div>
+        </div>
+
+    </div>
+</div>

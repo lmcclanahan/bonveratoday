@@ -1,0 +1,183 @@
+﻿@model ManageLeadViewModel
+@{
+    ViewBag.Title = "Manage Lead";
+}
+
+<div id="view-manage-lead">
+    <h2>@ViewBag.Title</h2>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa-home"></i></a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+
+    <div class="row">
+        <div class="col-sm-3">
+            @Html.Navigation()
+        </div>
+        <div class="col-sm-9">
+            <input id="customerID" type="hidden" value="@Model.Lead.CustomerID" />
+
+            @using (Ajax.BeginForm("managelead", "organization", new AjaxOptions()
+            {
+                OnSuccess = "leadmanageoverview.onSuccess"
+            }))
+            {
+                <div class="manage-lead-form-container">
+                    <div class="row margin-10">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(c => c.Lead.FirstName, new { @class = "control-label" })
+                                @Html.EditorFor(c => c.Lead.FirstName)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(c => c.Lead.LastName, new { @class = "control-label" })
+                                @Html.EditorFor(c => c.Lead.LastName)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row margin-10">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(c => c.Lead.Email, new { @class = "control-label" })
+                                @Html.EditorFor(c => c.Lead.Email)
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="row margin-10">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(c => c.Lead.PrimaryPhone, new { @class = "control-label" })
+                                @Html.EditorFor(c => c.Lead.PrimaryPhone)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(c => c.Lead.SecondaryPhone, new { @class = "control-label" })
+                                @Html.EditorFor(c => c.Lead.SecondaryPhone)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row margin-10">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(c => c.Lead.MobilePhone, new { @class = "control-label" })
+                                @Html.EditorFor(c => c.Lead.MobilePhone)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(c => c.Lead.Fax, new { @class = "control-label" })
+                                @Html.EditorFor(c => c.Lead.Fax)
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    @Html.EditorFor(c => c.Lead.MainAddress)
+
+                    <div class="space-20"></div>
+                    <a data-role="delete" class="btn btn-primary pull-right" style="margin-left: 15px;">Delete Lead</a>
+                    <button type="submit" data-role="submit-form" class="btn btn-primary pull-right">Update Lead</button>
+                    <div class="clearfix"></div>
+                    <div class="space-20"></div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="delete-lead-modal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Confirm</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to remove this lead?</p>
+                    <a data-role="confirm" class="btn btn-default">Yes</a>
+                    <a data-dismiss="modal" class="btn btn-default">No</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        var leadmanageoverview;
+
+        require(["jquery", "ajax", "toastr", "pubsub", "forms", "bootstrap"], function ($, ajax, toastr) {
+            leadmanageoverview = (function () {
+                // Settings
+                var context = "#view-manage-lead",
+                    $context = $(context);
+
+
+                // Event Handlers
+                function registerEventHandlers() {
+                    // Delete
+                    $($context).on('click', '[data-role="delete"]', function () {
+                        $('#delete-lead-modal').modal();
+                    });
+
+                    $('[data-role="confirm"]', $context).on('click', function () {
+                        var id = $('#customerID').val();
+                        actions.deleteLead(id);
+                    });
+                }
+
+
+                // Actions
+                var actions = {
+                    onSuccess: function (response) {
+                        if (response.success) {
+                            window.location = "@Url.Action("leadslist", "organization", new { update = "true" })";
+                        } else {
+                            toastr.error(response.message, "We were unable to update this lead.");
+                        }
+                    },
+                    deleteLead: function (id) {
+                        ajax.json({
+                            url: '@Url.Action("deletelead", "organization")',
+                            data: { leadID: id },
+                            success: function (response) {
+                                if (response.success) {
+                                    window.location = "@Url.Action("leadslist", "organization")"
+                                }
+                                else {
+                                    console.log("message", response.message);
+                                }
+                            }
+                        });
+                    }
+                };
+
+
+                // Initialization
+                function init() {
+                    registerEventHandlers();
+                }
+                init();
+
+
+                // Exports
+                return {
+                    onSuccess: actions.onSuccess
+                }
+            })();
+        });
+    </script>
+}

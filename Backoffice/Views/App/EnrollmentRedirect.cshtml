@@ -1,0 +1,253 @@
+﻿@{
+    ViewBag.Title = "Enroll New";
+}
+
+<div class="space-50"></div>
+<div id="enrollment-validation">
+    <div class="space-20"></div>
+    <div id="enrollment-validation">
+        <h3>Choose the Enroller and Placement Sponsor</h3>
+        <p>(You can use username or Bonvera id# to validate)</p>
+        <div class="space-20 hidden-xs"></div>
+        <div class="search-container">
+            <label for="enroller-textbox" class="text-lg">Enroller</label>
+            <input class="input-sm form-control validation-textbox" id="enroller-textbox" type='text' data-validatefor="enroller" placeholder="username or id" />
+            <div id="enroller-validate-result"></div>
+        </div>
+
+
+    <div class="space-20"></div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Enroller Details</h3>
+        </div>
+        <div class="panel-body">
+            <div id="enroller-details-container">
+            </div>
+        </div>
+    </div>
+        <hr />
+        <div class="search-container">
+            <label for="sponsor-textbox" class="text-lg">Placement Sponsor</label>
+            <input class="input-sm form-control validation-textbox" id="sponsor-textbox" type='text' value="" data-validatefor="sponsor" placeholder="username or id" />
+            <div id="sponsor-validate-result"></div>
+        </div>
+
+    <div class="space-20"></div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Sponsor Details</h3>
+        </div>
+        <div class="panel-body">
+            <div id="sponsor-details-container">
+            </div>
+        </div>
+    </div>
+    <div class="space-50"></div>
+    <div class="row row-body">
+
+        <div class='col-xs-12'>
+                <button type="submit" data-role="enroll" class="btn btn-success" data-loading-text="Loading..."> Continue to Enroll at bonvera.com</button>
+                <div class="space-10"></div>
+                <em>* You will be redirected to bonvera.com to complete the Independent Associate Enrollment</em>
+        </div>
+    </div>
+</div>
+<div class="space-50"></div>
+
+<script>
+    require(["pubsub", "ajax", "enquire", "toastr"], function (pubsub, ajax, enquire, toastr) {
+
+        var validatedButtons = {
+            sponsor: false,
+            enroller: false
+        };
+
+        var customerIDs = {
+            sponsor: 0,
+            enroller: 0
+        };
+        var isValidating = false;
+        var actions = {
+            enrollerValidate: function (validateFor) {
+                var isEnroller = (validateFor == "enroller") ? true : false;
+                var $dataSelector = (isEnroller) ? $("#enroller-textbox") : $("#sponsor-textbox");
+                var data = $dataSelector.val();
+                if (!isValidating) {
+                    isValidating = true;
+                    ajax.json({
+                        url: "@Url.Action("VerifyEnrollerSponsor", "app")",
+                        data: { input: data, isEnroller: isEnroller },
+                        success: function (response) {
+
+                            if (response.valid) {
+
+                                if (validateFor == "sponsor") {
+                                    validatedButtons.sponsor = true;
+                                    customerIDs.sponsor = response.customerid;
+                                    $("#sponsor-details-container").html(response.html);
+                                    $("#sponsor-validate-result").html(response.successhtml);
+                                    isValidating = false;
+
+                                }
+                                else {
+                                    validatedButtons.enroller = true;
+                                    $("#enroller-validate-result").html(response.successhtml);
+                                    customerIDs.enroller = response.customerid;
+                                    $("#enroller-details-container").html(response.html);
+                                    isValidating = false;
+
+                                }
+                            }
+                            else {
+
+                                if (validateFor == "sponsor") {
+                                    $("#sponsor-validate-result").html(response.html);
+
+                                    $("#sponsor-details-container").html("");
+                                    isValidating = false;
+
+                                }
+                                else {
+                                    $("#enroller-validate-result").html(response.html);
+
+                                    $("#enroller-details-container").html("");
+                                    isValidating = false;
+
+
+
+                                }
+                            }
+                        },
+                        error: function (xhr, error, data) {
+                            console.log("server error", xhr.responseText);
+                            isValidating = false;
+
+                        }
+                    });
+                }
+            }
+        };
+        $(".paymentlabel").on("click", function () {
+            $(this).parents(".row").first().find('input').click();
+        });
+
+        $(".validation-textbox").on("change ,  drop", function () {
+            var textbox = $(this);
+
+            if (textbox.data('validatefor') == "sponsor") {
+                validatedButtons.sponsor = false;
+            }
+            else {
+                validatedButtons.enroller = false;
+            }
+        });
+        $(".validation-textbox").on("focusout", function () {
+            var textbox = $(this);
+            if (textbox.data('validatefor') == "sponsor") {
+                validatedButtons.sponsor = false;
+            }
+            else {
+                validatedButtons.enroller = false;
+            }
+            actions.enrollerValidate(textbox.data('validatefor'));
+        });
+        $("[data-role='enroll']").on("click", function () {
+            if (validatedButtons.sponsor != true || validatedButtons.enroller != true) {
+                toastr.error("Please validate both enroller and sponsor");
+            }
+            else {
+                var enroller = $("#enroller-textbox").val();
+                var sponsor = $("#sponsor-textbox").val();
+
+                var url = "@Url.Action("customenrollmentredirect", "app")?enroller=" + customerIDs.enroller + "&sponsor=" + customerIDs.sponsor;
+
+                //window.open(url);
+                window.location = url;
+            }
+
+
+        });
+        $("[data-role='validate-enrollment']").on("click", function () {
+            var button = $(this);
+            button.button("loading");
+            var validateFor = button.data('validatefor');
+
+            var isEnroller = (validateFor == "enroller") ? true : false;
+            var $dataSelector = (isEnroller) ? $("#enroller-textbox") : $("#sponsor-textbox");
+            var data = $dataSelector.val();
+            if (!isValidating) {
+                isValidating = true;
+                ajax.json({
+                    url: "@Url.Action("VerifyEnrollerSponsor", "app")",
+                    data: { input: data, isEnroller: isEnroller },
+                    success: function (response) {
+
+                        if (response.valid) {
+
+                            if (button.data('validatefor') == "sponsor") {
+                                validatedButtons.sponsor = true;
+                                customerIDs.sponsor = response.customerid;
+                                $("#sponsor-details-container").html(response.html);
+                                $("#sponsor-validate-result").html(response.successhtml);
+                                isValidating = false;
+
+                            }
+                            else {
+                                validatedButtons.enroller = true;
+                                $("#enroller-validate-result").html(response.successhtml);
+                                customerIDs.enroller = response.customerid;
+                                $("#enroller-details-container").html(response.html);
+                                isValidating = false;
+
+                            }
+                        }
+                        else {
+
+                            if (button.data('validatefor') == "sponsor") {
+                                $("#sponsor-validate-result").html(response.html);
+
+                                $("#sponsor-details-container").html("");
+                                isValidating = false;
+
+                            }
+                            else {
+                                $("#enroller-validate-result").html(response.html);
+
+                                $("#enroller-details-container").html("");
+                                isValidating = false;
+
+
+
+                            }
+                        }
+                        button.button("reset");
+                    },
+                    error: function (xhr, error, data) {
+                        button.button("reset");
+                        console.log("server error", xhr.responseText);
+                        isValidating = false;
+
+                    }
+                });
+            }
+        });
+        $(function () {
+            var keyStop = {
+                13: "input:text, input:password", // stop enter = submit 
+
+                end: null
+            };
+            $("#enrollment-validation").bind("keydown", function (event) {
+                var selector = keyStop[event.which];
+
+                if (selector !== undefined && $(event.target).is(selector)) {
+                    event.preventDefault(); //stop event
+                    actions.enrollerValidate($(event.target).data('validatefor'));
+                }
+                return true;
+            });
+        });
+    })();
+</script>

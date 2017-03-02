@@ -1,0 +1,298 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<div class="space-20"></div>
+
+<div class="row">
+    <div class="col-sm-3">
+        <div data-spy="affix">
+            <div class="well well-small">
+
+                <ul class="nav nav-list">
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#markets">Markets</a></li>
+                    <li><a href="#settings">Settings</a></li>
+                    <li><a href="#helpers">Helpers</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#utilities">Utilities</a></li>
+                    <li><a href="#extensions">Extensions</a></li>
+                </ul>
+            </div>
+
+            <div class="well well-small">
+                <h5>Questions? Comments?</h5>
+                <p>
+                    <address>
+                        Travis Wilson<br />
+                        8130 John Carpenter Freeway<br />
+                        Dallas, TX 75247<br />
+                    </address>
+
+                    <i class="icon-envelope"></i>&nbsp;<a href="mailto:travisw@exigo.com">travisw@exigo.com</a><br />
+                    <i class="icon-volume-up"></i>&nbsp;<a href="tel:6233414913">(623)341-4913</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-9">
+
+        <a name="overview"></a>
+        <h2>Overview</h2>
+        <p>The replicated site is a public-facing website shell that accepts a unique name, or "web alias", and replaces pre-determined sections of the content with the customer tied to the web alias. These websites often allow orders and enrollments to be placed by visiting users. The website stores the customer's information, or
+            "identity",
+            and can be used to ensure that orders, enrollments and other actions are tied to the site owner.
+        </p>
+
+
+        <hr />
+
+
+        <a name="features"></a>
+        <h2>Features</h2>
+        <h4>Web Aliases</h4>
+        <p>Web aliases are unique alpha-numeric names assigned to replicated site owners to be used as the name of their website.</p>
+        <p>This replicated website is accessed by appending the desired web alias to the end of the URL and directory, but before the page name:</p>
+        <p><code>http://www.company.com/[webalias]</code><br />
+            <code>http://www.company.com/[webalias]/home</code>
+        </p>
+        <p>If a web alias is not detected with the request, the website can be configured to either:</p>
+        <ul>
+            <li>allow orphans by redirecting to itself using an "orphan" web alias, or</li>
+            <li>deny orphans by redirecting to a page forcing them to enter one before browsing any further</li>
+        </ul>
+
+
+        <h4>Identities</h4>
+        <p>The site owner's information is stored and can be referenced at any time at <code>Identity.Current</code>.</p>
+
+        <p>When a replicated site is requested:</p>
+        <ul>
+            <li>The <code>Global.asax</code> parses the request to ensure that the web alias is provided. If the web alias provided is new (ie. doesn't match the one used in the last request), it will proceed to validate the web alias.</li>
+            <li>The <code>IdentityAuthenticationService</code> is used to validate the web alias and attempt to return an Identity.</li>
+            <ul>
+                <li>If the application cache already has a record for this Identity, the cached version is returned.</li>
+                <li>If no cahced Identity is found, site owner's vital information is fetched and the newly created Identity is cached in the application cache.</li>
+            </ul>
+        </ul>
+
+
+
+        <h4>Identity Caching</h4>
+        <p>When a web alias is validated, the site owner's information is fetched from Exigo, stored in the Identity object and cached in the application cache for @Settings.SessionTimeout minutes. This setting can be changed in the <code>Settings/Settings.cs</code> file.</p>
+
+
+
+        <h4>Identity Memory</h4>
+        <p>When a user visits a valid replicated website, a cookie is created on the user's machine that stores the web alias used on their last visit. If the user returns within the next year without a web alias, the website will attempt to fetch the web alias from the cookie and redirect the user to the last replicated site they
+            visited.</p>
+        <p>This options can be toggled in the <code>Global/Settings.cs</code> file under <code>ReplicatedSite.RememberLastWebAliasVisited</code>.</p>
+
+
+
+        <h4>Markets</h4>
+        <p>Markets are used to help internationalized applications identify settings related to a specific company market. Learn more about <a href="#markets">markets</a>.</p>
+
+
+
+        <h4>SASS Stylesheets</h4>
+        <p>We use SASS for all of our web applications, and have provided the <code>site.scss</code> as the main style sheet. </p>
+        <p>SASS is an extension of CSS3, adding nested rules, variables, mixins, selector inheritance and more. For more information on SASS, visit <a href="http://sass-lang.com/" target="_blank">http://sass-lang.com/</a>.</p>
+        <p>To generate our SASS files, we use WebWorkbench from MindScape (<a href="http://www.mindscapehq.com/products/web-workbench" target="_blank">http://www.mindscapehq.com/products/web-workbench</a>). If you're a .NET developer working in Visual Studio, we HIGHLY recommend this add-on.</p>
+
+
+        <div class="well">
+            <h4>Other Included Goodies</h4>
+            <p>We include some basic plugins and frameworks that help to speed up development time. None of the included goodies are required for this replicated site to function.</p>
+
+            <ul>
+                <li><strong>jQuery</strong> (<a href="http://jquery.com/" target="_blank">http://jquery.com/</a>)<br />
+                    The popular JavaScript framework used for powerful DOM manipulation.
+                </li>
+                <li><strong>Modernizr</strong> (<a href="http://modernizr.com/" target="_blank">http://modernizr.com/</a>)<br />
+                    A JavaScript library that detects HTML5 and CSS3 features in the user’s browser.
+                </li>
+                <li><strong>Twitter Bootstrap</strong> (<a href="http://twitter.github.io/bootstrap/" target="_blank">http://twitter.github.io/bootstrap/</a>)<br />
+                    A sleek, intuitive, and powerful front-end framework for faster and easier web development.
+                </li>
+                <li><strong>jQuery Validation Engine</strong> (<a href="https://github.com/posabsolute/jQuery-Validation-Engine" target="_blank">https://github.com/posabsolute/jQuery-Validation-Engine</a>)<br />
+                    A JavaScript plugin aimed at the validation of form fields in the browser by providing visually appealing prompts that grab user attention on the subject matter.
+                </li>
+                <li><strong>Handlebars</strong> (<a href="http://handlebarsjs.com/" target="_blank">http://handlebarsjs.com/</a>)<br />
+                    A JavaScript library that provides the power necessary to let you build semantic templates effectively with no frustration.
+                </li>
+            </ul>
+        </div>
+
+
+
+        <hr />
+
+
+        <a name="markets"></a>
+        <h2>Markets</h2>
+        <p>Markets are used to help internationalized applications identify settings related to a specific company market.
+            The current market is determined by loading the value of a cookie, which can be set at anytime.
+            Market objects are highly extensible, and currently store information such as:</p>
+        <ul>
+            <li>Available countries for that market</li>
+            <li>Culture code</li>
+            <li>A general description, which can be used in dynamic rendering</li>
+        </ul>
+
+        <h4>Usage</h4>
+        <p>A cookie named <code>@GlobalSettings.Markets.MarketCookieName</code> can be stored and given a value found in any Market object defined in the <code>GlobalSettings.Markets</code> collection in the <code>Global/Settings.cs</code> file.
+            A method in the <code>Global/Utilities.cs</code> file called <code>GetCurrentMarket()</code> will fetch the cookie and find an available market in the Markets collection where the cookie value matches the Market's cookie value. If one is found, it will return the Market object.</p>
+
+
+        <h4>Getting the Current Market</h4>
+        <p>To get the current market, you can call <code>GlobalUtilities.GetCurrentMarket()</code>. As an added shortcut, you can also access the current market with <code>Identity.Current.Market</code>.</p>
+
+
+        <h4>Setting the Current Market</h4>
+        <p>To set a market, set the value of a cookie named <code>@GlobalSettings.Markets.MarketCookieName</code> to equal the value of the desired Market object's <code>CookieValue</code> property.</p>
+
+
+        <h4>Adding New Markets</h4>
+        <p>To add a new available market, create a new <code>Market</code> object and add it to the <code>GlobalSettings.Markets.AvailableMarkets</code> list.</p>
+
+
+
+        <hr />
+
+        <a name="settings"></a>
+        <h2>Settings</h2>
+        <p>A collection of global settings is stored in the <code>Global/Settings.cs</code> file, and are accessible in subclasses found under <code>GlobalSettings</code>. We like our settings here instead of the web.config because we find many of our settings work best in an object-oriented environment.</p>
+        <p>Settings stored here include:</p>
+        <ul>
+            <li>Exigo API credentials and settings</li>
+            <li>Exigo Payment API credentials</li>
+            <li>References to connection strings (the actual connection strings are still stored in the web.config)</li>
+            <li>Website settings</li>
+            <li>Available markets</li>
+            <li>Shopping settings</li>
+            <li>Site owner image settings</li>
+            <li>SMTP mail settings</li>
+            <li>Shared company information</li>
+            <li>Static references to company-specific constants (used to give meaning and readability to our code)</li>
+        </ul>
+
+        <h4>Constants</h4>
+        <p>We give hard-coded, static references to company-specific constants to help our code be more readable and meaningful. This also allows us to use Visual Studio's refactor feature in case we need to change a variable across a website.</p>
+        <p>For example, let's pretend we need to reference period type ID 1:</p>
+        <p>
+            <pre>
+// Ugly and not meaningful
+var periodTypeID = 1;
+</pre>
+        </p>
+        <p>To the original developer, this may make sense. However, the code references a number that has specific meaning to the client and not necessarily to the developer. This is ugly, and could be made cleaner with our constant definitions in the <code>Global/Settings.cs</code> file:</p>
+        <p>
+            <pre>
+// Pretty, scalable and meaningful
+var periodTypeID = PeriodTypes.Monthly;
+</pre>
+        </p>
+        <p>Now, whoever looks at the code will know that we are referring to the monthly period type. This also allows us to change it's value globally, rename it using refactoring, and even share the code with other developers. Adding meaning to the code is vital to keeping it scalable, and we feel this is a great step towards that
+            goal.</p>
+        <p>We encourage you to keep this pattern as you develop your website.</p>
+
+
+
+        <hr />
+
+
+
+        <a name="helpers"></a>
+        <h2>Helpers</h2>
+        <p>We have a few helpers found in the <code>Helpers</code> folder that you might want to take advantage of (we do!)</p>
+        <ul>
+            <li><strong>Dapper Dot Net</strong> (<a href="https://code.google.com/p/dapper-dot-net/" target="_blank">https://code.google.com/p/dapper-dot-net/</a>)<br />
+                A simple object mapper for .NET. You can create a Dapper <code>SqlConnection</code> object using our <code>ExigoApiFactory</code> factory:<br />
+                <code>var context = ExigoApiFactory.CreateSqlDapperContext();</code>
+            </li>
+            <li><strong>SqlHelper</strong><br />
+                Our own helper class that makes pulling SQL trivial.
+            </li>
+            <li><strong>GreekingHelper</strong><br />
+                Creates and returns greeking on the fly.
+            </li>
+        </ul>
+
+
+
+        <hr />
+
+
+
+
+        <a name="services"></a>
+        <h2>Services</h2>
+        <p>We have a few services found in the <code>Services</code> folder.</p>
+        <ul>
+            <li><strong>ExigoApiFactory</strong><br />
+                This factory creates Exigo API contexts for you. Here are some examples:<br />
+                <pre>
+// Create a web service context
+var context = ExigoApiFactory.CreateWebServiceContext();
+
+// Create a web service context for a sandbox environment
+var context = ExigoApiFactory.CreateWebServiceContext(ExigoApiFactorySource.Sandbox1);
+
+// Create an OData context
+var context = ExigoApiFactory.CreateODataContext();
+
+// Create an OData context for a sandbox environment
+var context = ExigoApiFactory.CreateODataContext(ExigoApiFactorySource.Sandbox1);
+
+// Create a Dapper context to communicate with your replicated SQL
+var context = ExigoApiFactory.CreateSqlDapperContext();
+
+// Create a payments context
+var context = ExigoApiFactory.CreatePaymentContext();</pre>
+            </li>
+            <li><strong>GlobalResourcesToJavaScriptService</strong><br />
+                Translates a global resource of your choosing to a JSON object. For example, to translate a global resource file in the GlobalResources folder called "Labels.resx" to a Javascript object found in "resources.labels", you would include this in your header:<br />
+                <code>&lt;script src="~/content/scripts/plugins/resource.ashx?name=resources.labels&path=labels" >&lt;/script></code><br />
+                The script file would contain something like this:
+                <pre>
+{
+    var resources = resources || {};
+    resources.labels = {
+        MyFirstKey: "My first value",
+        ...
+    }
+}
+</pre>
+
+
+                As you can see, JavaScript namespacing is supported, allowing you to translate multiple files under the same namespace.
+                <br />
+                <br />
+            </li>
+            <li><strong>IdentityAuthenticationService</strong><br />
+                Authenticates Identity requests. See <a href="#features">features</a> for more information on this service.
+            </li>
+        </ul>
+
+
+
+        <hr />
+
+
+
+        <a name="utilities"></a>
+        <h2>Utilities</h2>
+        <p>A collection of helpful, global utilities is found in the <code>Global/Utilities.cs</code> folder, and can be referenced using <code>GlobalUtilities</code>.</p>
+        <p>Each method has it's own intellisense, and is worth checking out. Add your own methods as you see fit</p>
+
+
+        <hr />
+
+
+        <a name="extensions"></a>
+        <h2>Extensions</h2>
+        <p>A collection of helpful .NET extensions are found in the <code>Global/Extensions.cs</code> folder.</p>
+    </div>
+</div>

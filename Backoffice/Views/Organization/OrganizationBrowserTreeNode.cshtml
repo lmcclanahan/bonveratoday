@@ -1,0 +1,17 @@
+﻿@model Customer
+
+<div class="panel panel-default">
+    <div class="panel-body no-padding">
+        <a href="@Url.Action("organizationbrowser", "organization", new { token = Model.EncryptedCustomerID })">
+            <img src="@Url.Avatar(Model.CustomerID)" class="img-responsive" />
+        </a>
+    </div>
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            @Model.FullName
+        </h3>
+    </div>
+    <div class="panel-body">
+        Coming soon!
+    </div>
+</div>

@@ -1,0 +1,138 @@
+﻿@model ItemListViewModel
+@{
+    ViewBag.Title = "Shopping";
+    Layout = "~/Views/Shared/_ShoppingLayout.cshtml";
+}
+
+<input type="hidden" class="activenavigation" value="shopping" />
+
+@section navigation
+{
+    <div id="category-banner-container" class="itemlist-banner">
+        <h3>Front Door Delivery</h3>
+    </div>
+
+
+}
+
+@section facebook
+{
+
+    @*@Html.Partial("Partials/Modules/_FacebookVideo")*@
+    @Html.Partial("Partials/ProductSearch/_ProductSearch")
+}
+
+
+
+
+
+
+<div id="view-productlist" class="shop">
+    <div class="product-list">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="items-list">
+                    <div class="row" id="itemList">
+                        <div class="col-xs-12">
+                            <div class="space-10"></div>
+                            <img class="img-responsive" src="@Url.Content("~/content/images/loading/circle-48.gif")" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="space-100"></div>
+@Html.AntiForgeryToken()
+
+<script>
+    require(["jquery", "app", "pubsub", "ajax", "toastr"], function ($, app, pubsub, ajax) {
+        var getItemListUrl = "@Url.Action("GetItemList", "shopping")",
+            itemListUrl = "@Url.Action("ItemList", "shopping", new RouteValueDictionary{{ "parentCategoryKey", null}, {"childCategoryKey", null}})",
+            model = @Html.Raw(Json.Encode(Model)),
+            $scrollToTopButton = $("#scroll-to-top"),
+            pxScrolled = 550;
+
+        var state ={
+            CategoryID: model.CategoryID,
+            Sort: "@SortByOptions.AtoZ_Ascending",
+            Query: "" }
+
+        function registerEventHandlers() {
+            $("#ItemCategories").on('change', function () {
+                var CategoryName = $(this).val();
+                window.location = itemListUrl + "/" + CategoryName;
+            });
+
+            $("#searchBar").on('keyup', function(e){
+                if(e.keyCode == 13){
+                    if($("#searchBar").val().trim() != ""){
+                        $("#submitSearch").click();
+                    }
+                };
+            });
+
+            $("#submitSearch").on('click', function(e){
+                state.Query = $("#searchBar").val().trim();
+                if(state.Query != ""){
+                    $("select option[value = 'allproducts']").attr("selected","selected");
+                    actions.loadItemList();
+                }
+            });
+
+            $("#SortBy").on('change', function(){
+                state.Sort = $(this).val();
+                actions.loadItemList();
+            });
+
+            $(window).scroll(function(){
+                if($(window).scrollTop() > pxScrolled){
+                    $scrollToTopButton.fadeIn('slow');
+                }else{
+                    $scrollToTopButton.fadeOut('slow');
+                }
+            });
+
+            $scrollToTopButton.on('click', function(){
+                $('html, body').animate({
+                    scrollTop:0
+                },400);
+                return false;
+            });
+        }
+
+        var actions = {
+            loadItemList: function (Query, SortBy ) {
+                state.Query = Query || state.Query;
+                state.Sort = SortBy || state.Sort;
+                ajax.json({
+                    url: getItemListUrl,
+                    data: {
+                        categoryId: state.CategoryID,
+                        search : state.Query,
+                        sort : state.Sort
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            var $html = $("#itemList");
+
+                            $html.html(response.html);
+                        } else {
+                            console.log("failed");
+                        }
+                    },
+                    error: function (xhr, error, data) {
+                        app.throwError("error loading itemlist");
+                    }
+                });
+            }
+        }
+
+        function _init() {
+            registerEventHandlers();
+            actions.loadItemList();
+        }
+        _init();
+    });
+</script>

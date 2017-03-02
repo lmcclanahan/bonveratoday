@@ -1,0 +1,35 @@
+.view-item {
+
+    .image { text-align: center; }
+
+    &.view-item-card {
+        .details { margin-top: 10px;
+            .itemdescription { font-size: 1.1em; height: 4em; overflow: hidden; }
+            .price { margin-top: 10px; font-size: 1em; }
+            .itemcode {  }
+        }
+        .image { height: 150px; overflow: hidden; margin-top: 10px;
+            img { max-height: 150px; }
+        }
+        &.fuller-brush-logo {
+            .image {
+                img {width: 300px;}
+            }
+        }
+    }
+
+    &.view-item-detail {
+        .image { height: 200px; overflow: hidden; 
+            img { max-height: 200px; }
+        }
+        .details { 
+            .itemdescription { font-size: 1.4em; }
+            .itemcode { color: #aaa; font-size: 0.85em; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
+            .price { margin-top: 15px; font-size: 1.2em; }
+        }
+        .summary { font-size: 1.1em; margin-top: 3em; }
+        .options {
+
+        }
+    }
+}

@@ -1,0 +1,833 @@
+﻿@{
+    var isEnrollment = Request.Url.ToString().ToLower().Contains("enrollment");
+    var style = "";
+    var protocol = Request.IsSecureConnection ? "https" : "http";
+
+    var requestUrl = Request.Url.AbsoluteUri;
+    var needsRedirection = !Request.IsLocal && (requestUrl.Contains("login") || requestUrl.Contains("register") || requestUrl.Contains("/account") || requestUrl.Contains("settings") || requestUrl.Contains("review") || requestUrl.Contains("payment") || requestUrl.Contains("/enrollment/enrolleeinfo"));
+    var showHowToBecomeSmartShopperMessage = Identity.Customer != null && Identity.Customer.CustomerTypeID == (int)CustomerTypes.RetailCustomer;
+}
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html lang="en" class="lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html lang="en" class="lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html lang="en" class="lt-ie9"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <meta name="mobileoptimized" content="0" />
+    <meta name="published" content="@MvcApplication.ApplicationStartDate" />
+
+    <title>@ViewBag.Title - @GlobalSettings.Company.Name</title>
+
+    <link rel="app" id="apppath" href="@Request.ApplicationPath" />
+    <link rel="app" id="appauthenticated" href="@Request.IsAuthenticated.ToString()" />
+    <link rel="app" id="appsessiontimeout" href="@GlobalSettings.ReplicatedSites.SessionTimeout" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+    <meta name="theme-color" content="#ffffff" />
+
+    @*<link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon"/>
+        <link rel="apple-touch-icon" href="~/apple-touch-icon.png"/>
+        <link rel="apple-touch-icon" sizes="57x57" href="~/apple-touch-icon-57x57.png"/>
+        <link rel="apple-touch-icon" sizes="72x72" href="~/apple-touch-icon-72x72.png"/>
+        <link rel="apple-touch-icon" sizes="114x114" href="~/apple-touch-icon-114x114.png"/>
+        <link rel="apple-touch-icon" sizes="144x144" href="~/apple-touch-icon-144x144.png"/>*@
+    @* Styles *@
+    <!-- CSS Files -->
+    <link href="@protocol://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- <link href="@protocol://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/4.0.2/bootstrap-material-design.min.css" rel="stylesheet"/> -->
+    <!-- Bootstrap Material Design -->
+    <link href="http://fezvrasta.github.io/bootstrap-material-design/dist/css/bootstrap-material-design.css" rel="stylesheet" />
+    <link href="http://fezvrasta.github.io/bootstrap-material-design/dist/css/ripples.min.css" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/redesign/dist/css/css/bootoverride.css")" rel="stylesheet" />
+    <!--<link href="@Url.Content("~/Content/redesign/dist/css/tether-theme-arrows.css")" rel="stylesheet" />-->
+    <link href="@Url.Content("~/Content/styles/site.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/redesign/dist/css/css/site_header.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/redesign/dist/css/css/sidecart.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/redesign/dist/css/css/cloudzoom.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/redesign/dist/css/css/itemdetails.css")" rel="stylesheet" />
+
+    <!--<link href="assets/css/material-kit.css" rel="stylesheet"/>
+    <link href="@Url.Content("~/Content/redesign/redesign.min.css")" rel="stylesheet" />
+
+    CSS Just for demo purpose, don't include it in your project
+    <link href="assets/css/demo.css" rel="stylesheet"/>-->
+    <!-- Material Design fonts --><!-- Fonts and icons -->
+    <link href="@protocol://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css" />
+    <link href="@protocol://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css" />
+    <link href='@protocol://fonts.googleapis.com/css?family=Raleway:400,700' rel='stylesheet' type='text/css' />
+    <link href='@protocol://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css' />
+    <link href="@protocol://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="@protocol://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.2/toastr.min.css" rel="stylesheet" />
+
+    @RenderSection("styles", required: false)
+
+    @* Scripts *@
+    <script src="@RouteJs.RouteJsHandler.HandlerUrl"></script>
+    <script src="@Url.Action("culture", "app")"></script>
+    <script src="@ResourceJs.ResourceJsHandler.SourceUrl"></script>
+
+    <!-- RequireJS -->
+    <script src="@protocol://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.20/require.min.js" data-main="@Url.Content("~/Content/scripts/main.js")"></script>
+    <script>
+        require.config({
+            baseUrl: '@Url.Content("~/Content/scripts")',
+            @if (Request.IsLocal)
+            {
+                <text>urlArgs: "bust=" + (new Date()).getTime(),</text>
+            }
+            paths: {
+                'addresses': 'modules/addresses',
+                'app': 'modules/app',
+                'ajax': 'modules/ajax',
+                'browser': 'modules/browser',
+                'calendars': 'modules/calendars',
+                'console': 'modules/console',
+                'containers': 'modules/containers',
+                'cookies': 'modules/cookies',
+                'cloudzoom': 'modules/cloudzoom',
+                'debug': 'modules/debug',
+                'encryptions': 'modules/encryptions',
+                'extensions': 'modules/extensions',
+                'forms': 'modules/forms',
+                'guids': 'modules/guids',
+                'kendogrids': 'modules/kendogrids',
+                'kendo': 'vendor/kendo/scripts/kendo.web.min',
+                'kendo-cultures': 'vendor/kendo/scripts/kendo.culture.min',
+                'passwords': 'modules/passwords',
+                'popups': 'modules/popups',
+                'pubsub': 'modules/pubsub',
+                'urls': 'modules/urls',
+                'widgets': 'modules/widgets',
+
+
+                'enquire': '@protocol://cdnjs.cloudflare.com/ajax/libs/enquire.js/2.1.2/enquire.min',
+                'bootstrap': '@protocol://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min',
+
+                'bootstrap-hover-dropdown': 'vendor/bootstrap-hover-dropdown.min',
+                'handlebars': '@Scripts.Url("~/bundles/scripts/handlebars")',
+                'jquery': '@protocol://code.jquery.com/jquery-3.1.1.min',
+                'tether': '@protocol://cdn.rawgit.com/HubSpot/tether/v1.3.4/dist/js/tether.min',
+                'bootstrap-material-design': '@protocol://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/4.0.2/bootstrap-material-design.umd.min',
+                'jquery-validate': 'vendor/jquery.validate.min',
+                'jquery-validate-unobtrusive': 'vendor/jquery.validate.unobtrusive.min',
+                'jquery-unobtrusive-ajax': 'vendor/jquery.unobtrusive-ajax',
+                'moment': '@protocol://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min',
+                'toastr': '@protocol://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.2/toastr.min'
+            },
+            shim: {
+                'bootstrap': {
+                    deps: ["jquery", "bootstrap-hover-dropdown"]
+                },
+                'jquery-validate-unobtrusive': {
+                    deps: ['jquery-validate']
+                },
+                'jquery-unobtrusive-ajax': {
+                    deps: ['jquery']
+                },
+                'handlebars': {
+                    exports: 'Handlebars'
+                }
+            },
+            deps: ["bootstrap", "extensions", "forms"]
+        });
+    </script>
+
+
+    <!--<script src="~/Content/redesign/scripts/tether.min.js"></script>
+        <script src="~/Content/redesign/redesign.min.js" type="text/javascript"></script>
+        <script src="~/Content/redesign/scripts/bootstrap.min.js"></script>
+        <script src="~/Content/redesign/scripts/bootstrap-material-design.umd.js"></script>-->
+
+    @if (needsRedirection)
+    {
+        <script>
+            require(["jquery"],
+                function ($) {
+                    $(function () {
+                        if (window.location.protocol == "http:") {
+                            var restOfUrl = window.location.href.substr(5);
+                            window.location = "https:" + restOfUrl;
+                        }
+                    });
+                });
+        </script>
+    }
+    else
+    {
+        <script>
+            require(["jquery"],
+                function ($) {
+                    $(function () {
+                        if (window.location.protocol == "https:") {
+                            var restOfUrl = window.location.href.substr(6);
+                            window.location = "http:" + restOfUrl;
+                        }
+                    });
+                });
+        </script>
+    }
+
+
+    @* This script is required to account for the Anti-Forgery token logic *@
+    <script src="@Url.Content("~/Content/scripts/vendor/jquery.extended.js")"></script>
+
+    <!--[if lt IE 9]>
+        <script src="@protocol://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="@protocol://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+        <script src="@protocol://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    @RenderSection("header", required: false)
+
+</head>
+<body style="overflow-x: hidden;">
+    @if (GlobalSettings.Exigo.Api.UseSandboxGlobally && GlobalSettings.Exigo.Api.SandboxID != 0)
+    {
+        <div class="alert alert-info text-center fadeout" role="">
+            <strong>Sandbox Mode</strong> <br />
+            This site is currently using sandbox @GlobalSettings.Exigo.Api.SandboxID.
+        </div>
+    }
+
+    <header class="hidden-print">
+
+        <div id="bonvera-navbar">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-1">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4" style="margin-right: -3em;">
+
+                        <span class="smallnav menu" onclick="openNav()">
+                            <img src="@Url.Content("~/Content/images/logo_with_gradient.png")" class="logo img-responsive" alt="Bonvera Shop Save Share" />
+                        </span>
+
+
+                        <span class="largenav">
+                            <img src="@Url.Content("~/Content/images/logo_with_gradient.png")" class="logo img-responsive" alt="Bonvera Shop Save Share" />
+                        </span>
+
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group is-empty">
+                            <div class="input-group">
+                                <input class="col-xs-12 bonvera-navbar-input" type="text" id="searchBar" placeholder="Search all products" />
+                                <span class="input-group-btn no-padding">
+                                    <button class="bonvera-navbar-button btn btn-primary" type="submit" id="submitSearch">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group is-empty">
+                            <ul class="nav nav-pills">
+                                <li class="active">
+                                    <a href="javascript:void(0)">
+                                        <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>
+                                        <span class="badge">42</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="bonveraSidenav" class="sidenav">
+            <div class="container" style="background-color: #0f416b; min-height: 75px;">
+                <span style="margin: 0px;">
+                    <span class="smallnav menu" onclick="openNav()">
+                        <img src="@Url.Content("~/Content/images/logo_with_gradient.png")" class="logo img-responsive" alt="Bonvera Shop Save Share" style="min-height: 75px;" />
+                    </span>
+                </span>
+                <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">
+                    <i class="fa fa-close" aria-label="Close"></i>
+                </a>
+            </div>
+            <div class="row">
+                <section class="content">
+                    <div class="panel panel-default">
+                        <div class="container">
+                            <div class="row-fluid">
+                                <ul class="nav nav-tabs">
+                                    <li class="active">
+                                        <a href="#sidecart-cart" data-toggle="tab" id="sidecart-cart-tab">Cart</a>
+                                    </li>
+                                    <li>
+                                        <a href="#sidecart-menu" data-toggle="tab" id="sidecart-menu-tab">Menu</a>
+                                    </li>
+
+                                </ul>
+                                <div class="tab-content">
+                                    <div id="sidecart-cart" class="tab-pane fade in active">
+                                        <div class="mobile-scroll-panel tab-content">
+
+                                            <!-- header -->
+                                            <div class="recalculating row-fluid">
+                                                <div class="message">Recalculating prices...</div>
+                                                <div class="recalculating-progress"></div>
+                                            </div>
+                                            <div class="cart-item cart-bundle hide"></div>
+
+                                            <!-- free shipping -->
+                                            <div class="cart-item cart-free-shipping">
+                                                <div class="cart-shipping ">
+                                                    <div class="free-shipping-achieved">
+                                                        <img src="https://batmancdn.jet.com/1487174805981/img/free_shipping_v2.gif">
+                                                    </div>
+                                                    <div class="shipping-progress">
+                                                        <div class="shipping-messaging">
+                                                            <div class="earned-message">You've earned FREE shipping!</div>
+                                                            <div class="shipping-message">
+                                                                <span class="messageNumber">$6.50</span><span class="messageText"> away from FREE shipping</span>
+                                                            </div>
+                                                        </div>
+                                                        <div data-min="0" data-max="35" data-current="15.07" class="cart-free-shipping-bar">
+                                                            <div class="progress-bar">
+                                                                <div style="width: 81.4286%;" class="progress">$15.07</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- alert -->
+                                            <div id="cart-price-change-alert"></div>
+
+                                            <!-- products -->
+                                            <div class="cart-products">
+                                                <div data-sku="d4d948ee8d414696ab8968908688efc3" class="product-cart cart-item overflow-hidden">
+                                                    <div class="product-cart-quantity">
+                                                        <a href="#" class="cart-quantity-up">
+                                                            <i class="fa fa-arrow-up"></i>
+                                                        </a>
+                                                        <div class="cart-quantity-number ">1</div>
+                                                        <a href="#" class="cart-quantity-down">
+                                                            <i class="fa fa-arrow-down"></i>
+                                                        </a>
+                                                    </div>
+                                                    <a href="#" class="product-cart-image">
+                                                        <div class="img-holder">
+                                                            <img src="https://images7.jetcdn.net/md5/6b79bd4c2749d9c1f2ccd4cb4555d47e.100" alt="Bonvera Product Title" />
+                                                        </div>
+                                                    </a>
+                                                    <div class="product-title">
+                                                        <div class="brand h6 text-gray-4"></div>
+                                                        <a href="#">Bonvera Product Title</a>
+                                                    </div>
+                                                    <div class="product-price">
+                                                        <div class="price-market strikethrough">$MarketPricing.00</div>
+                                                        <div class="price-wrapper">
+                                                            <div id="price-ours">$OurPricing.00</div>
+                                                            <span class="price-difference">-$0.04</span>
+                                                        </div>
+                                                        <div class="price-unit">($0.00/unit)</div>
+                                                        <div class="price-savings">
+                                                            <span class="savings-number">0.47%</span>
+                                                            <span class="savings-message">savings</span>
+                                                        </div>
+                                                    </div>
+                                                    <a href="#" class="product-remove">
+                                                        <i class="fa fa-close"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="sidecart-menu" class="tab-pane fade">
+                                        <div class="mobile-scroll-panel tab-content">
+                                            Menu
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <div class="hide-large">
+                        <div class="subtotal">
+                            <label class="mb0 pt1 pb1 border-bottom h3 text-center text-gray-6">
+                                <span>Subtotal&nbsp;</span><span class="subtotal-amount strong">$35.61</span>
+                            </label>
+                        </div>
+                        <div class="buttons  p1 text-center">
+                            <a href="#" class="keep-shopping cart-view strong btn btn-primary">Keep Shopping</a>
+                            <a href="/cart" class="cart-view strong btn btn-secondary">View Cart</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+
+
+
+        <!-- Logo Header -->
+        <div class="mainheader" style="display: none;">
+            <div class="container">
+                <div class="row" style="">
+                    @if (!GlobalSettings.Globalization.HideForLive)
+            {
+                    <div class="col-sm-5">
+                        <a href="@Url.Action("index", "home")" class="hidden-xs">
+                            <img src="@Url.Content("~/Content/images/logo_with_gradient.png")" class="logo img-responsive" />
+                        </a>
+                    </div>
+                    }
+                    else
+                    {
+                    <div class="col-sm-offset-4 col-sm-8">
+                        <a href="@Url.Action("index", "home")" class="hidden-xs">
+                            <img src="@Url.Content("~/Content/images/logo_with_gradient.png")" class="logo img-responsive" />
+                        </a>
+                    </div>
+                    }
+
+                    <div class="col-sm-7">
+                        <!-- Mobile Logo -->
+                        <div id="mobile-logo-container">
+                            <img class="img-responsive visible-xs pull-left" src="@Url.Content("~/Content/images/logo.png")" />
+                        </div>
+
+                        @if (!GlobalSettings.Globalization.HideForLive)
+                        {
+                        <div id="account-cart-container">
+                            <div class="row">
+                                <div class="col-sm-6 col-xs-12">
+
+                                    <!-- Account -->
+                                    @if (Identity.Customer != null)
+                                        {
+                                        <p id="welcome-message">Hi @Identity.Customer.FirstName!</p>
+                                        }
+                                    <div class="space-5"></div>
+                                </div>
+                                <div class="col-sm-6 col-xs-12">
+                                    @if (!isEnrollment)
+                                        {
+                                    <!-- Cart -->
+                                        <div id="cart-button-container">
+                                            <a href="@Url.Action("cart", "shopping")">
+                                                <img class="img-responsive" src="~/Content/images/cart.png" />
+                                                <sup id="my-cart"></sup>
+                                            </a>
+                                        </div>
+                                        }
+                                </div>
+                            </div>
+                            @if (showHowToBecomeSmartShopperMessage)
+                                {
+                                <br />
+                                <a data-toggle="modal" data-target="#howtomodal">How do I become a Smart Shopper?</a>
+
+                            <!-- Modal -->
+                                <div class="modal fade" id="howtomodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header header-blue">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title" id="myModalLabel">How do I become a Smart Shopper?</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h4>Simple!</h4>
+
+                                                <ol>
+                                                    <li>Click on Replenish</li>
+                                                    <li>Add at least one product to Replenish</li>
+                                                    <li>Click on the Cart and Checkout Successfully</li>
+                                                    <li>You are Smart Shopper!</li>
+                                                </ol>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                }
+                        </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Main Navigation -->
+        <nav class="navbar navbar-default main-nav" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+
+                <div class="container">
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        @if (!GlobalSettings.Globalization.HideForLive)
+                        {
+                    <!-- Site Links -->
+                        <ul class="nav navbar-nav">
+                            @{
+                                    var excludedCategoryIDs = new[] { "account" };
+                                    var nodes = Settings.SiteMap.Current.Items.Where(c => c.IsVisible());
+
+                                    if (Identity.Customer == null)
+                                    {
+                                        nodes = nodes.Where(c => !excludedCategoryIDs.Contains(c.ID));
+                                    }
+                            }
+                            <!-- Dropdown Links -->
+                            @foreach (var node in nodes.Cast<NavigationSiteMapNode>())
+                                {
+                                    if (node.Children.Any())
+                                    {
+                                <li class="dropdown dropdown-hover @node.DeviceVisibilityCssClass">
+                                    <a class="dropdown-toggle" data-navigation="@node.ActiveGroup" data-toggle="dropdown">
+                                        @node.Label <b class="caret"></b>
+                                    </a>
+                                    <ul class="dropdown-menu col-2">
+                                        @foreach (var item in node.Children.Where(c => c.IsVisible()))
+                                                {
+                                                    // Dividers
+                                                    var dividerItem = item as DividerNode;
+                                                    if (dividerItem != null)
+                                                    {
+                                                <li class="divider"></li>
+
+                                                        continue;
+                                                    }
+
+                                                    // Headings
+                                                    var headingItem = item as HeadingNode;
+                                                    if (headingItem != null)
+                                                    {
+                                                <li role="presentation" class="dropdown-header">@headingItem.Label</li>
+
+                                                        continue;
+                                                    }
+
+                                                    // Links
+                                                    var linkItem = item as NavigationSiteMapNode;
+                                                    if (linkItem != null)
+                                                    {
+                                                <li class="@linkItem.DeviceVisibilityCssClass @(linkItem.IsActive() ? "active" : "")">
+                                                    <a href="@linkItem.Url" target="@linkItem.Target">
+                                                        @if (linkItem.HasIcon)
+                                                                {
+                                                                <i class="@linkItem.Icon"></i>
+                                                                }
+                                                        @item.Label
+                                                    </a>
+                                                </li>
+                                                    }
+                                                }
+                                    </ul>
+                                </li>
+                                    }
+                                    else
+                                    {
+                                <!-- Non-Dropdown Links -->
+                                <li class="@node.DeviceVisibilityCssClass">
+                                    <a href="@node.Url" data-navigation="@node.ActiveGroup">
+                                        @if (node.HasIcon)
+                                                {
+                                                <i class="@node.Icon"></i>
+                                                }
+                                        @node.Label
+                                    </a>
+                                </li>
+                                    }
+                                }
+                        </ul>
+                                    }
+                        <!-- Social Media Icons -->
+                        <div id="social-media-container" class="hidden-xs">
+                            <ul class="list-unstyled list-inline">
+                                <li>
+                                    <a href="@GlobalSettings.Company.Facebook" target="_blank" class="id-social">
+                                        <span class="fa-facebook" title="Facebook"></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@GlobalSettings.Company.Twitter" target="_blank" class="id-social">
+                                        <span class="fa-twitter" title="Twitter"></span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@GlobalSettings.Company.Instagram" target="_blank" class="id-social">
+                                        <span class="fa-instagram" title="Instagram"></span>
+                                    </a>
+                                </li>
+                                @*<li>
+                                        <a href="@GlobalSettings.Company.Pinterest" target="_blank" class="id-social"><span class="fa-pinterest-p" title="Pintrest"></span></a>
+                                    </li>
+                                    <li>
+                                        <a href="@GlobalSettings.Company.GooglePlus" target="_blank" class="id-social"><span class="fa-google-plus" title="Google Plus"></span></a>
+                                    </li>*@
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+
+
+
+
+    @RenderBody()
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Site Footer -->
+    <footer class="hidden-print">
+        <div id="upper-footer">
+            <div class="container">
+                <div class="row-24">
+                    <div class="col-sm-6 col-sm-offset-3 text-center">
+                        <p id="footer-logo-wrapper">
+                            <img class="img-responsive" src="~/Content/images/footer-logo.PNG" />
+                        </p>
+                        <p>@GlobalSettings.Company.Address.Address1</p>
+                        <p>@GlobalSettings.Company.Address.City, @GlobalSettings.Company.Address.State @GlobalSettings.Company.Address.Zip</p>
+                        <p>United States</p>
+                    </div>
+                    @if (!GlobalSettings.Globalization.HideForLive)
+                    {
+                        <div class="col-sm-6 text-center">
+                            <h3>Contact Us</h3>
+                            <p id="message-us-wrapper">
+                                <a id="message-us" class="btn btn-white">Message Us</a>
+                            </p>
+                            <div class="space-20"></div>
+                            <div id="footer-social-container">
+                                <ul class="list-unstyled list-inline">
+                                    <li>
+                                        <a href="@GlobalSettings.Company.Facebook" target="_blank" class="id-social">
+                                            <span class="fa-facebook-square" title="Facebook"></span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@GlobalSettings.Company.Twitter" target="_blank" class="id-social">
+                                            <span class="fa-twitter-square" title="Twitter"></span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@GlobalSettings.Company.Instagram" target="_blank" class="id-social">
+                                            <span class="fa-instagram" title="Instagram"></span>
+                                        </a>
+                                    </li>
+                                    @*<li class="hidden-xs">
+                                            <a href="@GlobalSettings.Company.Pinterest" target="_blank" class="id-social"><span class="fa-pinterest-square" title="Pintrest"></span></a>
+                                        </li>
+                                        <li class="hidden-xs">
+                                            <a href="@GlobalSettings.Company.GooglePlus" target="_blank" class="id-social"><span class="fa-google-plus-square" title="Google Plus"></span></a>
+                                        </li>*@
+                                </ul>
+                            </div>
+                        </div>
+
+                        @*Z.M. 76882 5-10-16 Added corporate blog link- updated resx files for all below*@
+                        <div class="col-sm-8 col-sm-offset-1 hidden-xs">
+                            <h3>Quick Links</h3>
+                            <p>
+                                <a href="@Url.Action("ourproducts", "shopping", new {parentCategoryKey = "", subCategoryKey = ""})">@Resources.Common.BonveraProducts</a>
+                            </p>
+                            @if (Identity.Customer == null)
+                            {
+                            <p>
+                                <a href="@Url.Action("registrationlanding", "enrollment")">@Resources.Common.JoinBonvera</a>
+                            </p>
+                            }
+                            <p>
+                                <a href="@Url.Action("partnerstores", "shopping", new {parentCategoryKey = "", subCategoryKey = ""})">@Resources.Common.PartnerStores</a>
+                            </p>
+                            <p>
+                                <a href="@Url.Action("CorporateBlog", "app", new {parentCategoryKey = "", subCategoryKey = ""})" target="_blank">@Resources.Common.CorporateBlog</a>
+                            </p>
+                        </div>
+                    }
+                </div>
+
+            </div>
+        </div>
+        <div id="lower-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <p id="copyright-wrapper">
+                            &#169; @GlobalSettings.Company.Name @DateTime.Now.Year, All Rights Reserved
+                        </p>
+                    </div>
+                    <div class="col-sm-4">
+                        <p id="privacy-policy-wrapper">
+                            <a href="@Url.Action("PrivacyPolicy", "home")">Bonvera Privacy Policy</a>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+
+    @* Language Modal *@
+    <div class="modal fade" id="language" tabindex="-1" role="dialog" aria-labelledby="language" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">@Resources.Common.SelectCountLang</h4>
+                </div>
+                <div class="modal-body">
+                    <p>@Resources.Common.SelectCountry</p>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="control-group">
+                                <label class="control-label" for="Country">@Resources.Common.ChooseCountry</label>
+                                <div class="controls">
+                                    @{
+                                        var availableMarkets = GlobalSettings.Markets.AvailableMarkets;
+                                        var selectedCountryCode = GlobalUtilities.GetSelectedCountryCode();
+                                        var selectedMarket = availableMarkets.FirstOrDefault(c => c.Countries.Contains(selectedCountryCode));
+                                    }
+                                    <select name="Country" id="CountrySelector" class="span12 form-control">
+                                        @foreach (var item in availableMarkets)
+                                        {
+                                            var selected = (selectedMarket == item) ? "selected='selected'" : "";
+                                        <option value="@item.Countries.FirstOrDefault()" @selected>@item.Description</option>
+                                        }
+                                    </select>
+                                </div>
+                                <!-- /controls -->
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="control-group">
+
+                                <label class="control-label" for="Country">@Resources.Common.ChooseLang</label>
+                                <div class="controls">
+                                    <select name="Language" class="span12 form-control">
+                                        @foreach (var lang in GlobalSettings.Globalization.AvailableLanguages)
+                                        {
+                                        <option value="@lang.CultureCode" selected="">@CommonResources.Languages(lang.LanguageID)</option>
+                                        }
+                                    </select>
+                                </div>
+                                <!-- /controls -->
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <a class="btn btn-primary" id="languageSubmit">@Resources.Common.Submit</a>
+                        </div>
+                    </div>
+                    <div class="space-30"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Global Modal *@
+    <div id="addtocart-modalcontainer">
+        <div class="modal fade" id="view-item" tabindex="-1" role="dialog" aria-labelledby="quickShopLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span><span class="sr-only">@Resources.Common.Close</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <div class="space-20"></div>
+                        </h4>
+
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Message Us Modal *@
+    <div id="message-us-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">@Resources.Common.Close</span>
+                    </button>
+                    <h4 class="modal-title">Message Us</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="message-us-form">
+                        <label>Your email:</label>
+                        <input type="text" name="fromEmail" class="form-control" placeholder="Email" />
+
+                        <div class="space-30"></div>
+
+                        <label>Subject:</label>
+                        <input type="text" name="subject" class="form-control" placeholder="Subject" />
+
+                        <div class="space-30"></div>
+
+                        <label>Enter your message:</label>
+                        <textarea name="body" class="form-control"></textarea>
+                        <div class="space-20"></div>
+
+                        <button type="button" data-dismiss="modal" class="btn pull-right">Close</button>
+                        <button id="submit-message" type="button" class="btn btn-info pull-right" style="margin-right: 10px;">Submit</button>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @* Global Javascript *@
+    @Html.Partial("_GlobalScripts")
+
+    <!-- Page Scripts -->
+    @RenderSection("scripts", required: false)
+    @Html.PartialScripts()
+
+
+
+    @Html.AntiForgeryToken()
+
+</body>
+
+
+</html>

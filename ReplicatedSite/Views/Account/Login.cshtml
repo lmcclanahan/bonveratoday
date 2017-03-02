@@ -1,0 +1,199 @@
+﻿@model LoginViewModel
+@{
+    ViewBag.Title = "Sign In";
+    var isPasswordResetRedirect = Request.QueryString["p"] != null && Request.QueryString["p"] == "r";
+    var hasReturnURL = (Request["ReturnUrl"] != null) ? true : false;
+    var returnUrl = "";
+    if (hasReturnURL)
+    {
+        returnUrl = Request["ReturnUrl"];
+    }
+}
+
+<div id="view-sitelogin" class="container site-login">
+    <h2>Sign In</h2>
+
+    <div class="row">
+        <div class="col-md-5 col-sm-12">
+            <div class="alert alert-danger alert-dismissable" id="errors" style="display: none;">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <h4 class="title"></h4>
+                <div class="error"></div>
+            </div>
+            <div class="well account-form-container">
+                <form role="form" class="form-horizontal">
+                    <div class="form-group">
+                        @Html.LabelFor(c => c.LoginName, new { @class = "col-sm-3 control-label" })
+                        <div class="col-xs-9">
+                            @Html.EditorFor(c => c.LoginName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(c => c.Password, new { @class = "col-sm-3 control-label" })
+                        <div class="col-xs-9">
+                            @*@Html.EditorFor(c => c.Password)*@
+                            @Html.PasswordFor(c => c.Password, new { @class = "form-control", value = Model.Password, placeholder = Resources.Common.Password })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <button type="button" id="loginbutton" data-loading-text="Loading..." class="btn btn-primary">Sign in</button>
+                        </div>
+                    </div>
+                    <span class="pull-right"><a href="@Url.Action("ForgotPassword", "Account")">Forgot Password?</a></span>
+                    <div class="clearfix"></div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-7 col-sm-12">
+            <h3>Don't have an account?</h3>
+            <p>Please register by clicking on the below button.</p>
+            <p>
+                @if (hasReturnURL)
+                {
+                    <a href="@Url.Action("register", "account", new { ReturnUrl = returnUrl })" class="btn btn-info">
+                        @if (Model.IsSmartShopperRegistration)
+                        {
+                            <text>Click here to continue your account creation</text>
+                        }
+                        else
+                        {
+                            <text>Create an account</text>
+                        }
+                        
+                    </a>
+                }
+                else
+                {
+                    <a href="@Url.Action("registrationlanding", "enrollment")" class="btn btn-info">Create an account</a>
+                }
+            </p>
+
+
+        </div>
+    </div>
+</div>
+<div class="space-100"></div>
+
+@section scripts
+{
+    <script>
+        require(["jquery", "ajax", "cookies", "urls", "toastr", "forms"], function ($, ajax, cookies, url, toastr, forms) {
+            
+            // Settings
+            var context = '#view-sitelogin',
+                $context = $(context),
+                cookiename = '@(GlobalSettings.Exigo.Api.CompanyKey)LoginName',
+                landingUrl = '@Url.Action("index", "home")',
+                isPasswordResetRedirect = @isPasswordResetRedirect.ToString().ToLower();
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+
+                // Login Form
+                $('#loginbutton', $context).on('click', function (event) {
+                    event.preventDefault();
+                    $(this).button("loading");
+                    actions.signin();
+                });
+                $('input', $context).on('keypress', function (event) {
+                    if (event.which == 13) {
+                        event.preventDefault();
+                        actions.signin();
+                    }
+                });
+
+            }
+
+
+            // Actions
+            var actions = {
+                clearCookies: function () {
+                    cookies.clear(cookiename);
+                },
+                loadCookies: function () {
+                    var savedLoginName = cookies.get(cookiename);
+                    if (savedLoginName) $('#LoginName').val(savedLoginName);
+                },
+                saveCookies: function () {
+                    // Get the expiration date of the cookie
+                    var expires = new Date();
+                    expires.setDate(expires.getDate() + 365);
+
+                    // Set the cookies
+                    cookies.set(cookiename, $('#LoginName').val(), {
+                        expires: expires
+                    });
+                },
+                signin: function () {
+
+                    // Validate the form
+                    if (!$('form').valid()) {
+                        $("#loginbutton").button("reset");
+                        return false;
+                    }
+
+
+                    // Submit the form
+                    ajax.json({
+                        url: window.location,
+                        data: $('form').serializeObject(),
+                        beforeSend: function () {
+                            toastr.clear();
+                        },
+                        success: function (response) {
+                            if (!response.Status) {
+                                actions.throwError("Login Failed", response.ErrorMessage);
+                                $("#loginbutton").button("reset");
+                            }
+                            else {
+                                // Save the cookies
+                                actions.saveCookies();
+
+                                // Redirect
+                                window.location = (response.RedirectUrl) ? response.RedirectUrl : decodeURIComponent(url.current.queryKey.ReturnUrl || landingUrl);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr);
+                            actions.throwError("Login failed", error);
+                            $("#loginbutton").button("reset");
+                        }
+                    });
+                },
+                throwError: function (title, error) {
+                    toastr.error(error, title);
+                    $('#Password').focus();
+                    $("#loginbutton").button("reset");
+                }
+            };
+
+
+            // Initialization
+            function _init() {
+
+                // Register the event handlers
+                registerEventHandlers();
+
+                // Load the saved cookies into the form
+                actions.loadCookies();
+
+                // Focus on the right field
+                if ($('#LoginName').val() == '') $('#LoginName').focus();
+                else $('#Password').focus();
+
+
+                // Handle password reset redirect messaging
+                if (isPasswordResetRedirect) {
+                    $(function() {
+                        toastr.success("Your password has been reset, please log in with your new password");
+                    });
+                }
+            }
+            _init();
+
+        });
+    </script>
+}

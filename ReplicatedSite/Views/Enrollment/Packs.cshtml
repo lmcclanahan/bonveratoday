@@ -1,0 +1,376 @@
+﻿@model PacksViewModel
+@{
+    var selectedOrderItemCode = (Model.SelectedOrderItem != null) ? Model.SelectedOrderItem.ItemCode : "";
+    
+    var selectedOrderItemType = (Model.SelectedOrderItem != null) ? Model.SelectedOrderItem.Type : ShoppingCartItemType.EnrollmentPack;
+   
+    ViewBag.Title = "Enrollment Options";
+}
+<div class="container">
+    <div id="view-packs" class="customer-type-@(Model.CustomerTypeID)">
+        <input type="hidden" id="selected-order-item" data-itemcode="@selectedOrderItemCode" data-type="@selectedOrderItemType" />
+
+        <h2>@ViewBag.Title</h2>
+
+        <div class="space-30"></div>
+
+        <div class="pack-list row text-center order" style="margin: auto;" id="kit-container">
+
+            @foreach (var item in Model.OrderItems.OrderBy(i => i.Price))
+            {
+                var isRegistrationKit = item.ItemCode == Model.RequiredEnrollmentPackItemCode;
+                var packCount = Model.OrderItems.Count();
+                var columnCount = 12;
+
+                switch (packCount)
+                {
+                    case 1:
+                        columnCount = 12;
+                        break;
+                    case 2:
+                        columnCount = 6;
+                        break;
+                    case 3:
+                        columnCount = 4;
+                        break;
+                    default:
+                        break;
+                }
+                <div class="col-sm-@columnCount">
+                    <section class="pack" data-itemcode="@item.ItemCode" data-type="@item.Type">
+                        <!-- hidden item code -->
+                        <input type="hidden" class="itemcode" value="@item.ItemCode" />
+
+
+                        <header>@item.ItemDescription</header>
+                        <article>
+                            <div class="item-details">
+                                <h4>@item.Price.ToString("C2")</h4>
+                                @*<span class="pv">BV - @item.CV.ToString("N2")</span>*@
+                                <a data-toggle="modal" data-target="#@item.ItemCode-modal">
+                                    <img src="@item.SmallImageUrl" />
+                                </a>
+                                <div class="shortdescription">
+                                    @Html.Raw(item.ShortDetail1)
+                                </div>
+                            </div>
+                            <div class="space-20"></div>
+
+                            <div class="details">
+                                @{ var packtype = (int)ShoppingCartItemType.EnrollmentPack; }
+                                <div class="addtoorder-container" data-packtype="@packtype">
+                                    @if (isRegistrationKit)
+                                    {
+                                        <span class="add-confirm no-hide">
+                                            <i class="fa-check"></i> Item included with registration
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <a class="btn btn-primary" data-role="additem">Add To Order</a>
+                                        <span class="add-confirm" style="display:none;">
+                                            <i class="fa-check"></i> Item Added!<br />
+                                            <a data-role="removepack"><small>remove</small></a>
+                                        </span>
+                                    }
+                                </div>
+                                <div class="qualifies-you-for">@Html.Raw(item.LongDetail3)</div>
+                            </div>
+                        </article>
+
+                        <div class="modal fade" tabindex="-1" role="dialog" id="@item.ItemCode-modal">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">@item.ItemDescription</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img src="@item.LargeImageUrl" class="img-responsive" />
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+                    </section>
+                </div>
+            }
+
+
+        </div>
+
+        <div class="space-30"></div>
+    </div>
+
+    <div class="text-center">
+        <p>Your Registration kit discount of $24.97 will be applied at the time of checkout if you choose to add the first order pack</p>
+    </div>
+
+    <div class="space-30"></div>
+
+    <div class="text-center">
+        <h4>Optional BVR lifestyle Replenish Program set up:</h4>
+    </div>
+
+    <div class="space-30"></div>
+
+    @*Z.M. #76633 5-16-16 Added replinish packs to enrollment*@
+    <div id="replinish-packs" class="customer-type-@(Model.CustomerTypeID)">
+        <input type="hidden" id="selected-auto-order-item" data-itemcode="@selectedOrderItemCode" data-type="@selectedOrderItemType" />
+        <div class="pack-list row text-center order" style="margin: auto;" id="kit-container">
+
+            @foreach (var item in Model.ReplinishPacks.OrderBy(i => i.Price))
+            {
+                var packCount = Model.ReplinishPacks.Count();
+                var columnCount = 12;
+
+                switch (packCount)
+                {
+                    case 1:
+                        columnCount = 12;
+                        break;
+                    case 2:
+                        columnCount = 6;
+                        break;
+                    case 3:
+                        columnCount = 4;
+                        break;
+                    default:
+                        break;
+                }
+                <div class="col-sm-@columnCount">
+                    <section class="pack" data-itemcode="@item.ItemCode" data-type="@item.Type">
+                        <!-- hidden item code -->
+                        <input type="hidden" class="itemcode" value="@item.ItemCode" />
+
+                        <a data-toggle="modal" data-target="#@item.ItemCode-modal">
+                            <header>@item.ItemDescription</header>
+                        </a>
+                        <article>
+                            <div class="item-details">
+                                <div class="space-20"></div>
+                                <h4>@item.Price.ToString("C2")/@item.BV.ToString("C2")BV</h4>
+                                @*<span class="pv">BV - @item.CV.ToString("N2")</span>*@
+
+                        
+                        </div>
+                        <div class="space-20"></div>
+
+                            <div class="details">
+                                @{ var packtype = (int)ShoppingCartItemType.EnrollmentAutoOrderPack; }
+                                <div class="addtoorder-container" data-packtype="@packtype">
+
+                                    <a class="btn btn-primary" data-role="additem">Add To Order</a>
+                                    <span class="add-confirm" style="display:none;">
+                                        <i class="fa-check"></i> Item Added!<br />
+                                        <a data-role="removepack"><small>remove</small></a>
+                                    </span>
+                                </div>
+                            </div>
+                        </article>
+
+                        <div class="modal fade" tabindex="-1" role="dialog" id="@item.ItemCode-modal">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    </div>
+                                    @*//Z.M. 5-16-16 #76633 Added for display of replenish packs*@
+                                    <div class="modal-body row">
+                                        <div class="col-xs-6 col-xs-offset-3">
+                                            <h4 class="modal-title">@item.ShortDetail2</h4>
+                                            <div class="space-20"></div>
+                                        </div>
+                                        <div class="col-xs-6 col-xs-offset-3">
+                                            <img src="@item.LargeImageUrl" class="img-responsive" />
+                                        </div>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+                    </section>
+                </div>
+            }
+
+
+        </div>
+
+        <div class="space-30"></div>
+
+        @*//Z.M. 5-16-16 #76633 Added for selection of replenish packs*@
+        <div class="text-center">
+            <p>
+                First billing of Replenish program will happen 30 days from enrollment date<br /> (Taxes and Shipping are not included in the pricing)<br /> You can add/delete/change your Replenish profile at anytime.
+            </p>
+        </div>
+        <div class="space-20"></div>
+
+        <div class="pull-right">
+            <a data-action="checkout" class="btn btn-primary btn-lg">Continue</a>
+        </div>
+        <div class="clearfix"></div>
+        <div class="space-30"></div>
+    </div>
+</div>
+@section scripts
+{
+    <script>
+        require(["jquery", "ajax", "app", "toastr"], function ($, ajax, app, toastr) {
+
+            // Settings
+            var context = "#view-packs",
+                $context = $(context),
+                updatePackUrl = "@Url.Action("updatepackitems")";
+
+        //Z.M. 5-16-16 #76633 Added for single selection of replenish packs
+            var context1 = "#replinish-packs",
+                $context1 = $(context1),
+                updatePackUrl = "@Url.Action("updatepackitems")";
+
+            // State
+            var state = {
+                hasPack: false
+            };
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $('[data-role="additem"]', $context).on('click', function () {
+                    var $button = $(this);
+                    actions.addItem($button);
+                });
+
+                $('[data-role="removepack"]', $context).on('click', function () {
+                    var $button = $(this);
+                    actions.removeItem($button);
+                });
+
+                //Z.M. 5-16-16 #76633 Added for single selection of replenish packs
+                $('[data-role="additem"]', $context1).on('click', function () {
+                    var $button = $(this);
+                    actions.addItem($button);
+                });
+
+                //Z.M. 5-16-16 #76633 Added for single selection of replenish packs
+                $('[data-role="removepack"]', $context1).on('click', function () {
+                    var $button = $(this);
+                    actions.removeItem($button);
+                });
+
+                $("[data-action='checkout']").on("click", function () {
+                    var url = "@Url.Action("checkout", "enrollment")";
+
+                    window.location = url;
+                });
+            }
+
+            // Actions
+            var actions = {
+                addItem: function ($button) {
+
+                    var $pack = $button.parents('.pack'),
+                        $packContainer = $button.parents('.pack-list'),
+                        $itemCodeContainer = $pack.find('.itemcode'),
+                        itemCode = $itemCodeContainer.val(),
+                        $container = $button.parents('.addtoorder-container'),
+                        packType = $container.data('packtype'),
+                        action = 'add';
+
+
+                    $packContainer.find('.add-confirm:not(.no-hide)').css('display', 'none');
+                    $packContainer.find('[data-role="additem"]').css('display', 'inline-block');
+
+
+                    ajax.json({
+                        url: updatePackUrl,
+                        data: {
+                            itemcode: itemCode,
+                            action: action,
+                            packType: packType
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                $button.css('display', 'none');
+                                $container.find('.add-confirm:not(.no-hide)').css('display', 'inline-block');
+                            }
+                            else {
+                                app.throwError("We were unable to add this pack.");
+                            }
+                        },
+                        error: function (xhr, error, status) {
+                            console.log("Error: ", xhr);
+                        }
+                    });
+                },
+                removeItem: function ($button) {
+
+                    var $pack = $button.parents('.pack'),
+                        $itemCodeContainer = $pack.find('.itemcode'),
+                        itemCode = $itemCodeContainer.val(),
+                        $container = $button.parents('.addtoorder-container'),
+                        packType = $container.data('packtype'),
+                        action = 'remove';
+
+
+                    ajax.json({
+                        url: updatePackUrl,
+                        data: {
+                            itemcode: itemCode,
+                            action: action,
+                            packType: packType
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                $container.find('.add-confirm:not(.no-hide)').css('display', 'none');
+                                $container.find('[data-role="additem"]').css('display', 'inline-block');
+                            }
+                            else {
+                                toastr.error("We were unable to remove this pack.");
+                            }
+                        },
+                        error: function (xhr, error, status) {
+                            console.log("Error: ", xhr);
+                        }
+                    });
+                },
+                populateExistingPacks: function () {
+                    var orderItemCode = $('#selected-order-item').data('itemcode'),
+                        autoOrderItemCode = $('#selected-auto-order-item').data('itemcode'),
+                        orderItemType = $('#selected-order-item').data('type'),
+                        autoOrderItemType = $('#selected-auto-order-item').data('type'),
+                        $orderItemButton = $('.pack[data-itemcode="' + orderItemCode + '"][data-type="' + orderItemType + '"] [data-role="additem"]'),
+                        $autoOrderItemButton = $('.pack[data-itemcode="' + autoOrderItemCode + '"][data-type="' + autoOrderItemType + '"] [data-role="additem"]'),
+                        $orderItemContainer = $orderItemButton.parents('.addtoorder-container'),
+                        $autoOrderItemContainer = $autoOrderItemButton.parents('.addtoorder-container');
+
+                    if (orderItemCode != "") {
+                        $orderItemButton.css('display', 'none');
+                        $orderItemContainer.find('.add-confirm:not(.no-hide)').css('display', 'inline-block');
+
+                        state.hasPack = true;
+                    }
+
+                    if (autoOrderItemCode != "") {
+                        $autoOrderItemButton.css('display', 'none');
+                        $autoOrderItemContainer.find('.add-confirm:not(.no-hide)').css('display', 'inline-block');
+                    }
+                }
+            };
+
+
+            // Helpers
+            var helpers = {
+
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+
+                actions.populateExistingPacks();
+
+            }
+            init();
+
+        });
+    </script>
+}

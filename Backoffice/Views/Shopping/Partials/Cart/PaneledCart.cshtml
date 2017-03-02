@@ -1,0 +1,174 @@
+﻿@model IEnumerable<IItem>
+@{
+    var contextID = Guid.NewGuid();
+    var type = (ShoppingCartItemType)ViewData["Type"];
+    var typeID = (int)type;
+    var hideControls = (ViewData["HideControls"] != null && ViewData["HideControls"].CanBeParsedAs<bool>()) ? Convert.ToBoolean(ViewData["HideControls"]) : false;
+    var firstOrderPackItemCode = (ViewData["FirstOrderPackItemCode"] != null) ? ViewData["FirstOrderPackItemCode"].ToString() : "";
+}
+
+<div data-widget="paneledcart" id="view-paneledcart-@contextID" class="view-paneledcart">
+    @{
+        var items = Model.Where(c => c.Type == type);
+    }
+
+    @if (items.Count() > 0)
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title no-padding">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <h3>
+                                @Html.Raw(ViewData["PanelTitle"])
+                            </h3>
+                        </div>
+                        @if (hideControls)
+                        {
+                            <div class="col-sm-3 text-right">
+                                <div class="space-15"></div>
+                                <a href="@Url.Action("cart")" class="btn btn-link">Edit Items</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div data-widget="cart" id="view-cart-@contextID" class="view-cart">
+
+                    @if (Model.Count() > 0)
+                    {
+                        <div class="row margin-10 text-uppercase text-muted text-xs">
+                            <div class="col-xs-5">@Resources.Common.Items</div>
+                            <div class="col-xs-2 text-center">@Resources.Common.BV</div>
+
+                            <div class="col-xs-3 text-center">@Resources.Common.Price</div>
+                            <div class="col-xs-2 text-center">@Resources.Common.Quantity</div>
+                        </div>
+                        <div class="space-10"></div>
+
+                        foreach (var item in Model)
+                        {
+                            var itemCodeForDetail = (item.GroupMasterItemCode.IsNotNullOrEmpty()) ? item.GroupMasterItemCode : item.ItemCode;
+                            var isFirstOrderPack = item.ItemCode == firstOrderPackItemCode;
+
+                            <div class="row margin-10" data-id="@item.ID">
+                                <div class="col-xs-5">
+                                    <div class="row">
+                                        <div class="col-sm-2">
+                                            <div class="image">
+                                                <a href="@Url.Action("itemdetail", new { itemcode = itemCodeForDetail })"><img src="@item.SmallImageUrl" class="img-responsive" /></a>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <div class="itemdescription">
+                                                <a href="@Url.Action("itemdetail", new { itemcode = itemCodeForDetail })">@item.ItemDescription</a>
+                                            </div>
+                                            <small class="text-muted">@Resources.Common.SKU: @item.ItemCode</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-2 text-center">
+                                    @if (!isFirstOrderPack)
+                                    { 
+                                        @item.BV.ToString("0.00")
+                                    }
+                                </div>
+                                <div class="col-xs-3 text-center">
+                                    @item.Price.ToString("C")
+                                    @if (isFirstOrderPack)
+                                    {
+                                        <div class="price-first-order-discount text-success"><i class="fa-asterisk"></i> @Resources.Common.FirstOrderPackCheckoutPriceText</div>
+                                    }
+                                </div>
+                                <div class="col-xs-2 text-center">
+                                    @if (hideControls || isFirstOrderPack)
+                                    {
+                                        <span>@item.Quantity.ToString("0")</span>
+                                    }
+                                    else
+                                    {
+                                        <input type="hidden" name="ID" value="@item.ID" />
+
+                                        @Html.TextBoxFor(c => item.Quantity, new
+                                        {
+                                            type = "number",
+                                            @class = "form-control input-sm text-center",
+                                            data_role = "cart.updateitemquantity",
+                                            data_id = item.ID,
+                                            Value = Convert.ToInt32(item.Quantity).ToString("0")
+                                        })
+                                    }
+                                    @if (!hideControls)
+                                    {
+                                        <small class="remove display-block"><a class="text-muted" data-role="cart.removeitemfromcart" data-id="@item.ID">@Resources.Common.Remove</a></small>
+                                    }
+                                </div>
+                            </div>
+                            <div class="space-10"></div>
+                        }
+                    }
+                    else
+                    {
+                        <p>@Resources.Common.NoItemsInCart</p>
+                    }
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="text-right">@Resources.Common.Subtotal (<span data-text="quantity">@items.Sum(c => c.Quantity).ToString("N0")</span> @Resources.Common.Items.ToLower()): <strong><span data-text="subtotal">@items.Sum(c => c.Quantity * c.Price).ToString("C")</span></strong></div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p>@Resources.Common.NoItemsInCart</p>
+    }
+</div>
+
+
+<script>
+    require(["jquery", "modules/shopping", "pubsub", "extensions"], function ($, shopping) {
+
+        // Settings
+        var context = "#view-paneledcart-@contextID",
+            $context = $(context),
+            typeID = @typeID;
+            
+        shopping.bind(context);
+
+        window.on('cart.itemremoved', function (id) {
+            $('[data-id="{0}"]'.format(id), $context).slideUp('fast', function () {
+                $(this).remove();
+            });
+        });
+
+        window.on("cart.registerevents", function () {
+            shopping.bind(context);
+        });
+
+        window.on('cart.cartupdated', function (data) {
+            var updatedItem = data.item;
+            var items = data.items;
+
+            var quantity = 0;
+            for (var i = 0, max = items.length; i < max; i++) {
+                var item = items[i];
+
+                if (item.Type == typeID) {
+                    quantity += item.Quantity;
+                }
+            }
+            if(quantity == 0) {
+                $context.remove();
+            }
+            else
+            {
+                $('[data-text="quantity"]', $context).html(quantity.format("N0"));
+
+                if(updatedItem.Type == typeID) {
+                    $('[data-text="subtotal"]', $context).html(data.totals.Subtotal.format("C"));
+                }
+            }
+        });
+    });
+</script>

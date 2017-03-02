@@ -1,0 +1,140 @@
+﻿@model Backoffice.ViewModels.AutoOrders.AutoOrderDateViewModel
+@{
+    var minimumStartDate = DateTime.Now.AddMonths(-1);
+}
+
+@using (Ajax.BeginForm("updateAutoOrderdate", "autoorders", new AjaxOptions
+{
+    OnSuccess = "onUpdateDateSuccess"
+}))
+{
+    @Html.AntiForgeryToken()
+    <div class="top-bar-blue no-padding no-margin-top">
+        <div class="row row-head">
+            <div class="col-xs-12">
+                <input type="hidden" name="AutoorderID" value="@Model.AutoorderID" />
+            </div>
+        </div>
+        <br />
+        <div class="row row-body">
+            <div class="col-sm-7">
+                <span class="autoOrder-cart-name">@Resources.Common.NextProcessDate</span>
+            </div>
+
+                <input type="hidden" name="Frequency" value="@Common.Api.ExigoWebService.FrequencyType.Monthly" />
+            <input type="hidden" name="CreatedDate" value="@Model.CreatedDate" />
+
+            <div class='col-sm-5'>
+                <div class="form-horizontal">
+                    <input id="NextDate" name="NextDate" class="input-sm form-control" type='text' data-type="date" value="@Model.NextDate.ToShortDateString()" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="space-10"></div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="autoOrder-cart-buttons">
+                <button type="button" class="btn btn-sm btn-danger btn-cancel autoOrder-link" data-loading-text="Loading..."><span><i class="fa-times-circle"></i> @Resources.Common.CancelUppercase </span></button>
+                <button type="submit" class="autoOrder-link btn btn-sm btn-success" data-loading-text="Loading..."><span><i class="fa-save"></i> @Resources.Common.SaveUppercase </span></button>
+            </div>
+        </div>
+    </div>
+}
+
+<link href="~/Content/scripts/vendor/kendo/styles/kendo.bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/scripts/vendor/kendo/styles/kendo.common-bootstrap.min.css" rel="stylesheet" />
+<script>
+    function onUpdateDateSuccess(response) {
+        $("button").each(function () {
+            $(this).button("reset");
+        });
+        window.trigger("datealert", response);
+    }
+
+    require(["kendo"], function (kendo) {
+
+        // Settings
+        var currentCultureCode = "@Identity.Current.Language.CultureCode.ToLower()",
+            minimumStartDate   = new Date(@minimumStartDate.Year, @minimumStartDate.Month, @minimumStartDate.Day);
+
+        function registerEventHandlers() {
+
+            // Dates and Times
+          $('[data-type="date"]').kendoDatePicker({
+                culture: currentCultureCode,
+                dates: [
+						 1, 5, 10, 15, 20, 25
+                ],
+                min: minimumStartDate,
+                month: {
+                    // template for dates in month view
+                    content: '# if ($.inArray(+data.date.getDate(), data.dates) == -1) { #' +
+                    '<div class="disabledDay">#= data.value #</div>' +
+                    '# } else { #' +
+                    '#= data.value #' +
+                    '# } #'
+                },
+                change: function () {
+                    if (this.options.dates.indexOf(+this.value().getDate()) >= 0) {
+
+                        $(".disabledDay").parent().removeClass("k-link"); //removing this class makes the day unselectable
+                        $(".disabledDay").parent().removeAttr("href"); //this removes the hyperlink styling
+
+                    }
+                    else {
+                        this.value(null); //clear the selected value
+
+                        $(".disabledDay").parent().removeClass("k-link"); //removing this class makes the day unselectable
+                        $(".disabledDay").parent().removeAttr("href"); //this removes the hyperlink styling
+                    }
+                },
+                open: function (e) {
+                    $(".disabledDay").parent().removeClass("k-link"); //removing this class makes the day unselectable
+                    $(".disabledDay").parent().removeAttr("href"); //this removes the hyperlink styling
+                }
+            }).on({
+                focus: function () {
+                    $(this).data("kendoDatePicker").open();
+                },
+                click: function () {
+                    $(this).data("kendoDatePicker").open();
+                },
+                keypress: function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+            });
+
+            function disableDates(date) {
+                    for (var i = 0; i < availableDates.length; i++) {
+                        if (date.getDate() == availableDates[i].getDate()) {
+                            return true;
+                        }
+
+                }
+            }
+            $("button").on("click", function () {
+                $("button").each(function () {
+                    $(this).button("loading");
+                });
+            });
+
+            @*$('#calendar-date').datetimepicker({
+                pickTime: false,
+                minDate: new Date('@DateTime.Now.ToShortDateString()'),
+                maxDate: new Date('@DateTime.Now.AddDays(30).ToShortDateString()')
+            });
+           *@
+        }
+
+
+        // Initialization
+        function init() {
+            registerEventHandlers();
+        }
+        init();
+
+    });
+</script>

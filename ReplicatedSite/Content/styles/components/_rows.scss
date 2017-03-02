@@ -1,0 +1,4 @@
+[class*="col-"] {
+	&.col-border-left { border-left: 1px dotted #ccc; }
+	&.col-border-right { border-right: 1px dotted #ccc; }
+}

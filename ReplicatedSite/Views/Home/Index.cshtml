@@ -1,0 +1,146 @@
+﻿@{
+    Layout = "~/Views/Shared/_FullWidthLayout.cshtml";
+    ViewBag.Title = "Shop. Save. Share.";
+}
+
+<input type="hidden" class="activenavigation" value="home" />
+
+<div id="view-home-page">
+
+    <!-- Banner Carousel -->
+    <div id="product-banner" class="carousel slide" data-ride="carousel">
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner">
+            <div class="item active" id="affiliateImage">
+                <a href="@Url.Action("affiliatestores", "shopping", new { parentCategoryKey = "", subCategoryKey = "" })">
+                    <img class="hidden-xs" src="~/Content/images/home/banners/AffiliateStoreBanner.jpg" />
+                    <img class="visible-xs" src="~/Content/images/home/banners/AffiliateStoreBanner-sm.jpg" />
+                </a>
+            </div>
+            <div class="item" id="drinkImage">
+                <a href="@Url.Action("itemlist", "shopping", new { parentCategoryKey = "", subCategoryKey = "" })">
+                    <img class="hidden-xs" src="~/Content/images/home/banners/BonveraWebSliders-PhyzixDrink.png" />
+                    <img class="visible-xs" src="~/Content/images/home/banners/BonveraWebSlidersMobile-PhyzixDrink.png" />
+                </a>
+            </div>
+            <div class="item" id="barsImage">
+                <a href="@Url.Action("itemlist", "shopping", new { parentCategoryKey = "", subCategoryKey = "" })">
+                    <img class="hidden-xs" src="~/Content/images/home/banners/BonveraWebSliders-PhyzixBars.png" />
+                    <img class="visible-xs" src="~/Content/images/home/banners/BonveraWebSlidersMobile-PhyzixBar.png" />
+                </a>
+            </div>
+            <div class="item" id="xyienceImage">
+                <a href="@Url.Action("itemlist", "shopping", new { parentCategoryKey = "", subCategoryKey = "" })">
+                    <img class="hidden-xs" src="~/Content/images/home/banners/BonveraXyience.jpg" />
+                    <img class="visible-xs" src="~/Content/images/home/banners/BonveraXyienceWebSlidersMobile0316-1.jpg" />
+                </a>
+            </div>
+            <div class="item" id="xyienceImage">
+                <a href="@Url.Action("itemlist", "shopping", new { parentCategoryKey = "", subCategoryKey = "" })">
+                    <img class="hidden-xs" src="~/Content/images/home/banners/BonveraMrsMeyersWebSliders0316.jpg" />
+                    <img class="visible-xs" src="~/Content/images/home/banners/BonveraMrsMeyersWebSlidersMobile0316.jpg" />
+                </a>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <a class="left carousel-control" href="#product-banner" role="button" data-slide="prev">
+            <span class="icon-prev hidden-xs"></span>
+        </a>
+        <a class="right carousel-control" href="#product-banner" role="button" data-slide="next">
+            <span class="icon-next hidden-xs"></span>
+        </a>
+    </div>
+
+
+    <!-- Shop Now -->
+    <div class="container">
+        <div class="row margin-0">
+            <div class="col-sm-6">
+                <div class="space-70 hidden-sm hidden-xs"></div>
+                <div class="space-40 visible-xs"></div>
+                <h2>The Ultimate Shopping Experience</h2>
+                <p>Bonvera taps into the magic of online shopping – it’s at-home ordering and prompt front-door delivery – with a fast-growing assortment of familiar brands in household goods, packaged groceries, hygiene and personal care products. These are the essentials your customers need day after day. And then, winning loyalty and trust from associates and customers alike, comes Bonvera’s promise to share profits.</p>
+                <p>Shop. Save. Share. It’s really that simple.</p>
+                <div class="space-20"></div>
+                <a href="@Url.Action("itemlist", "shopping", new { parentCategoryKey = "", subCategoryKey = "" })" class="btn btn-primary">Shop Now</a>
+                <div class="space-30"></div>
+            </div>
+            <div class="col-sm-6">
+                <img id="ultimate-shopping-img" class="img-responsive hidden-xs" src="~/Content/images/home/BonveraCouplecShoppingOnTablet.png" />
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Shopping Can Pay Banner -->
+    <div id="shopping-pays-banner-containerlg" class="hidden-xs">
+        <img class="img-responsive hidden-xs" src="~/Content/images/home/banners/Shopping_Can_Pay.png" />
+    </div>
+    <div id="shopping-pays-banner-container" class="visible-xs">
+        <h1 class="visible-xs">Shopping Can Pay</h1>
+    </div>
+    
+
+
+
+    <!-- Super Brand -->
+    <div id="super-brand-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <img class="img-responsive hidden-xs" src="~/Content/images/home/BonveraPhyzixSuperBrandShirt.png" />
+                    <img class="img-responsive visible-xs" src="~/Content/images/home/BonveraPhyzixSuperBrandShirtMobile.jpg" />
+                </div>
+                <div class="col-sm-6">
+                    <div class="space-50 visible-lg"></div>
+                    <h2>Bonvera's Own Super Brand</h2>
+                    <p>Bonvera has created a brand of healthful, nutritious products, uniquely our own.</p>
+                    <p>Our private-label products compete and win against those popular energy drinks and protein bars on the shelves of any supermarket.</p>
+                    <a href="@Url.Action("ourproducts", "shopping")" class="btn btn-primary">Find Out More</a>
+                    <div class="space-30"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Wishes and Dreams Banner -->
+    <div id="wishesanddreamsbanner" class="hidden-xs">
+        <img class="img-responsive hidden-xs" src="~/Content/images/home/banners/Live_Your_Wishes.png" />
+    </div>
+
+    <!-- Your Next Step -->
+    <div class="space-30"></div>
+    <div class="container">
+        <div id="next-step-container">
+            <h2>Your Next Step</h2>
+            <h3>We are men and women who agree on the basics: taking care of yourself, your family, and your friends.</h3>
+            <p>We can help you become the owner of a successful business that will benefit both your customers and your community. We place a premium on everyday products that promote good health. We believe that social shopping represents the future, and we want you to participate in this massive shift in commerce.</p>
+            <div class="space-10"></div>
+            <p>Shop. Save. Share. Bonvera.</p>
+            <div class="space-15"></div>
+            @if (Identity.Customer == null)
+            {
+                <a href="@Url.Action("registrationlanding", "enrollment")" class="btn btn-primary">Join Bonvera Today</a>
+            }
+            <div class="space-30"></div>
+        </div>
+    </div>
+
+</div>
+
+
+@section scripts
+{
+    <script>
+        require(["jquery", "bootstrap"], function ($) {
+            function init() {
+                // initiallize the carousel
+                $('#product-banner').carousel();
+            }
+            init();
+        });
+    </script>
+}

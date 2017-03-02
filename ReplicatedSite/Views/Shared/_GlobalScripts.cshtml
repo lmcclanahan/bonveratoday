@@ -1,0 +1,455 @@
+﻿@{
+    var isEnrollment = (Request.Url.ToString().ToLower().Contains("enrollment")).ToString().ToLower();
+}
+
+
+<script>
+    require(["jquery", "cookies", "ajax", "toastr", "app", "pubsub", "bootstrap", "extensions"], function ($, cookies, ajax, toastr) {
+
+        // Settings
+        var languageExpiration   = '@DateTime.Now.AddYears(1).ToShortDateString()',
+            languageCookieName   = '@GlobalSettings.Globalization.LanguageCookieName',
+            countryCookieName    = '@GlobalSettings.Globalization.CountryCookieName',
+            additemUrl           = "@Url.Action("additemtocart", "shopping")",
+            quickshopUrl         = "@Url.Action("quickshopmodal", "shopping")",
+            getcartpreviewUrl    = "@Url.Action("fetchcartpreview", "shopping")",
+            messageUsURL    = "@Url.Action("messageus", "app")",
+            getautoordermodalUrl = "@Url.Action("getautoordermodal", "shopping")",
+            orderItemType        = "@ShoppingCartItemType.Order",
+            autoOrderItemType = "@ShoppingCartItemType.AutoOrder",
+            userIsEnrolling      = @isEnrollment,
+            defaultCountry       = "@CountryCodes.UnitedStates",
+            defaultLanguage      = "en-US";
+
+
+        var resources = {
+            order: "@Resources.Common.Order",
+            autoorder: "@Resources.Common.AutoOrder",
+            itemAddedText: "@Resources.Common.HasBeenAddedToYour",
+            autoOrderItemAddedText: "@Resources.Common.HasBeenAddedToYourAutoOrder"
+        };
+
+        var state = {
+            modalActive: false
+        };
+
+
+        // Event Handlers
+        function registerEventHandlers() {
+
+            // Set defaults for toastr
+            toastr.options.timeOut = 10000;
+
+            // message us modal
+            $('#message-us').on("click", function () {
+                $('#message-us-modal').modal();
+            });
+
+            // message us submit
+            $('#submit-message').on("click", function () {
+                var form = $('#message-us-form').serializeObject(),
+                    email = form.fromEmail,
+                    subject = form.subject,
+                    body = form.body,
+                    emailNotEmpty = (/\S/.test(email)),
+                    subjectNotEmpty = (/\S/.test(subject)),
+                    bodyNotEmpty = (/\S/.test(body));
+
+                // ensure the form is filled out completely before submitting
+                if(emailNotEmpty == false || subjectNotEmpty == false || bodyNotEmpty == false)
+                {
+                    toastr.error("Please ensure all fields are filled out before submitting");
+                    return;
+                }
+
+                ajax.json({
+                    url: messageUsURL,
+                    data: {
+                        fromemail: email,
+                        subject: subject,
+                        body: body
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            $('#message-us-modal').modal("hide");
+                            toastr.success("Your message has been sent!");
+                        }
+                        else
+                        {
+                            toastr.error(response.message);
+                        }
+                    }
+                });
+            });
+
+
+            // language selection
+            $('[data-language]').on("click", function () {
+                cookies.set('@GlobalSettings.Globalization.LanguageCookieName', $(this).data("language"), {
+                    expires: new Date('@DateTime.Now.AddYears(1).ToShortDateString()'),
+                    path: '/'
+                });
+                window.location = window.location;
+            });
+
+            // Enable click of Shopping Cart link in shopping cart preview (found in header)
+            $("[data-shoppinglink]").on("click", function () {
+                window.location = $(this).prop("href");
+            });
+
+            // Cart Preview logic
+            window.on("update.cartpreview", function () {
+                // Prevent updating main navigation cart during enrollment
+                if (!userIsEnrolling) {
+                    actions.getCartPreview();
+                }
+            });
+            window.on("render.cartpreview", function (cart, total) {
+                // Prevent updating main navigation cart during enrollment
+                if (!userIsEnrolling) {
+                    // Old Version - Mike M.
+                    //actions.getCartPreview(cart, total);
+                    actions.getCartPreview(total);
+                }
+            });
+
+
+
+            // Auto Order Modal Logic
+            window.on("cart.showautoordermodal", function (html) {
+
+                // If we are passing in the cart html already, we do not need to get it from the server
+                if (html != null && html.length > 0) {
+                    $("#addtocart-modalcontainer .modal-body").html("");
+                    $("#addtocart-modalcontainer .modal-body").html(html);
+                    $("#addtocart-modalcontainer .modal").modal("show");
+                } else {
+                    actions.getAutoOrderModal();
+                }
+            });
+
+            // Auto Order Modal Logic for Auto Order Manager
+            window.on("autoordermanager.showautoordermodal", function (autoshipID) {
+                actions.getAutoOrderModal(autoshipID);
+            });
+
+            @*
+                // Shop Now Logic
+                // For all carts or partials you need add to cart ability, you need to have the following accounted for:
+                // * Add to cart button has data-role = to item.addtoorder
+                // * Add to cart button has data-type set to the appropriate ShoppingCartItemType
+                // * Add to cart button has data-itemcode set to item code of item, to ensure we handle the appropriate call back when the addition is done
+                // * The container of the button needs to have the id of item-fields in order for the logic to capture the item properties
+                // Example:
+                // <div id="item-fields">
+                //     <input type="hidden" name="ItemCode" value="123123" />
+                //     ...
+                //    <button type="button" class="btn btn-primary" data-role="item.addtoorder" data-type="@@ShoppingCartItemType.Order"><i class="fa-shopping-cart"></i> Add to cart</button>
+                // </div>
+            *@
+
+            $("body").on("click", "a[data-role='item.addtoorder']", function () {
+                var $this = $(this),     item = $this.parents(".item-fields").serializeObject();
+                item.Type = $this.data("type");
+                //item.unitePrice = $this.parents(".item-fields").find('.price').val();
+
+
+                // Trigger the loading button
+                $this.button('Adding');
+                console.log(item);
+
+                actions.addToCart(item);
+            });
+
+
+
+
+            $("body").on("click", "[data-quick-shop]", function () {
+
+                if (state.modalActive == false) {
+                    state.modalActive = true;
+
+                    var itemcode = $(this).data("quick-shop");
+
+                    ajax.json({
+                        url: quickshopUrl,
+                        data: { itemcode: itemcode },
+                        success: function (response) {
+                            if (response.success) {
+                                $("#addtocart-modalcontainer .modal-body").html("");
+                                $("#addtocart-modalcontainer .modal-body").html(response.html);
+                                $("#addtocart-modalcontainer .modal").modal();
+                            } else {
+                                console.log("error fetching quick shop modal", response.message);
+                            }
+                        },
+                        complete: function () {
+                            $("#addtocart-modalcontainer .modal").on("hide.bs.modal", function () {
+                                state.modalActive = false;
+                            });
+                        }
+                    });
+                }
+            });
+
+
+            // Language selection
+            $("#language").on('hidden.bs.modal', function () {
+                if (cookies.get(languageCookieName) == null) {
+                    actions.setLanguageCookie()
+                }
+            });
+            $("#language").on('shown.bs.modal', function () {
+                if (cookies.get(languageCookieName) !== null) {
+                    actions.setModalLanguageValues()
+                }
+            });
+            $("#languageSubmit").on('click', function () {
+                actions.setLanguageCookie();
+                $("#language").modal('hide');
+            });
+
+            $('[data-action="toggleMenu"]').on("click", function (e) {
+                $(".sub-menu").toggle(400);
+            });
+
+            $("body").on("keyup, change", "[name$='Quantity']", function (e) {
+                var $this = $(this),
+                    allowZero = $(this).hasClass("allow-zero"),
+                    quantity = $this.val();
+
+
+                if (quantity.indexOf(".") >= 0) {
+                    $this.val(quantity.replace(".", ""));
+                    return;
+                }
+
+                if (quantity < 1 && !allowZero) {
+                    $this.val("1");
+                    return;
+                }
+                if (quantity < 0 && allowZero) {
+                    $this.val("0");
+                    return;
+                }
+            });
+        }
+
+
+
+        // Actions
+        var actions = {
+            addToCart: function(item) {
+
+                for(var key in item) {
+                    var value = item[key];
+                }
+
+                ajax.json({
+                    url: additemUrl,
+                    data: {
+                        item: item
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            var itemType = (item.Type == orderItemType) ? resources.order : resources.autoorder;
+
+                            // Need a custom message for auto order items
+                            if (item.Type == autoOrderItemType) {
+                                toastr.success(resources.autoOrderItemAddedText.format(item.description));
+                            } else {
+                                toastr.success(resources.itemAddedText.format(item.description, itemType));
+
+                            }
+
+                            // Logic for First Order Pack shopping
+                            if (response.isFirstOrderPack) {
+                                $(".first-order-pack-container").hide();
+                                $(".first-order-pack-added-message").show();
+                                $(".modal").modal("hide");
+                            }
+
+                            // Prevent updating main navigation cart during enrollment
+                            if (!userIsEnrolling) {
+                                actions.getCartPreview();
+                            }
+
+                            // Trigger the auto order modal if applicable
+                            if (response.carttype == "autoorder") {
+                                window.trigger("cart.showautoordermodal", response.html);
+                            }
+
+                            var $item ='<div class="form-group"><div class="col-sm-3 col-xs-3"><img class="img-responsive" src="http://sandboxapi2.exigo.com/4.0/allbrands/productimages/Luebella_NightCream_250px.png" /></div><div class="col-sm-6 col-xs-6"><div class="col-xs-12">'+item.description+'</div><div class="col-xs-12"><small>Quantity:<span>'+item.Quantity+'</span></small></div></div><div class="col-sm-3 col-xs-3 text-right"><h6><span>$</span>XX.00</h6></div></div><div class="form-group"><hr /></div>';
+                            $('#panelshopbody').prepend($item);
+                        }
+                    },
+                    error: function (xhr) {
+                        console.log("Add to cart failed", xhr);
+                    },
+                    complete: function () {
+
+                        $("[data-role='item.addtoorder'][data-type='{0}'][data-itemcode='{1}']".format(item.Type, item.ItemCode)).button('reset');
+
+                    }
+                });
+            },
+            getAutoOrderModal: function(autoshipID) {
+
+                ajax.json({
+                    url: getautoordermodalUrl,
+                    data: { autoshipID: autoshipID },
+                    success: function (response) {
+                        if (response.success) {
+                            $("#addtocart-modalcontainer .modal-body").html("");
+                            $("#addtocart-modalcontainer .modal-body").html(response.html);
+                            $("#addtocart-modalcontainer .modal").modal();
+                        } else {
+                            console.log("showautoordermodal failed: ", response);
+                        }
+                    },
+                    error: function (xhr, error, status) {
+                        console.log("showautoordermodal failed: ", xhr);
+                    }
+                });
+            },
+            getCartPreview: function (total) {
+                var $myCart = $("#my-cart");
+                if(total != undefined) {
+                    $("#my-cart").html(total);
+                } else {
+                    // Make sure we even need to update the cart total first before running anything
+                    if ($myCart.length > 0) {
+                        ajax.json({
+                            url: "@Url.Action("GetCartItemQuantity", "Shopping")",
+                            success: function (response) {
+                                if (response.success) {
+                                    $("#my-cart").html(response.count);
+                                } else {
+                                    console.log("error fetching quick shop modal", response.message);
+                                }
+                            }
+                        });
+                    } else {
+                    }
+                }
+            },
+            /*
+            // Old Version not being used - Mike M.
+            //getCartPreview: function (cart, total) {
+            //    var $priceField = $("#cart-total span"),
+            //        $cartContainer = $("#cart-list"),
+            //        $mobileQtyBadge = $("#my-cart");
+
+
+            //    if (cart === undefined) {
+            //        $.ajax({
+            //            url: getcartpreviewUrl,
+            //            cache: false,
+            //            success: function (response) {
+            //                if (response.success) {
+            //                    $mobileQtyBadge.html("{0}".format(response.quantity));
+            //                    $priceField.html(response.total);
+            //                    $cartContainer.html(response.cart);
+            //                } else {
+            //                    console.log("getcartpreview failed", response);
+            //                }
+            //            }, error: function (xhr, status, error) {
+            //                console.log(xhr);
+            //            }
+            //        });
+            //    } else {
+            //        $cartContainer.html(cart);
+            //        $priceField.html(total);
+            //    }
+            //},
+            */
+            setLanguageCookie: function (language, market) {
+                var lang = (language || $('[name="Language"]').val());
+                var country = (market || $('[name="Country"]').val());
+                var options = {};
+                options.expires = new Date(languageExpiration);
+                options.path = "/";
+                options.domain = false;
+                options.secure = false;
+
+                cookies.set(countryCookieName, country, options);
+                cookies.set(languageCookieName, lang, options);
+
+                window.location = window.location;
+            },
+            setModalLanguageValues: function () {
+                var lang = cookies.get(languageCookieName);
+                var country = cookies.get(countryCookieName);
+                $('[name="Language"]').val(lang);
+                $('[name="Country"]').val(country);
+            },
+            updateItemQuantity: function (item) {
+                var $this = $(item),
+                    quantity = $this.val(),
+                    $parentContainer = $this.parents("[data-itemcode]").first(),
+                    itemcode = $parentContainer.data("itemcode"),
+                    priceEach = $this.data("price-each"),
+                    $priceDisplayContainer = $parentContainer.find("[data-price-display]");
+
+                if (quantity < 0) {
+                    $this.val("0");
+                    return;
+                }
+
+                // Set the price display of the items updated
+                var price = priceEach * quantity;
+                $priceDisplayContainer.html("$" + price.toFixed(2));
+            },
+            setActiveNavigation: function () {
+                var hasActiveNavigationField = ($('.activenavigation').length > 0);
+
+                if (hasActiveNavigationField) {
+                    var activeNavigation = $('.activenavigation').val(),
+                        $navigationLink = $('a[data-navigation="' + activeNavigation + '"]');
+
+                    //$('.nav>li>a').removeClass('active');
+                    $navigationLink.addClass('active');
+                }
+                else {
+                    return;
+                }
+            }
+        };
+
+
+        // Initialization
+        function init() {
+            registerEventHandlers();
+
+            actions.getCartPreview();
+            actions.setActiveNavigation();
+
+
+            if (cookies.get(languageCookieName) == null) {
+                // $("#language").modal('show');
+                actions.setLanguageCookie();
+            }
+
+            //oasisfleeting
+            //session cookies for persistent carts
+            //navigation for mobile design
+            //TODO:refactor cart functionalities and migrate to better spot.
+            //cart functionalities
+            //cart actions are above
+
+            //playground
+
+
+        }
+
+        init();
+
+
+
+    });
+</script>
+
+
+
+
+

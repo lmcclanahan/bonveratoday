@@ -1,0 +1,66 @@
+@import "../settings/_colors";
+
+// Images
+.img-responsive { display: inline-block; }
+
+// Text
+.text-uppercase { text-transform: uppercase; }
+.text-xl { font-size: 1.6em; }
+.text-lg { font-size: 1.3em; }
+.text-sm { font-size: 0.85em; }
+.text-xs { font-size: 0.7em; }
+.text-strong { font-weight: bold; }
+.block { display: block; }
+
+// Margin, Padding & Border
+.no-padding { padding: 0 !important; }
+.no-margin { margin: 0 !important; }
+.no-border { border: 0 !important; }
+.margin-top-10 { margin-top: 10px; }
+.margin-top-20 { margin-top: 20px; }
+.margin-top-30 { margin-top: 30px; }
+.margin-top-40 { margin-top: 40px; }
+.margin-top-50 { margin-top: 50px; }
+.margin-top-60 { margin-top: 60px; }
+.margin-bottom-10 { margin-bottom: 10px; }
+.margin-bottom-20 { margin-bottom: 20px; }
+.margin-bottom-30 { margin-bottom: 30px; }
+.margin-bottom-40 { margin-bottom: 40px; }
+.margin-bottom-50 { margin-bottom: 50px; }
+.margin-bottom-60 { margin-bottom: 60px; }
+
+// Aligning text next to buttons and form controls
+.form-control-text-lg,
+.btn-text-lg { padding-top: 12px; }
+.form-control-text,
+.btn-text { padding-top: 7px; }
+.form-control-text-sm,
+.btn-text-sm { padding-top: 5px; }
+
+// Display
+.inline-block { display:inline-block; }
+.display-block { display: block; }
+
+// Horizontal Rules
+.hr-xl { margin: 40px auto; }
+.hr-lg { margin: 30px auto; }
+.hr-sm { margin: 10px auto; }
+.hr-xs { margin: 5px auto; }
+.hr-dashed { border-top: 1px dashed #eee; }
+.hr-dotted { border-top: 1px dotted #eee; }
+.hr-double { border-top: 3px double #eee; }
+
+// Background Colors
+.bg-primary { color: #fff; background-color: $blue; }
+a.bg-primary:hover { background-color: $blue; }
+.bg-success { background-color: #dff0d8; }
+a.bg-success:hover { background-color: #c1e2b3; }
+.bg-info { background-color: #d9edf7; }
+a.bg-info:hover { background-color: #afd9ee; }
+.bg-warning { background-color: #fcf8e3; }
+a.bg-warning:hover { background-color: #f7ecb5; }
+.bg-danger { background-color: #f2dede; }
+a.bg-danger:hover { background-color: #e4b9b9; }
+
+// Content Masking
+.smudged { -webkit-filter: blur(5px); -moz-filter: blur(10px); -o-filter: blur(10px); -ms-filter: blur(10px); filter: blur(10px); }

@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = Resources.Common.RegisterNow;
+    var check = Html.Raw("<div class='text-center check-container'><i class='fa-check'></i></div>");
+}
+<div id="view-registration-landing">
+    <div class="space-30"></div>
+    <div class="">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <td id="description-column"></td>
+                    <td class="registration-title text-center">@Resources.Common.Customer</td>
+                    <td class="registration-title text-center">@Resources.Common.SmartShopper</td>
+                    <td class="registration-title text-center">@Resources.Common.IndependentAssociate</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    @*Access to the Bonvera website shopping experience*@
+                    <td class="description">@Html.Raw(Resources.Common.EnrollmentOption1)</td>
+                    <td class="shade-cell">@check</td>
+                    <td>@check</td>
+                    <td class="shade-cell">@check</td>
+                </tr>
+                <tr>
+                    @*Access to Bonvera Private Brand products*@
+                    <td class="description">@Html.Raw(Resources.Common.EnrollmentOption2)</td>
+                    <td class="shade-cell">@check</td>
+                    <td>@check</td>
+                    <td class="shade-cell">@check</td>
+                </tr>
+                <tr>
+                    @*Discounted pricing on all Tier 2 and Tier 3 products, services and stores*@
+                    <td class="description">@Html.Raw(Resources.Common.EnrollmentOption3)</td>
+                    <td class="shade-cell">@check</td>
+                    <td>@check</td>
+                    <td class="shade-cell">@check</td>
+                </tr>
+                <tr>
+                    @*Up to 20% discount on Bonvera Private Brand products*@
+                    <td class="description">@Html.Raw(Resources.Common.EnrollmentOption4)</td>
+                    <td class="shade-cell"></td>
+                    <td>@check</td>
+                    <td class="shade-cell">@check</td>
+                </tr>
+                <tr>
+                    @*A replicated custom website for your customers and Smart Shoppers*@
+                    <td class="description">@Html.Raw(Resources.Common.EnrollmentOption5)</td>
+                    <td class="shade-cell"></td>
+                    <td></td>
+                    <td class="shade-cell">@check</td>
+                </tr>
+                <tr>
+                    @*Eligibility to carve out YOUR Compensated Marketplace*@
+                    <td class="description">@Html.Raw(Resources.Common.EnrollmentOption6)</td>
+                    <td class="shade-cell"></td>
+                    <td></td>
+                    <td class="shade-cell">@check</td>
+                </tr>
+                <tr>
+                    @*Eligibility to earn commissions*@
+                    <td class="description">@Html.Raw(Resources.Common.EnrollmentOption7)</td>
+                    <td class="shade-cell"></td>
+                    <td></td>
+                    <td class="shade-cell">@check</td>
+                </tr>
+                <tr>
+                    @*1st 30 days of back-office features and benefits*@
+                    <td class="description">@Html.Raw(Resources.Common.EnrollmentOption8)</td>
+                    <td class="shade-cell"></td>
+                    <td></td>
+                    <td class="shade-cell">@check</td>
+                </tr>
+                <tr>
+                    @*Access to all of the necessary information and forms to build YOUR business in Your personal website*@
+                    <td class="description">@Html.Raw(Resources.Common.EnrollmentOption9)</td>
+                    <td class="shade-cell"></td>
+                    <td></td>
+                    <td class="shade-cell">@check</td>
+                </tr>
+                <tr>
+                    @*Registration Kit with:*@
+                    <td class="description">@Html.Raw(Resources.Common.EnrollmentOption10)</td>
+                    <td class="shade-cell"></td>
+                    <td></td>
+                    <td class="shade-cell">@check</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td><a href="@Url.Action("Register", "Account", new { webalias = Identity.Owner.WebAlias })" class="btn btn-primary btn-block">@Resources.Common.RegisterNow</a></td>
+                    <td><a href="@Url.Action("SmartShopperRegister", "Account", new { webalias = Identity.Owner.WebAlias })" class="btn btn-primary btn-block">@Resources.Common.RegisterNow</a></td>
+                    <td><a href="@Url.Action("EnrollmentConfiguration", "Enrollment")" class="btn btn-primary btn-block">@Resources.Common.RegisterNow</a></td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="space-30"></div>
+    </div>
+</div>

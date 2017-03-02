@@ -1,0 +1,308 @@
+﻿@model ProductListViewModel
+@{
+    ViewBag.Title = "Enrollment Shopping";
+}
+
+<div class="container">
+    <div id="view-enrollment-productlist">
+        <div class="row margin-10">
+            <div class="col-sm-8">
+                <h3>Order Items</h3>
+                <div class="space-5"></div>
+                @foreach (var item in Model.OrderItems)
+                {
+                    @Html.Partial("~/Views/Enrollment/_Item.cshtml", item)
+                }
+
+                <div class="space-15"></div>
+                <h3>@Resources.Common.ReplenishItems</h3>
+                <div class="space-5"></div>
+                @foreach (var item in Model.AutoOrderItems)
+                {
+                    @Html.Partial("~/Views/Enrollment/_Item.cshtml", item)
+                }
+
+            </div>
+            <div class="col-sm-4">
+                <div class="space-60"></div>
+                <div id="summary-container">
+                    <!-- Dynamically Injected -->
+                </div>
+            </div>
+        </div>
+        <div class="space-10"></div>
+        <a href="@Url.Action("packs")" style="margin-right: 10px;" class="btn btn-primary btn-lg">Back to Packs</a>
+        <a href="@Url.Action("checkout")" class="btn btn-primary btn-lg">Continue</a>
+        <div class="space-30"></div>
+    </div>
+</div>
+
+<script>
+
+    require(["jquery", "ajax", "extensions"], function ($, ajax) {
+
+        var $context             = $('#view-enrollment-productlist'),
+            updateItemSummaryURL = '@Url.Action("updateitemsummary", "enrollment")',
+            addItemsURL          = '@Url.Action("additemtocart", "enrollment")',
+            removeItemsURL       = '@Url.Action("deleteitemfromcart", "enrollment")',
+            updateItemsURL       = '@Url.Action("updateitemquantity", "enrollment")',
+            orderType            = '@ShoppingCartItemType.Order.ToString()',
+            autoOrderType        = '@ShoppingCartItemType.AutoOrder.ToString()';
+
+        // Settings
+        var state = {
+            originalItemQuantity: 0
+        };
+
+        // Event Handlers
+        function registerEventHandlers() {
+            // Increment item quantity button
+            $('[data-role="incrementquantity"]', $context).on('click', function () {
+                var $item = $(this),
+                    $itemParent = $item.parents('.item-container'),
+                    itemType = $itemParent.find('[name="Type"]').val(),
+                    itemCode = $itemParent.data('itemcode'),
+                    originalQuantity = parseInt($('.quantity-box', $itemParent).val()),
+                    newQuantity = originalQuantity + 1;
+
+                $('.quantity-box', $itemParent).val(newQuantity);
+
+                actions.updateCart(itemCode, itemType, originalQuantity);
+            });
+
+            // Decrement item quantity button
+            $('[data-role="decrementquantity"]', $context).on('click', function () {
+                var $item = $(this),
+                    $itemParent = $item.parents('.item-container'),
+                    itemType = $itemParent.find('[name="Type"]').val(),
+                    itemCode = $itemParent.data('itemcode'),
+                    originalQuantity = parseInt($('.quantity-box', $itemParent).val()),
+                    newQuantity = (originalQuantity - 1 >= 0) ? originalQuantity - 1 : 0;
+
+                $('.quantity-box', $itemParent).val(newQuantity);
+
+                actions.updateCart(itemCode, itemType, originalQuantity);
+            });
+
+            // Remove item button
+            $context.on('click', '[data-role="removeitem"]', function () {
+                var $this = $(this),
+                    $itemParent = $this.parents('tr'),
+                    itemcode = $itemParent.data('itemcode'),
+                    itemtype = $itemParent.data('itemtype'),
+                    $item = $('[data-itemcode="' + itemcode + '"][data-itemtype="' + itemtype + '"].item-container .quantity-box');
+                state.originalItemQuantity = 1;
+
+                if ($item.length > 0) {
+                    $item.val(0);
+                    $item.triggerHandler('blur');
+                }
+                else {
+                    actions.updateCart(itemcode, itemtype, state.originalItemQuantity);
+                }
+            });
+
+            // Save the original value of this box in state
+            $('.quantity-box', $context).on('focus', function () {
+                var $this = $(this),
+                    originalquantity = $this.val();
+
+                state.originalItemQuantity = originalquantity;
+                $this.val("");
+            });
+
+            // If a value was entered, submit the change. Else restore the original value from state
+            $('.quantity-box', $context).on('blur', function () {
+                var $item = $(this),
+                    $itemParent = $item.parents('.item-container'),
+                    itemType = $itemParent.find('[name="Type"]').val(),
+                    itemCode = $itemParent.data('itemcode'),
+                    quantity = $item.val();
+
+                if (quantity == "") {
+                    $item.val(state.originalItemQuantity);
+                    return;
+                }
+                else {
+                    actions.updateCart(itemCode, itemType, state.originalItemQuantity);
+                }
+            });
+
+            // Prevent the entering of anything but 1-9
+            $('.quantity-box').on('keypress', function (event) {
+
+                var regex = new RegExp("^[0-9]$");
+                var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+
+                if (!regex.test(key)) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        }
+
+        // Actions
+        var actions = {
+            updateItemSummary: function () {
+                var $container = $('#summary-container');
+
+                ajax.json({
+                    url: updateItemSummaryURL,
+                    beforeSend: function () {
+                        $container.html('<p class="text-center"><strong>Loading Summary...</strong></p>');
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            $container.html(response.html);
+                            actions.setCartQuantities(response);
+                        }
+                        else {
+                            console.log("failed:", response.error);
+                        }
+                    },
+                    error: function (xhr, error, status) {
+                        console.log("Error: ", xhr);
+                    }
+                });
+            },
+            setCartQuantities: function (response) {
+                var orderitems = response.orderitems;
+                var autoorderitems = response.autoorderitems;        
+
+                $('.quantity-box').each(function () {
+                    var $item = $(this),
+                    $itemParent = $item.parents('.item-container'),
+                    itemType = $itemParent.find('[name="Type"]').val(),
+                    itemCode = $itemParent.data('itemcode');
+
+                    if (itemType === orderType) {
+                        for (var i = 0; i < orderitems.length; i++) {
+                            var item = orderitems[i];
+                            if (itemCode === item.ItemCode) {
+                                $item.val(item.Quantity);
+                            }
+                        }
+                    }
+                    else if (itemType === autoOrderType) {
+                        for (var i = 0; i < autoorderitems.length; i++) {
+                            var item = autoorderitems[i];
+                            if (itemCode === item.ItemCode) {
+                                $item.val(item.Quantity);
+                            }
+                        }
+                    }
+                    else {
+                        console.log('Unrecognized Type.');
+                    }
+
+                })
+            },
+            updateCart: function (itemcode, type, originalQuantity) {
+                originalQuantity = parseInt(originalQuantity);
+
+
+                console.log(itemcode, type, originalQuantity);
+
+
+
+                var $container = $('[data-itemcode="' + itemcode + '"][data-itemtype="' + type + '"].item-container'),
+                    $item = null,
+                    quantity = 0;
+
+                if ($container.length > 0) {
+                    $item = $container.serializeObject();
+                    quantity = parseInt($item.Quantity);
+                }
+                else {
+                    $item = $('[data-itemcode="' + itemcode + '"][data-itemtype="' + type + '"]tr').serializeObject();
+                    quantity = parseInt($item.Quantity);
+                }
+
+                //console.log("item: ", $item);
+
+                if (originalQuantity === 0 && quantity > 0) { // Add new item
+                    console.log("add");
+                    actions.addItem($item);
+                }
+                else if (originalQuantity > 0 && quantity === 0) { // Remove exisitng item
+                    console.log("remove");
+                    actions.removeItem($item);
+                }
+                else if (originalQuantity > 0 && quantity > 0) { // Update exiting item quantity
+                    console.log("update");
+                    actions.updateItem($item);
+                }
+            },
+            addItem: function ($item) {
+                ajax.json({
+                    url: addItemsURL,
+                    data: {
+                        item: $item
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            console.log("item added");
+                            actions.updateItemSummary();
+                        }
+                        else {
+                            console.log("failed");
+                        }
+                    },
+                    error: function (xhr, error, status) {
+                        console.log("Error: ", xhr);
+                    }
+                });
+            },
+            removeItem: function ($item) {
+                ajax.json({
+                    url: removeItemsURL,
+                    data: {
+                        itemcode: $item.ItemCode,
+                        type: $item.Type
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            console.log("item deleted");
+                            actions.updateItemSummary();
+                        }
+                        else {
+                            console.log("failed");
+                        }
+                    },
+                    error: function (xhr, error, status) {
+                        console.log("Error: ", xhr);
+                    }
+                });
+            },
+            updateItem: function ($item) {
+                ajax.json({
+                    url: updateItemsURL,
+                    data: {
+                        itemcode: $item.ItemCode,
+                        type: $item.Type,
+                        quantity: $item.Quantity
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            console.log("item updated");
+                            actions.updateItemSummary();
+                        }
+                        else {
+                            console.log("failed");
+                        }
+                    },
+                    error: function (xhr, error, status) {
+                        console.log("Error: ", xhr);
+                    }
+                });
+            }
+        };
+
+        // Initialization
+        function init() {
+            registerEventHandlers();
+            actions.updateItemSummary();
+        }
+        init();
+    })();
+</script>

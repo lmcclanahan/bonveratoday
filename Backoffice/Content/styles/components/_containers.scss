@@ -1,0 +1,5 @@
+.container-expandable { @include transition(width ease-out 0.5s);
+    &.expanded { width: 100%; max-width: 100%; }
+}
+
+.centered-content-container { width: 80%; margin: auto; }

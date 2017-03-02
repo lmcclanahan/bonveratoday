@@ -1,0 +1,38 @@
+﻿@model RankRequirement
+
+@if (Model.IsQualified)
+{
+    <div class="list-group-item">
+        <div class="media">
+            <div class="media-object pull-left fa-check text-success"></div>
+            <div class="media-body">
+                @Model.RequirementDescription
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="list-group-item">
+        <div class="media">
+            <div class="media-object pull-left fa-times text-danger"></div>
+            <div class="media-body">
+                @Model.RequirementDescription
+
+                @if (!Model.IsBoolean)
+                {
+                    <div class="space-10"></div>
+
+                    <div class="progress progress-sm no-margin">
+                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="@Model.RequiredToActualAsPercent" aria-valuemin="0" aria-valuemax="100" style="width: @Model.RequiredToActualAsPercent%;">
+                            <span class="sr-only">@Model.RequiredToActualAsPercent% @Resources.Common.Complete</span>
+                        </div>
+                    </div>
+
+                    <small class="text-muted">@Model.ActualValueAsDecimal.ToString("N0") of @Model.RequiredValueAsDecimal.ToString("N0")</small>
+
+                }
+            </div>
+        </div>
+    </div>
+}

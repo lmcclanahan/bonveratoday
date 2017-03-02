@@ -1,0 +1,35 @@
+﻿@model DistributorSearch
+@{
+    var contextID = Guid.NewGuid().ToString();
+
+}
+
+<div class="view-webalias info" id="view-webaliassearch-@contextID" data-container="view-webalias-search">
+    <div class="form-group row margin-5">
+        @Html.LabelFor(c => c.WebAlias, new { @class = "control-label" })
+        <div class="space-5"></div>
+
+        <div class="col-sm-6">
+            <h5 class="control-label">@GlobalSettings.ReplicatedSites.FormattedBaseUrl</h5>
+        </div>
+        <div class="col-sm-4">
+            @Html.EditorFor(c => c.WebAlias, new
+        {
+            htmlAttributes = new
+                 {
+                     @class = "form-control",
+                     id = Html.IdFor(c => c.WebAlias),
+                     name = Html.NameFor(c => c.WebAlias),
+                     data_role = "search-field",
+                     value = Model.WebAlias,
+                     @placeholder = "johnsmith2015"
+
+                 }
+        })
+            @Html.ValidationMessageFor(c => c.WebAlias)
+        </div>
+        <div class="col-sm-2">
+            <button role="button" class="btn btn-primary search" data-role="search" id="webalias-search">Search</button>
+        </div>
+    </div>
+</div>

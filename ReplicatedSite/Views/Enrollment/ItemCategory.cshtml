@@ -1,0 +1,42 @@
+﻿@model IEnumerable<ItemCategory>
+
+<script>
+    var categorylink = [];
+    var y = 0;
+</script>
+
+@if (Model.Count() > 0)
+{
+    <ul>
+        @foreach (var category in Model)
+        {
+            <li><a href="#" id="@category.ItemCategoryDescription.Replace(" ","_")" class="categorylink">@category.ItemCategoryDescription</a></li><!--Put in ajax call to populate content of second field-->
+            
+            if (category.Subcategories.Count() > 0)
+            {
+                @Html.Partial("ItemCategory", category.Subcategories)
+            }
+        }
+    </ul>
+    
+    foreach (var category in Model)
+    {
+        <script>
+            categorylink[y] ="@category.ItemCategoryDescription".replace(" ","_");
+            y++;
+        </script>
+    }
+
+    <script>
+
+        $(document).ready(function () {
+            for (var x=0; x < categorylink.length; x++) {
+                $("#"+categorylink[x]).click(function (event) {
+                    alert("I am ready!");
+                    $("#myproductlist").html("Hello"); //use this as premise to fill Product List using data pulled by API
+                })
+            }
+        })
+    </script>
+}
+

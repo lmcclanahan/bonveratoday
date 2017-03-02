@@ -1,0 +1,180 @@
+﻿@model EnrollmentPropertyBag
+@{
+    var contextID = Guid.NewGuid();
+}
+
+<div id="view-personalinformation-@contextID">
+
+    <div class="row margin-5">
+        <div class="col-xs-12 col-sm-8">
+            <div class="form-group">
+                @Html.LabelFor(c => c.Customer.FirstName)
+                @Html.EditorFor(c => c.Customer.FirstName)
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+                @Html.LabelFor(c => c.Customer.MiddleName)
+                @Html.EditorFor(c => c.Customer.MiddleName)
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-8">
+            <div class="form-group">
+                @Html.LabelFor(c => c.Customer.LastName)
+                @Html.EditorFor(c => c.Customer.LastName)
+            </div>
+        </div>
+    </div>
+
+    <div class="space-5"></div>
+    <div class="form-group">
+            @Html.CheckBoxFor(c => c.ShowBirthday, new { id = "birthday-checkbox" })
+        <label for="birthday-checkbox">
+            <span>Save my birthday "Optional"</span>
+        </label>
+    </div>
+    @{
+        var birthdayDisplay = (Model.ShowBirthday) ? "block" : "none";
+    }
+    <div id="birthday-container" style="display: @birthdayDisplay;">        
+        <div class="row margin-5">
+            <div class="col-xs-12">
+                <div class="form-group">
+
+                    <label class="control-label">Birthday</label>
+                    <div class="row margin-5">
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                @Html.DropDownList("Customer.BirthDate.Month", Html.Months(defaultMonth: Model.Customer.BirthDate.Month), new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                @Html.DropDownList("Customer.BirthDate.Day", Html.Days(defaultDay: Model.Customer.BirthDate.Day), new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                @Html.DropDownList("Customer.BirthDate.Year", Html.BirthYears(defaultYear: Model.Customer.BirthDate.Year), new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="space-5"></div>
+    </div>
+
+    <div class="row margin-5">
+        <div class="col-xs-12">
+            <div class="form-group">
+                @Html.LabelFor(c => c.Customer.Company)
+                @Html.EditorFor(c => c.Customer.Company)
+            </div>
+        </div>
+    </div>
+
+    <div class="row margin-5">
+        <div class="col-sm-6 col-md-3">
+            <div class="form-group">
+                @Html.LabelFor(c => c.Customer.PrimaryPhone)
+                @Html.EditorFor(c => c.Customer.PrimaryPhone)
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3">
+            <div class="form-group">
+                @Html.LabelFor(c => c.Customer.SecondaryPhone)
+                @Html.EditorFor(c => c.Customer.SecondaryPhone)
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3">
+            <div class="form-group">
+                @Html.LabelFor(c => c.Customer.MobilePhone)
+                @Html.EditorFor(c => c.Customer.MobilePhone)
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3">
+            <div class="form-group">
+                @Html.LabelFor(c => c.Customer.Fax)
+                @Html.EditorFor(c => c.Customer.Fax)
+            </div>
+        </div>
+    </div>
+    <div class="space-5"></div>
+    <div class="row margin-5">
+        <div class="col-sm-12 col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(c => c.Customer.TaxID)
+                @Html.EditorFor(c => c.Customer.TaxID)
+            </div>
+        </div>
+    </div>
+    <div class="space-5"></div>
+
+    @*<div class="row margin-5">
+            <div class="col-sm-12 col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(c => c.Customer.LanguageID)
+                    @Html.EditorFor(c => c.Customer.LanguageID)
+                </div>
+            </div>
+        </div>
+        <div class="space-5"></div>*@
+
+    <div class="row margin-5">
+        <div class="col-sm-12 col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(c => c.Customer.Email)
+                @Html.EditorFor(c => c.Customer.Email)
+            </div>
+        </div>
+    </div>
+
+    <div class="row margin-5">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <div class="checkbox">
+                    <label for="@Html.IdFor(c => c.Customer.IsOptedIn)">
+                        @Html.CheckBoxFor(c => c.Customer.IsOptedIn) I would like to receive special promotional emails.
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@using (Html.BeginPartialScript())
+{
+
+    <script>
+        require(["jquery", "bootstrap"], function ($) {
+
+            // Settings
+            var context = "#view-personalinformation-@contextID",
+                    $context = $(context);
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $('[data-toggle="popover"]', $context).popover();
+
+            }
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+
+        });
+    </script>
+}

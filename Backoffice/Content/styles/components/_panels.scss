@@ -1,0 +1,10 @@
+.panel-body.well { border-radius: 0; margin-bottom: 0; border-left: 0; border-top: 0; border-right: 0; }
+.panel-body + .panel-body { border-top: 1px solid #ddd; }
+
+// Used in Auto Order Choice modal 
+.choice-panel { margin: 10px 30px; border: 1px solid #ccc; min-height: 200px; cursor: pointer;
+    &:hover, &:active { border: 1px solid #aaa; border-bottom: 2px solid #aaa; border-right: 2px solid #aaa; }
+    &.active { border: 2px solid #333; }
+    .panel-heading { background-color: #fafafa !important; border-top-left-radius:inherit !important; border-top-right-radius:inherit !important; }
+     .panel-body { padding: 15px 20px; }
+}

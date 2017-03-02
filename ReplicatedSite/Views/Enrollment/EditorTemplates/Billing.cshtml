@@ -1,0 +1,87 @@
+﻿@model EnrollmentPropertyBag
+@{
+    var contextID = Guid.NewGuid().ToString();
+    IPaymentMethod PaymentMethod;
+}
+
+
+
+<div id="view-billing-@contextID">
+
+    <div class="checkbox">
+        <label for="billing-checkbox">
+            <input type="checkbox" id="billing-checkbox" name="@Html.NameFor(c => c.UseSameBillingAddress)" value="true" @((Model.UseSameBillingAddress) ? "checked" : "") />
+            <input type="hidden" name="@Html.NameFor(c => c.UseSameBillingAddress)" value="false" />
+            Use my main address as my billing address
+        </label>
+    </div>
+
+    <div data-bind="@Html.NameFor(c => c.PaymentTypeID)" data-key="@Exigo.GetPaymentTypeID(Common.Api.ExigoWebService.PaymentType.CreditCard)">
+        @{
+            if (Model.PaymentMethod is CreditCard) { PaymentMethod = (CreditCard)Model.PaymentMethod; }
+            else { PaymentMethod = new CreditCard(); }
+
+            // Make sure that the card number does not display if a user has navigated away and is coming back to this page
+            PaymentMethod.As<CreditCard>().CardNumber = "";
+        }
+        @Html.EditorFor(c => PaymentMethod, "CreditCard")
+
+    </div>
+
+</div>
+
+
+
+@using (Html.BeginPartialScript())
+{
+
+    <script>
+        require(["jquery", "extensions"], function ($) {
+
+            // Settings
+            var context = "#view-billing-@contextID",
+                        $context = $(context),
+                        samebilling = @(Model.UseSameBillingAddress.ToString().ToLower());
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+
+                $('[name="@Html.NameFor(c => c.UseSameBillingAddress)"]', $context).on('change', function () {
+                    $('#creditcard-address-container').toggle();
+                });
+
+                // Handle the PayableType fields
+                var paymentTypeIDName = '@Html.NameFor(c => c.PaymentTypeID)';
+
+                // Auto-check the first option if applicable
+                if ($('[name="{0}"]:checked'.format(paymentTypeIDName), $context).length == 0) {
+                    $('[name="{0}"]:first'.format(paymentTypeIDName), $context).prop('checked', true);
+                }
+
+                // Toggle the respective fieldset on change
+                $('[name="{0}"]'.format(paymentTypeIDName), $context).on('change', function () {
+                    var name = $(this).attr('name'),
+                        value = $('[name="{0}"]:checked'.format(name), $context).val();
+
+
+
+                    $('[data-bind="{0}"]'.format(name), $context).addClass('hidden')
+                        .filter('[data-key="{0}"]'.format(value), $context).removeClass('hidden');
+                }).filter(':checked').triggerHandler('change');
+            }
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+                
+                if (samebilling === true) {                                    
+                    $('#creditcard-address-container').hide();
+                }
+            }
+            init();
+
+        });
+    </script>
+}

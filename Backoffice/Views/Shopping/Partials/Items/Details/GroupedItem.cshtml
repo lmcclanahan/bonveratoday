@@ -1,0 +1,42 @@
+﻿@model Item
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="item-fields">
+
+            @Html.HiddenFor(c => c.Type)
+            @Html.HiddenFor(c => c.ParentItemCode)
+            <input type="hidden" name="@Html.NameFor(c => c.GroupMasterItemCode)" value="@Model.ItemCode" />
+
+            @Html.LabelFor(c => c.ItemCode, Model.GroupMembersDescription)
+            <select name="@Html.NameFor(c => c.ItemCode)" class="form-control">
+                @foreach (var groupMember in Model.GroupMembers)
+                {
+                    <option value="@groupMember.ItemCode">@groupMember.MemberDescription</option>
+                }
+            </select>
+
+            <div class="space-10"></div>
+            @Html.LabelFor(c => c.Quantity)<br />
+            @Html.TextBoxFor(c => c.Quantity,
+                            htmlAttributes: new
+                            {
+                                type = "number",
+                                @class = "form-control form-control-inline input-sm",
+                                style = "width: 80px"
+                            })
+
+            <div class="space-20"></div>
+            <button type="button" class="btn btn-primary btn-block" data-role="item.addtoorder"><i class="fa-shopping-cart"></i> Add to cart</button>
+
+            @if (Model.AllowOnAutoOrder)
+            {
+                <div class="text-divider">
+                    <h5>or</h5>
+                </div>
+
+                <button type="button" class="btn btn-info btn-block" data-role="item.addtoautoorder"><i class="fa-refresh"></i> @Resources.Common.AddToReplenish</button>
+            }
+        </div>
+    </div>
+</div>

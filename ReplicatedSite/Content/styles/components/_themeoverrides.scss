@@ -1,0 +1,34 @@
+$darkblue: darken($blue, 5);
+$darkdarkblue: darken($blue, 10);
+
+// Buttons
+.btn-primary {
+    color: #fff;
+    background-color: $blue;
+    border-color: $darkblue;
+
+    &:focus, &.focus {
+        color: #fff;
+        background-color: $darkdarkblue;
+        border-color: $darkdarkblue;
+    }
+
+    &:hover {
+        color: #fff;
+        background-color: $darkblue;
+        border-color: $darkdarkblue;
+    }
+     
+    &.disabled, &[disabled], &.disabled:hover, &[disabled]:hover {
+        background-color: $blue; 
+        border-color: $darkblue;
+    }
+}
+
+text-ltblue { font-family: 'Raleway',sans-serif; color: #60d1e0; }
+
+// Headers
+.header-ltblue { font-size: 42px; line-height: 38px; font-family: 'Raleway',sans-serif; font-weight: 300; color: #60d1e0; }
+.header-blue { background-color: #006098; color: white; 
+    button, span { color: white; opacity: 1; text-shadow: none; }
+}

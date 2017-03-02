@@ -1,0 +1,74 @@
+﻿@model CreditCard
+@{
+    ViewBag.Title = "Your Account";
+    Layout = "~/Views/Account/_Layout.cshtml";
+}
+
+
+
+<div id="view-ccoverview" class="row">
+    <div class="col-sm-9">
+        @using (Html.BeginForm("savecreditcard", "account"))
+        {
+
+            if (Model.IsUsedInAutoOrders)
+            {
+                <div class="alert alert-info">
+                    <h4>@Resources.Common.EditingReplenishCreditCards</h4>
+                    @Resources.Common.YouHaveReplenishUsingCard.FormatWith(Model.AutoOrderIDs.Length)
+                </div>
+            }
+            
+            <div class="well">
+                @Html.EditorForModel()
+            </div>
+
+            <button type="submit" class="btn btn-primary" data-loading-text="Loading...">Save Changes</button>
+            <a href="@Url.Action("PaymentMethodList")" class="btn btn-link">Cancel</a>
+
+            if (Model.Type != CreditCardType.New && !Model.IsUsedInAutoOrders)
+            {
+                <span class="pull-right">
+                    <a href="@Url.Action("DeleteCreditCard", new { type = Model.Type })" class="btn btn-default">Delete</a>
+                </span>
+            }
+
+            @Html.AntiForgeryToken()
+        }
+    </div>
+    <div class="col-sm-3">
+
+    </div>
+</div>
+
+@section scripts
+{
+
+    <script>
+        require(["jquery", "forms", "bootstrap"], function ($, forms) {
+
+            // Settings
+            var context = "#view-ccoverview",
+                $context = $(context);
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $("[type='submit']").on("click", function () {
+                    $(this).button("loading");
+                    if (!$("form").valid()) {
+                        $(this).button("reset");
+                    }
+                });
+            }
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+
+        });
+    </script>
+}

@@ -1,0 +1,141 @@
+﻿@model CreateLeadViewModel
+@{
+    ViewBag.Title = "Your Leads";
+}
+
+<div id="view-create-lead">
+    <h2>@ViewBag.Title</h2>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa-home"></i></a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+
+    <div class="row">
+        <div class="col-sm-3">
+            @Html.Navigation()
+        </div>
+        <div class="col-sm-9">
+
+
+            @using (Ajax.BeginForm("createlead", "organization", new AjaxOptions()
+            {
+                OnSuccess = "leadcreationoverview.onSuccess"
+            }))
+            {
+                <div class="create-lead-form-container">
+                    <div class="row margin-10">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(c => c.Lead.FirstName, new { @class = "control-label" })
+                                @Html.EditorFor(c => c.Lead.FirstName)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(c => c.Lead.LastName, new { @class = "control-label" })
+                                @Html.EditorFor(c => c.Lead.LastName)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row margin-10">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(c => c.Lead.Email, new { @class = "control-label" })
+                                @Html.EditorFor(c => c.Lead.Email)
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="row margin-10">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(c => c.Lead.PrimaryPhone, new { @class = "control-label" })
+                                @Html.EditorFor(c => c.Lead.PrimaryPhone)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(c => c.Lead.SecondaryPhone, new { @class = "control-label" })
+                                @Html.EditorFor(c => c.Lead.SecondaryPhone)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row margin-10">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(c => c.Lead.MobilePhone, new { @class = "control-label" })
+                                @Html.EditorFor(c => c.Lead.MobilePhone)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(c => c.Lead.Fax, new { @class = "control-label" })
+                                @Html.EditorFor(c => c.Lead.Fax)
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    @Html.EditorFor(c => c.Lead.MainAddress)
+
+                    <div class="space-20"></div>
+                    <button type="submit" data-role="submit-form" class="btn btn-primary pull-right">Submit</button>
+                    <div class="clearfix"></div>
+                    <div class="space-20"></div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        var leadcreationoverview;
+
+        require(["jquery", "toastr", "forms"], function ($, toastr) {
+
+            // Settings
+            var context = "#view-create-lead",
+                $context = $(context);
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+
+            }
+
+
+            // Actions
+            var actions = {
+                onSuccess: function (response) {
+                    if (response.success) {
+                        window.location = "@Url.Action("leadslist", "organization", new { create = "true" })";
+                    }
+                    else {
+                        toastr.error(response.message, "We were unable to create this lead.");
+                    }
+                }
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+
+
+            // Exports
+            leadcreationoverview = {
+                onSuccess: actions.onSuccess
+            }
+
+        });
+    </script>
+}

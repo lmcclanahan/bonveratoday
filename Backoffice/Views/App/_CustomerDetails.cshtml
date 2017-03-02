@@ -1,0 +1,25 @@
+﻿@model CustomerDetailsViewModel
+@{
+    var paidRank = (Model.PaidRank.RankDescription.IsNullOrEmpty()) ? "N/A" : Model.PaidRank.RankDescription;
+    var highestRank = (Model.HighestRank.RankDescription.IsNullOrEmpty()) ? "N/A" : Model.HighestRank.RankDescription;   
+}
+<div class="row margin-10">
+    <div class="col-xs-2">
+        <img src="@Url.Avatar(Model.Customer.CustomerID)" class="img-responsive" style="max-width: 70px; margin: 0 auto;"/>
+    </div>
+    <div class="col-xs-10">
+        <h3 style="margin-top: 0;">@Model.Customer.FullName - ID# @Model.Customer.CustomerID</h3>
+        <div class="row margin-10">
+            <div class="col-sm-6">
+                <div class="space-10"></div>
+                <label>Status: </label>
+                <span>@Model.Customer.CustomerStatus.CustomerStatusDescription</span>
+            </div>
+            <div class="col-sm-6">
+                <div class="space-10"></div>
+                <label>Type: </label>
+                <span>@Model.Customer.CustomerType.CustomerTypeDescription</span>
+            </div>
+        </div>
+    </div>
+</div>

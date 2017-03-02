@@ -1,0 +1,126 @@
+﻿@model MarketListViewModel
+@{
+    ViewBag.Title = "Markets";
+
+
+    var getWarehouseName = new Func<int, string>((id) =>
+    {
+        var name = "Warehouse";
+        var record = Model.Warehouses.FirstOrDefault(c => c.WarehouseID == id);
+        if (record != null) name = record.WarehouseDescription;
+
+        return string.Format("{0} ({1})", name, id);
+    });
+
+    var getCountryName = new Func<string, string>((id) =>
+    {
+        var name = "Country";
+        var record = Model.Countries.FirstOrDefault(c => c.CountryCode == id);
+        if (record != null) name = record.CountryDescription;
+
+        return string.Format("{0} ({1})", name, id);
+    });
+
+    var getPriceTypeName = new Func<int, string>((id) =>
+    {
+        var name = "Price Type";
+        var record = Model.PriceTypes.FirstOrDefault(c => c.PriceTypeID == id);
+        if (record != null) name = record.PriceTypeDescription;
+
+        return string.Format("{0} ({1})", name, id);
+    });
+
+    var getLanguageName = new Func<int, string>((id) =>
+    {
+        var name = "Language";
+        var record = Model.Languages.FirstOrDefault(c => c.LanguageID == id);
+        if (record != null) name = record.LanguageDescription;
+
+        return string.Format("{0} ({1})", name, id);
+    });
+
+    var getShipMethodName = new Func<int, string>((id) =>
+    {
+        var name = "Ship Method";
+        var record = Model.ShipMethods.FirstOrDefault(c => c.ShipMethodID == id);
+        if (record != null) name = record.ShipMethodDescription;
+
+        return string.Format("{0} ({1})", name, id);
+    });
+
+    var getWebCategoryName = new Func<int, string>((id) =>
+    {
+        var name = "Category";
+        var record = Model.WebCategories.FirstOrDefault(c => c.WebCategoryID == id);
+        if (record != null) name = record.WebCategoryDescription;
+
+        return string.Format("{0} ({1})", name, id);
+    });
+}
+
+
+@foreach (var market in Model.Markets)
+{
+    var marketConfiguration = market.GetConfiguration();
+
+    // Order configuration
+    var orderConfigs = new List<IOrderConfiguration>()
+    {
+        marketConfiguration.Orders,
+        marketConfiguration.AutoOrders,
+        marketConfiguration.BackOfficeOrders,
+        marketConfiguration.BackOfficeAutoOrders,
+        marketConfiguration.EnrollmentKits
+    };
+
+
+    <h3 class="no-margin">@market.Description</h3>
+    <div class="space-20"></div>
+
+    <div class="row margin-5">
+        <div class="col-md-2">
+            <table class="table table-condensed table-striped text-sm">
+                <tr><th>Market Data</th><th>Value</th></tr>
+                <tr><td>Description</td><td>@market.Description</td></tr>
+                <tr><td>Cookie Value</td><td>@market.CookieValue</td></tr>
+                <tr><td>Culture Code</td><td>@market.CultureCode</td></tr>
+                <tr><td>Is Default</td><td>@market.IsDefault</td></tr>
+                <tr><td>Countries</td><td>@string.Join(", ", market.Countries)</td></tr>
+                <tr><td>Available Payment Types</td><td>@string.Join(", ", market.AvailablePaymentTypes.Select(c => c.GetType().Name))</td></tr>
+                <tr><td>Available Frequency Types</td><td>@string.Join(", ", market.AvailableAutoOrderFrequencyTypes.Select(c => c.ToString()))</td></tr>
+            </table>
+        </div>
+
+        <div class="col-md-10">
+            <table class="table table-condensed table-striped text-sm table-hover">
+                <tr>
+                    <th>Configuration</th>
+                    <th>Default Country</th>
+                    <th>Warehouse</th>
+                    <th>Price Type</th>
+                    <th>Currency</th>
+                    <th>Default Language</th>
+                    <th>Default Ship Method</th>
+                    <th>Category ID</th>
+                </tr>
+
+                @foreach (var orderConfig in orderConfigs)
+                {
+                    <tr>
+                        <td class="text-strong">@orderConfig.GetType().Name</td>
+                        <td>@getCountryName(orderConfig.DefaultCountryCode)</td>
+                        <td title="@orderConfig.WarehouseID">@getWarehouseName(orderConfig.WarehouseID)</td>
+                        <td title="@orderConfig.PriceTypeID">@getPriceTypeName(orderConfig.PriceTypeID)</td>
+                        <td>@orderConfig.CurrencyCode</td>
+                        <td title="@orderConfig.LanguageID">@getLanguageName(orderConfig.LanguageID)</td>
+                        <td title="@orderConfig.DefaultShipMethodID">@getShipMethodName(orderConfig.DefaultShipMethodID)</td>
+                        <td title="@orderConfig.CategoryID">@getWebCategoryName(orderConfig.CategoryID)</td>
+                    </tr>
+
+                }
+            </table>
+        </div>
+    </div>
+
+    <div class="space-50"></div>
+}

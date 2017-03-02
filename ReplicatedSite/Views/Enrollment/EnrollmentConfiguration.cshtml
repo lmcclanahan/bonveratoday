@@ -1,0 +1,142 @@
+﻿@model EnrollmentConfigurationViewModel
+@{
+    ViewBag.Title = "Create your Independent Associate Account";
+    var message = ViewBag.Message;
+    var error = ViewBag.Error != null ? ViewBag.Error : "";
+}
+
+<div id="view-enrollment-configuration">
+    <div class="container">
+        <h2>@ViewBag.Title</h2>
+
+        <div class="space-20 hidden-xs"></div>
+        @if (error != null && error != "")
+        {
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Error!</strong> @error
+            </div>
+        }
+
+
+        @using (Html.BeginForm())
+        {
+            <input type="hidden" id="enrollment-type" name="SelectedEnrollmentType" />
+            <input type="hidden" id="market-country-code" name="MarketName" />
+
+            @Html.HiddenFor(c => c.EnrollerID)
+            @Html.HiddenFor(c => c.SponsorID)
+            <!-- Choose Enroller -->
+            if (Identity.Owner.IsOrphan)
+            {
+                <div class="space-10"></div>
+                @Html.Partial("_EnrollerSearch")
+            }
+            else
+            {
+                <input type="hidden" name="@Html.NameFor(c => c.EnrollerID)" value="@Model.EnrollerID" />
+            }
+
+
+            <button type="submit" class="btn btn-lg btn-info pull-right" data-type="@EnrollmentType.Distributor">Join Now</button>
+            <div class="space-50"></div>
+     
+
+      
+        <!-- Choose Market -->
+        @*<h4><strong>Select your market</strong></h4>
+            <div class="row">
+                <div class="col-sm-4">
+                    @Html.DropDownListFor(c => c.MarketName,
+                    selectList: GlobalSettings.Markets.AvailableMarkets.Select(c => new SelectListItem
+                    {
+                        Text = c.Description,
+                        Value = c.Name.ToString()
+                    }).ToList(),
+                    htmlAttributes: new
+                    {
+                        @class = "form-control countryselect",
+                        data_role = "Country"
+                    })
+                </div>
+            </div>
+
+            <div class="space-30"></div>
+            <button type="submit" class="btn btn-lg btn-info" data-type="@EnrollmentType.Distributor">Join Now</button>
+            <div class="space-30"></div>*@
+        
+
+        <!-- Find Enroller Modal -->
+        <div class="modal fade" id="distributorSearchModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Find Your Referrer</h4>
+                    </div>
+                    <div class="modal-body">
+                        @Html.Partial("_EnrollerModal")
+                    </div>
+                </div>
+            </div>
+        </div>
+        @Html.AntiForgeryToken()
+        }
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        require(["jquery", "forms", "toastr", "bootstrap", "extensions", "pubsub"], function ($, forms, toastr) {
+            var message = "@message";
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                // Handle placement issues
+                if (message != "") {
+                    toastr.error(message);
+                }
+
+                $('#enroller-search').on('click', function () {
+                    $('#distributorSearchModal').modal();
+                });
+
+                $('[data-role="Country"]').on('click', function () {
+                    $('#market-country-code').val($('[data-role="Country"]').val());
+                });
+
+                $('[data-role="corporatesignup"]').on('click', function () {
+                    window.trigger("enrollment.showenrollerinfo", "corporate");
+                });
+
+                // Pubsub events
+                window.on('enrollment.showenrollerinfo', function (enroller) {
+                    var message = "";
+
+                    if (enroller == "corporate") {
+                        message = "You have chosen to enroll without a distributor.";
+                    }
+                    else {
+                        message = "You have selected {0}, ID# {1} as your enroller.".format(enroller.FullName, enroller.CustomerID);
+                    }
+
+                    $('#distributorSearchModal').modal('hide');
+                    $('#search-message .message').html(message);
+                    $('#search-message').show();
+                });
+            }
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+
+
+                $('#market-country-code').val($('[data-role="Country"]').val());
+            }
+
+            init();
+        });
+    </script>
+}

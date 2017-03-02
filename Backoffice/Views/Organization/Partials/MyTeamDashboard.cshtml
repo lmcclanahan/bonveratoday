@@ -1,0 +1,139 @@
+﻿@model MyTeamViewModel
+
+
+
+
+<div class="panel panel-default">
+    <div role="tab" id="headingTwo" class="dashboard-heading">
+        <h4 class="panel-title">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                My Teams Dashboard
+            </a>
+        </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+
+
+        <div class="panel-body">
+            <div>
+                <div class="left-button" style="background-color: gray;">
+                    <div class="glyphicon glyphicon-chevron-left left-glyphicon" aria-hidden="true"></div>
+
+                </div>
+                <div class="right-button" style="background-color: gray;">
+                    <div class="glyphicon glyphicon-chevron-right right-glyphicon" aria-hidden="true"></div>
+
+                </div>
+            </div>
+            <div>
+                <div id="slide-wrap">
+                    <div id="inner-wrap">
+
+
+                        <div class="row">
+
+
+                            @foreach (var team in Model.Teams)
+                            {
+                                <div class='team-div' data-team="@team.TeamNumber" data-id="@Model.CurrentTeamMember.CustomerID">
+                                    <div class="text-center team-header">Team @team.TeamNumber</div>
+                                    <div class="pull-left">
+                                        TGBV <br />
+                                        New Associates <br />
+                                        Depth <br />
+                                        Smart Shoppers <br />
+                                    </div>
+                                    <div class="pull-right">
+                                        @team.TGBV.ToString("0") <br />
+                                        @team.NewAssociates.ToString("0") <br />
+                                        @team.Depth.ToString("0") <br />
+                                        @team.SmartShoppers.ToString("0") <br />
+                                    </div>
+                                </div>
+                                if (team.TeamNumber != Model.Teams.Count)
+                                {
+                                    <div class="space"></div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+
+
+</style>
+<script>
+    require(["jquery", "ajax"], function ($, ajax) {
+
+        // Settings
+        var id = "@Model.CurrentTeamMember.CustomerID";
+
+        var teamCount = "@Model.Teams.Count",
+            defaultWidth = 250;
+
+        var innerWidth = teamCount * defaultWidth;
+        $("#inner-wrap").width(innerWidth);
+        // Event Handlers
+        function registerEventHandlers() {
+
+
+            $(".team-div").on("click", function () {
+                var team = $(this).data('team');
+                //var id = $(this).data('id');
+
+                var period = $("#periodSelect").val();
+                var data = { id: id, team: team, period: period };
+                window.trigger("myTeam.ReloadTable", data);
+
+            });
+
+            $(".left-button").on("click", function () {
+                var maxScroll = ($('#inner-wrap').width() - $('#slide-wrap').scrollLeft()) - $('#slide-wrap').width();
+
+                var $scrollLeft = $('.float-wrap').scrollLeft();
+                if (0 == $('#slide-wrap').scrollLeft()) {
+                }
+                else {
+                    $('#slide-wrap').animate({
+                        scrollLeft: "-=" + 250 + "px"
+                    });
+                }
+            });
+            $(".right-button").on("click", function () {
+                var maxScroll = ($('#inner-wrap').width() - $('#slide-wrap').scrollLeft()) - $('#slide-wrap').width();
+                if (0 == maxScroll) {
+                } else {
+                    $('#slide-wrap').animate({
+                        scrollLeft: "+=" + 250 + "px"
+                    });
+                }
+            });
+        }
+
+
+
+
+        // Actions
+        var actions = {
+        };
+
+
+        // Initialization
+        function init() {
+
+            registerEventHandlers();
+        }
+        init();
+    });
+</script>
+
+
+
+
+

@@ -1,0 +1,114 @@
+﻿@model SubscriptionsViewModel
+@{
+    ViewBag.Title = Resources.Common.Subscriptions;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div id="view-subscriptions">
+    <div class="row">
+        <div class="col-sm-3">
+            @Html.Navigation()
+        </div>
+        <div class="col-sm-9">
+            <a class="btn btn-primary" data-role="add">Add New Subscription</a>
+            <div class="space-20"></div>
+            @if (Model.CalendarSubscriptionCustomers.Count() == 0)
+            {
+            <p>You have no subscriptions.</p>
+            }
+            else
+            {
+                foreach (var sub in Model.CalendarSubscriptionCustomers)
+                {
+            <div class="panel panel-default">
+                <div class="panel-heading" style="padding: 8px;">
+                    <div class="row margin-0">
+                        <div class="col-sm-1"><img src="@Url.Avatar(sub.CustomerID)" style="max-height: 30px;" class="img-responsive" /></div>
+                        <div class="col-sm-11">
+                            @sub.FullName&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ID: #@sub.CustomerID
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    @foreach (var calendar in sub.Calendars)
+                            {
+                            <div class="row">
+                                <div class="col-sm-10">@calendar.Description</div>
+                                <div class="col-sm-2"><a data-role="unsubscribe" data-id="@calendar.CalendarID" class="btn btn-sm btn-block btn-primary">@Resources.Common.Unsubscribe</a></div>
+                            </div>
+                            }
+                </div>
+            </div>
+                }
+            }
+        </div>
+
+        <!-- Add Subscription Modal -->
+        <div class="modal fade" id="add-subscription-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Choose a person to subscribe to.</h4>
+                    </div>
+                    <div class="modal-body">
+                        @Html.Partial("AddSubscriptionModal")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts
+{
+
+    <script>
+        require(["jquery", "ajax", "bootstrap"], function ($, ajax) {
+
+            // Settings
+            var context = "#view-subscriptions",
+                $context = $(context);
+
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $('[data-role="add"]').on('click', function () {
+                    $('#add-subscription-modal').modal();
+                });
+
+                $('[data-role="unsubscribe"]').on("click", function () {
+                    var id = $(this).data('id');
+
+                    actions.unsubscribe(id);
+                });
+            }
+
+
+            // Actions
+            var actions = {
+                unsubscribe: function (id) {
+                    ajax.json({
+                        url: "@Url.Action("unsubscribefromdistributorcalendar", "events")",
+                        data: { id: id },
+                        success: function () {
+                            window.location = window.location;
+                        }
+                    });
+                }
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+
+            init();
+        });
+    </script>
+}

@@ -1,0 +1,25 @@
+﻿<div id="view-autoorderslist">    
+    <div class="grid"></div>
+</div>
+
+<script>
+    require(["kendogrids"], function (kendoGrid) {
+
+        var cultureCode = "@Identity.Current.Market.CultureCode";
+        kendo.culture(cultureCode);
+
+
+        kendoGrid.create("#view-autoorderslist .grid", {
+            url: '@Request.Url.AbsolutePath',
+            sort: { field: "NextRunDate", dir: "desc" },
+            columns: [
+                { field: "LastRunDate", title: Resources.Common.LastProcessDate, type: "date", format: "{0:d}", attributes: { "class": "text-right" } },
+                { field: "NextRunDate", title: Resources.Common.NextProcessDate, type: "date", format: "{0:d}", attributes: { "class": "text-right" } },
+                { field: "SubTotal", title: Resources.Common.SubTotal, type: "number", format: "{0:C}", attributes: { "class": "text-right" } },
+                // the naming here is misleading BV is actually stored in the CV table, but has been left as is for sorting purposes
+                { field: "CommissionableVolumeTotal", type: "number", title: Resources.Common.BV, format: "{0:N0} " + Resources.Common.BV, attributes: { "class": "text-right" } }
+            ]            
+            
+        });
+    });
+</script>

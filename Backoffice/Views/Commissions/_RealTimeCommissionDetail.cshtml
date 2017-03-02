@@ -1,0 +1,132 @@
+﻿@model CommissionDetailViewModel
+@{
+    Layout = null;
+    var contextID = Guid.NewGuid().ToString();
+}
+
+<div id="view-commissiondetail-@contextID">
+    <div class="panel panel-default">
+
+        @if (Model.Commissions.Count() == 0)
+        {
+            <div class="panel-body">
+                <div class="text-center text-muted">
+                    You have not earned any commissions yet - check back soon!
+                </div>
+            </div>
+        }
+
+
+        @foreach (var commission in Model.Commissions)
+        {
+            var typedCommission = (RealTimeCommission)commission;
+            <div class="panel-body">
+                <h4>@typedCommission.Period.PeriodDescription @Resources.Common.Commissions</h4>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="metric metric-sm">
+                            <div class="metric-body text-info">@Format.Currency(typedCommission.Total, typedCommission.CurrencyCode)</div>
+                            <div class="metric-title">
+                                @(Resources.Common.QualifyingAs): <strong>@CommonResources.Ranks(typedCommission.PaidRank.RankID)</strong>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <dl class="dl-metric">
+                                    <dt>@Resources.Common.Earnings</dt>
+                                    <dd>@Format.Currency(typedCommission.Total, typedCommission.CurrencyCode)</dd>
+                                </dl>
+                            </div>
+                            <div class="col-sm-4">
+                                <dl class="dl-metric">
+                                    <dt>@Resources.Common.Active</dt>
+                                    <dd>@Format.Boolean(typedCommission.Volumes.Volume1 == 1)</dd>
+
+                                    @*<dt>@Resources.Common.Qualified</dt>
+                                        <dd>@Format.Boolean(typedCommission.Volumes.Volume5 == 1)</dd>*@
+                                </dl>
+                            </div>
+                            <div class="col-sm-4">
+                                <dl class="dl-metric">
+                                    <dt>@CommonResources.Volumes(4)</dt>
+                                    <dd>@typedCommission.Volumes.Volume4.ToString("N0")</dd>
+
+                                    <dt>@CommonResources.Volumes(16)</dt>
+                                    <dd>@typedCommission.Volumes.Volume16.ToString("N0")</dd>
+
+                                    <dt>@CommonResources.Volumes(2)</dt>
+                                    <dd>@typedCommission.Volumes.Volume2.ToString("N0")</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <h5>
+                            Please note the commission calculations for @commission.Period.PeriodDescription are estimates only. They are subject to change based on your qualification, close of month, returns and adjustments. They have not been paid out. Please refer to the Compensation Plan Brochure for details on definitions and qualifications
+                        </h5>
+
+                        <h5>
+                            <span style="color:red;">PBV</span> is the personal BV of an order associated with the corresponding Bonvera ID#. A Bonvera ID could potentially have multiple orders associated with
+                            that ID in a given pay period.
+                        </h5>
+                        <h5>
+                            <span style="color:red;">PCBV</span> is the total personal customer BV for the current month from your retail customers and smart shoppers.
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (Model.Commissions.Count() != 0)
+        {
+        <!-- Bonuses -->
+            <div class="panel-body no-padding">
+                <div class="grid"></div>
+            </div>
+        }
+    </div>
+</div>
+
+
+<script>
+    require(["kendogrids"], function (kendoGrid) {
+
+        // Settings
+        var context = "#view-commissiondetail-@contextID";
+        var cultureCode = "@Identity.Current.Market.CultureCode";
+        kendo.culture(cultureCode);
+
+
+        kendoGrid.create(context + " .grid", {
+            url: '@Url.Action("GetRealTimeBonusDetails", new { runid = ViewContext.RouteData.Values["runid"] })',
+            pageable: false,
+            columns: [
+                { field: "PeriodDescription", title: Resources.Common.Period, type: "string", hidden: true },
+                { field: "BonusID", title: Resources.Common.BonusID, type: "number", hidden: true },
+                { field: "BonusDescription", title: Resources.Common.Bonus, type: "string", hidden: true },
+                { field: "FromCustomerID", title: "From Bonvera ID#", type: "number", width: 200 },
+                { field: "FromCustomerName", title: Resources.Common.From, type: "string", width: 200 },
+                //{ field: "Level", title: Resources.Common.Level, type: "number", template: kendoGrid.templates.level("Level") },
+                //{ field: "PaidLevel", title: Resources.Common.PaidLevel, type: "number", template: kendoGrid.templates.level("PaidLevel") },
+                { field: "SourceAmount", title: "PBV", format: "{0:C}", attributes: { "class": "text-right" } },
+                { field: "Percentage", title: "%", type: "number", format: "{0}%", attributes: { "class": "text-right" } },
+                { field: "CommissionAmount", title: Resources.Common.Earned, type: "number", format: "{0:C}", attributes: { "class": "text-right" }, aggregates: ["sum"], groupFooterTemplate: "#= kendo.toString(sum, 'C') #" }
+            ],
+            dataSource: {
+                pageSize: 50,
+                group: [
+                { field: "PeriodDescription" },
+                {
+                    field: "BonusDescription",
+                    aggregates: [
+                        { field: "CommissionAmount", aggregate: "sum" }
+                    ]
+                }]
+            }
+        });
+    });
+</script>

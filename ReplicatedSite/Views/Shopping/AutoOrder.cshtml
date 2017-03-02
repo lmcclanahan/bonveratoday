@@ -1,0 +1,91 @@
+﻿@model AutoOrderSettingsViewModel
+@{
+    ViewBag.Title = Resources.Common.ConfigureYourReplenish;
+    var minimumStartDate = GlobalUtilities.GetNextAvailableAutoOrderStartDate(DateTime.Now);
+
+    var availableFrequencyTypes = new List<Common.Api.ExigoWebService.FrequencyType>()
+                        {
+                            Common.Api.ExigoWebService.FrequencyType.Monthly
+                        };
+}
+
+<input type="hidden" class="activenavigation" value="shopping" />
+
+<div id="view-autoordersettings" class="container shop cart">
+
+    <h3>@ViewBag.Title</h3>
+    <div class="space-20"></div>
+
+
+    @using (Html.BeginForm())
+    {
+        <div class="form">
+            <div class="form-group">
+                <label for="">@Resources.Common.AutoOrderFrequencyMessage</label><br />
+
+                <input type="hidden" name="AutoOrderFrequencyType" value="@Common.Api.ExigoWebService.FrequencyType.Monthly" />
+                
+              <div class="space-10"></div>
+                <div class="row">
+                    <div class="auto-order-start-selection col-sm-3">
+                        <input type="text" class="form-control form-control-inline" id="" name="AutoOrderStartDate" data-type="date" value="@Model.AutoOrderStartDate.ToString("M/d/yyyy")" />
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-selector">Continue</button>
+
+            @Html.AntiForgeryToken()
+        </div>
+    }
+
+</div>
+<div class="space-20"></div>
+
+<link href="~/Content/scripts/vendor/kendo/styles/kendo.bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/scripts/vendor/kendo/styles/kendo.common-bootstrap.min.css" rel="stylesheet" />
+
+@section scripts
+{
+    <script>
+        require(["jquery", "kendo"], function ($, kendo) {
+
+            // Settings
+            var context            = "#view-autoordersettings",
+                $context           = $(context),
+                currentCultureCode = "@System.Threading.Thread.CurrentThread.CurrentCulture.Name",
+                minimumStartDate   = new Date(@minimumStartDate.Year, @minimumStartDate.Month, @minimumStartDate.Day);
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $('[data-type="date"]', $context).kendoDatePicker({
+                    culture: currentCultureCode,
+                    parseFormats: ["MM/dd/yyyy"],
+                    min: minimumStartDate
+                }).on("focus click", function () {
+                    $(this).data("kendoDatePicker").open();
+                });
+            }
+
+
+            // Actions
+            var actions = {
+            };
+
+
+            // Helpers
+            var helpers = {
+
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+
+        });
+    </script>
+}

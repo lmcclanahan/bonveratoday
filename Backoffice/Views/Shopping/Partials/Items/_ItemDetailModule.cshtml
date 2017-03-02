@@ -1,0 +1,115 @@
+﻿@model Item
+@{
+    var isFirstOrderPack = ViewBag.IsFirstOrderPack;
+    var hasFirstOrderPack = ViewBag.HasFirstOrderPack;
+    var canPurchaseFirstOrderPack = ViewBag.CanPurchaseFirstOrderPack;
+    var hideForLive = GlobalSettings.HideForLive;
+}
+@if (isFirstOrderPack)
+{
+    if (hasFirstOrderPack)
+    {
+        <div class="alert alert-info alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            You already have the First Order Pack in your cart, proceed to your cart by clicking <a href="@Url.Action("cart", "shopping")"><strong>here</strong></a>.
+        </div>
+    }
+    else if (!canPurchaseFirstOrderPack)
+    {
+        <div class="alert alert-info alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            You can't purchase the First Order Pack, click <a href="@Url.Action("itemlist", "shopping")"><strong>here</strong></a> to return to shopping.
+        </div>
+    }
+}
+@if (!isFirstOrderPack || (isFirstOrderPack && canPurchaseFirstOrderPack))
+{
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="images">
+                <div class="image">
+                    <img src="@Model.LargeImageUrl" class="img-responsive" />
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8 item-fields">
+            <div class=" row product-purchase-module">
+                <div class="product-category">
+                    <h3 class="text-uppercase" style="margin-top:0;">@Html.Raw(Model.ItemDescription)</h3>
+                </div>
+                <div class="itemdescription">
+                    <p class="product-name">
+                        @Html.Raw(Model.ShortDetail1)
+                    </p>
+                    <h5 class="skin-type">@Html.Raw(Model.ShortDetail2)</h5>
+                    <div class="space-10"></div>
+                </div>
+                <div class="price-weight">
+                    <h3 class="price">
+                        @Model.Price.ToString("C")
+                    </h3>
+                    @if (isFirstOrderPack)
+                    {
+                        <div class="price-first-order-discount text-success"><i class="fa-asterisk"></i> @Resources.Common.FirstOrderPackCheckoutPriceText</div>
+                    }
+                    else
+                    {
+                        @* P.M. 78567 08/02/2016 Removed Dollar sign from BV *@
+                        <h4>BV @Model.BV.ToString("0.00")</h4>
+                    }
+                </div>
+                <div class="space-40"></div>
+                <div class="select-product">
+                    <div class="row">
+                        <div class="col-xs-12 options">
+                            <input type="hidden" name="ItemCode" value="@Model.ItemCode" />
+                            <input type="hidden" name="Type" value="@Model.Type" />
+                            <input type="hidden" name="ParentItemCode" value="@Model.ParentItemCode" />
+                            <input type="hidden" name="description" value="@Model.ItemDescription" />
+
+                            <div class="col-sm-4 text-center">
+                                @if (!hideForLive)
+                                {
+                                    if (isFirstOrderPack)
+                                    {
+                                        @Html.TextBoxFor(c => c.Quantity, new { @class = "form-control input-sm product-quantity", disabled = "disabled" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(c => c.Quantity, new { @class = "form-control input-sm product-quantity" })
+                                    }
+                                }
+                            </div>
+                            <div class="col-sm-8">
+                                @if (!hideForLive)
+                                {
+                                    @* If this is the First Order Pack and the user already has one in their cart, we need to disable the Add functionality for this item to prevent more than one from being purchased - Mike M. *@
+                                    if (isFirstOrderPack && hasFirstOrderPack)
+                                    {
+                                        <button class="btn btn-primary disabled" disabled><i class="fa-check"></i> Item Added!</button>
+                                    }
+                                    else
+                                    {
+                                        <div class="first-order-pack-container">
+                                            <a class="btn btn-primary" data-role="item.addtoorder" data-itemcode="@Model.ItemCode" data-type="@ShoppingCartItemType.Order"><i class="fa-shopping-cart"></i> @Resources.Common.AddToCart</a>
+                                        </div>
+                                        <div class="first-order-pack-added-message">
+                                            <button class="btn btn-primary disabled" disabled><i class="fa-check"></i> Item Added!</button>
+                                        </div>
+                                    }
+
+                                    @*Hides Auto Order button from page if AllowOnAutoShip == false*@
+                                    if (Model.AllowOnAutoOrder)
+                                    {
+                                        <a class="btn btn-info" data-role="item.addtoorder" data-itemcode="@Model.ItemCode" data-type="@ShoppingCartItemType.AutoOrder"><i class="fa-refresh"></i> @Resources.Common.AddToAutoShip</a>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}

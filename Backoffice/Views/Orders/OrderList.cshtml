@@ -1,0 +1,344 @@
+﻿@model IEnumerable<Order>
+@{
+    ViewBag.Title = Resources.Common.Orders;
+    var startDate = Model.OrderByDescending(c => c.OrderDate).Any() ? Model.OrderByDescending(c => c.OrderDate).Select(c => c.OrderDate).LastOrDefault(): DateTime.Today.AddMonths(-1);
+    var endDate = Model.OrderByDescending(c => c.OrderDate).Any() ? Model.OrderByDescending(c => c.OrderDate).Select(c => c.OrderDate).FirstOrDefault() :  DateTime.Today;
+    int OrderID = 0;
+    
+    var OrderCount = Model.Count();
+    var rowCount = Convert.ToInt32(ViewBag.RowCount);
+    var action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    var page = Convert.ToInt32(ViewContext.RouteData.Values["page"]);
+    var isSearch = ViewBag.IsSearch != null && ViewBag.IsSearch == true;
+    var isPartnerStoreOrders = ViewBag.isPartnerStoreOrders != null && ViewBag.isPartnerStoreOrders == true;
+    bool hasPreviousPage = page >= 1,
+         hasNextPage = rowCount >= Model.Count(),
+         hasPagination = hasPreviousPage || hasNextPage;
+    string strActionResult = ViewContext.RouteData.Values["action"].ToString(); //20161226 80967 DV. Client request ability to control date range for both All Orders and Partner Stores tabs.  Since both share the OrderList.cshtml view simply pass the correction ActionResult to process.
+}
+<h2>@ViewBag.Title</h2>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="navbar-form navbar-left" role="search">
+        <div class="row" style="margin-bottom: 20px">
+            <div class="col-sm-12">
+                @using (Html.BeginForm(strActionResult, "Orders", FormMethod.Post))
+                {
+                    @*Search orders by Order ID*@
+                    <div class="form-group" style="display:block; margin-bottom: 10px">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="seachByOrderId" class="control-label" style="display:block">Search By Order ID</label>
+                                @*<input type="search" id="seachByOrderId" value="@ViewContext.RouteData.Values["id"]" class="form-control input-sm" placeholder="@Resources.Common.Order#" />*@
+                                @Html.TextBoxFor(c=> OrderID, "", new { name = "OrderID", id = "OrderID", placeholder="Order#", Value="", @class="form-control"})
+                                @*@if (isSearch)
+                                {
+                                    <a href="@Url.Action("orderlist")" class="btn btn-default btn-sm">@Resources.Common.Clear</a>
+                                }*@
+                                @*@Html.EditorFor(c => orderId, "orderId")*@
+                                <button type="submit" value="search" id="searchorderid" class="btn btn-primary btn-sm">@Resources.Common.SearchByOrderID</button> <a href="@Url.Action(strActionResult)" class="btn btn-default btn-sm">@Resources.Common.Clear</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @using (Html.BeginForm(strActionResult, "Orders", FormMethod.Post))
+                {
+                    @*Search orders by Date Range*@
+                    <div class="form-group" style="display:block;">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label for="datePickerFrom" class="control-label" style="display:block;">@Resources.Common.DateFrom</label>
+                                @Html.EditorFor(c => startDate, "Date", new { name = "StartDate", id = "datePickerFrom" })
+                            </div>
+                            <div class="col-sm-4" style="padding-right:1px;">
+                                <label for="datePickerTo" class="control-label" style="display:block">@Resources.Common.DateTo</label>
+                                @Html.EditorFor(c => endDate, "Date", new { name = "EndDate", id = "datePickerTo" })
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="control-label" style="display:block;">&nbsp;</label>
+                                <button type="submit" value="search" id="searchorders" class="btn btn-primary btn-sm">@Resources.Common.SearchByDate</button> <a href="@Url.Action(strActionResult)" class="btn btn-default btn-sm">@Resources.Common.Clear</a>
+                            </div>
+                        </div>
+                        
+                        @*<input type="submit" id="filterBalanceTable" style="margin-top: 10px;" class="btn btn-primary btn-sm">*@
+                    </div>
+                }
+            </div>
+        </div>
+        @*<div class="form-group">
+                <input type="search" id="searchordersfilter" value="@ViewContext.RouteData.Values["id"]" class="form-control input-sm" placeholder="@(Resources.Common.Order)#..." />
+                <button type="button" id="searchorders" class="btn btn-primary btn-sm">@Resources.Common.Search @Resources.Common.Orders</button>
+            </div>*@
+    </div>
+    <div class="navbar-right" style="margin-right: 10px;">
+        @*@if (hasPagination)
+    {
+        if (hasNextPage && Model.Count() > 0)
+            {
+            <a href="@Url.Action(action, new { page = (Model.Count() > 0) ? page + 1 : page })" class="btn btn-default btn-sm navbar-btn"><i class="fa-chevron-left"></i> @Resources.Common.Older </a>
+            }
+         if (hasPreviousPage && Model.Count() < 10)
+            {
+            <a href="@Url.Action(action, new { page = (page == 1) ? page : page - 1 })" class="btn btn-default btn-sm navbar-btn">@Resources.Common.Newer <i class="fa-chevron-right"></i></a>
+            }
+     }*@
+    </div>
+</nav>
+<ul class="nav nav-pills">
+    <li class="@((action == "openorderslist") ? "active" : "")"><a href="@Url.Action("openorderslist")">@Resources.Common.OpenOrders</a></li>
+    <li class="@((action == "shippedorderslist") ? "active" : "")"><a href="@Url.Action("shippedorderslist")">@Resources.Common.ShippedOrders</a></li>
+    <li class="@((action == "declinedorderslist") ? "active" : "")"><a href="@Url.Action("declinedorderslist")">@Resources.Common.DeclinedOrders</a></li>
+    <li class="@((action == "cancelledorderslist") ? "active" : "")"><a href="@Url.Action("cancelledorderslist")">@Resources.Common.CancelledOrders</a></li>
+    <li class="@((action == "returnedorderslist") ? "active" : "")"><a href="@Url.Action("returnedorderslist")">@Resources.Common.ReturnedOrders</a></li>
+    <li class="@((action == "orderlist") ? "active" : "")"><a href="@Url.Action("orderlist")">@Resources.Common.AllBonveraOrders</a></li>@* 20161229 80967 DV. Resourced. *@
+    <li class="@((action == "partnerstoreorderslist") ? "active" : "")"><a href="@Url.Action("PartnerStoreOrdersList")">@Resources.Common.PartnersAndAffiliates</a></li>@* 20161229 80967 DV. Resourced. *@
+    <li class="@((action == "feesorderslist") ? "active" : "")"><a href="@Url.Action("FeesOrdersList")">@Resources.Common.FeesAndServices</a></li> @* 20161229 80967 DV. Resourced. *@
+    @if (isSearch)
+    {
+        <li class="@((action == "searchorderslist") ? "active" : "")"><a href="@Url.Action("searchorderslist")">@Resources.Common.SearchResults</a></li>
+    }
+</ul>
+<div class="space-10"></div>
+<div class="orderlist">
+    @if (isSearch)
+    {
+        <h4>@Model.Count() @Resources.Common.OrdersFound.ToLower()</h4>
+    }
+    @if (!isPartnerStoreOrders)
+    {
+        foreach (var order in Model.OrderByDescending(c => c.OrderDate)) //.Take(20)
+        {
+            <div class="ordersummary">
+                <div class="panel panel-default">
+                    <div class="panel-body no-padding">
+                        <div class="row margin-0">
+                            <div class="col-sm-3 details-container">
+                                <div class="padded-container">
+                                    <div class="text-lg">@order.OrderDate.ToString("MMMM d, yyyy")</div>
+                                    <p>
+                                        @Resources.Common.Order <a href="@Url.Action("orderinvoice", "orders", new { token = Common.Services.Security.Encrypt(order.OrderID, Identity.Current.CustomerID) })">#@order.OrderID</a>
+                                        @if (order.AutoOrderID != null)
+                                        {
+                                            <br />
+                                            @*L.G 8-3-2016 #78978: Replaced link to send user to Replenishments page *@
+                                            @Resources.Common.AutoOrder <a href="@Url.Action("autoorderpreferences", "autoorders")">#@order.AutoOrderID</a>
+                                    }
+                                    </p>
+                                    <dl class="dl">
+                                        <dt>@Resources.Common.Total</dt>
+                                        <dd><span class="text-danger">@order.Total.ToString("C")</span></dd>
+                                        @if (!order.IsVirtualOrder)
+                                        {
+                                            <div class="space-10"></div>
+                                            <dt>@Resources.Common.ShippingAddress</dt>
+                                            <dd>
+                                                @Html.DisplayFor(c => order.Recipient, "ShippingAddress")
+                                            </dd>
+                                        }
+                                        @if (order.HasTrackingNumbers)
+                                        {
+                                            <div class="space-10"></div>
+                                            <dt>@Resources.Common.TrackYourOrder</dt>
+                                            <dd>
+                                                @foreach (var trackingNumber in order.TrackingNumbers)
+                                                {
+                                                    var trackingUrl = GlobalUtilities.GetTrackingWebsite(order.ShipMethodID);
+
+                                                    //20161228 80967 DV. Data comes in as comma delimited which could display several tracking numbers horizontally and is cosmetically displeasing to client.
+                                                    //Client requested to display the tracking numbers vertically. In the href portion the tracking numbers must remain comma delimited in order for the FedEx API to work
+                                                    string[] trackingnumbers = trackingNumber.Split(',');
+
+                                                    <a href="@trackingUrl@trackingNumber">
+                                                        @foreach (var trackingnumber in trackingnumbers)
+                                                        {
+                                                            @Html.Raw(trackingnumber + "<br/>");
+                                                        }                                                       
+                                                    </a><br/>
+                                                }
+                                            </dd>
+                                        }
+                                    </dl>
+                                    <ul class="list-unstyled">
+                                        <li><a href="@Url.Action("orderinvoice", "orders", new { token = Common.Services.Security.Encrypt(order.OrderID, Identity.Current.CustomerID) })">@Resources.Common.ViewInvoice</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-sm-9 items-container">
+                                <div class="padded-container">
+                                    <div class="row">
+                                        <div class="col-sm-8">
+                                            <div class="text-lg">
+                                                <span class="text-info">@order.OrderStatusDescription</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            @if (order.HasTrackingNumbers)
+                                            {
+                                                var trackingUrl = GlobalUtilities.GetTrackingWebsite(order.ShipMethodID);
+                                                <a href="@trackingUrl@order.TrackingNumbers.First()" class="btn btn-primary btn-block" title="@order.TrackingNumbers.First()">@Resources.Common.TrackYourOrder</a>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="padded-container">
+                                    @foreach (var detail in order.Details)
+                                    {
+                                        <div class="item">
+                                            <div class="row">
+                                                @*<div class="col-sm-2 col-xs-3">
+                                                        <div class="productimage">
+                                                            <div><img src="@GlobalUtilities.GetProductImagePath(detail.ImageUrl)" class="img-responsive" /></div>
+                                                        </div>
+                                                    </div>*@
+                                                <div class="col-sm-10 col-xs-9">
+                                                    <span class="block">@detail.ItemDescription</span>
+                                                    <small class="text-sm text-muted">@Resources.Common.SKU: <span>#@detail.ItemCode</span></small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    @if (order.Details.Count() == 0)
+                                    {
+                                        <div class="text-muted">
+                                             @Resources.Common.NoItemsPurchasedInOrder
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        foreach (var order in Model.OrderByDescending(c => c.OrderDate))  //.Take(20)
+        {
+            <div class="ordersummary">
+                <div class="panel panel-default">
+                    <div class="panel-body no-padding">
+                        <div class="row margin-0">
+                            <div class="col-sm-3 details-container">
+                                <div class="padded-container">
+                                    <div class="text-lg">@order.OrderDate.ToString("MMMM d, yyyy")</div>
+                                    <div>Bonvera Order # @order.OrderID</div>
+                                    <p>
+                                        @Resources.Common.PartnerStores :  @order.Other11.ToString()
+                                    </p>
+                                    <dl class="dl">
+                                        @*was told cv total is bv for this*@
+                                        <dt>@Resources.Common.BV</dt>
+                                        <dd><span class="text-danger">@order.CVTotal.ToString("0.00")</span></dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    @if (Model.Count() == 0)
+    {
+        <hr />
+        <p class="text-center text-muted">* @Resources.Common.NoOrdersFound *</p>
+    }
+</div>
+@*@if (hasPagination)
+{
+    <nav class="well well-sm no-padding">
+        <div class="text-center">
+            @if (hasNextPage && Model.Count() > 0)
+            {
+            <a href="@Url.Action(action, new { page = (Model.Count() > 0) ? page + 1 : page })" class="btn btn-default btn-sm navbar-btn"><i class="fa-chevron-left"></i> @Resources.Common.Older </a>
+            }
+            @if (hasPreviousPage && Model.Count() < 10)
+            {
+            <a href="@Url.Action(action, new { page = (page == 1) ? page : page - 1 })" class="btn btn-default btn-sm navbar-btn">@Resources.Common.Newer <i class="fa-chevron-right"></i></a>
+            }
+        </div>
+    </nav>
+}*@
+            @section scripts
+{
+                <script>
+                    require(["jquery"], function ($) {
+                        // Settings
+                        var context = "#DatePicker",
+                                $context = $(context);
+
+                        // registerEventHandlers
+                        function registerEventHandlers() {
+                            $(document).ready(function () {
+                                $(".dropdown-toggle").dropdown();
+                                $("#filterBalanceTable", $context).click(function () {
+                                    actions.filterTransactions();
+                                });
+                            });
+                            $('#searchordersfilter').on('keypress', function (event) {
+                                if (event.which == 13) {
+                                    event.preventDefault();
+                                    actions.searchOrder($('#searchordersfilter').val());
+                                }
+                            });
+                            $('#searchorders').on('click', function () {
+                                actions.searchOrder($('#searchordersfilter').val());
+                            });
+
+                            //$('[data-search-month]').on('click', function () {
+                            //    var selText = $(this).html();
+                            //    $("#monthSelector").html(selText);
+                            //});
+                            //$('[data-search-year]').on('click', function () {
+                            //    var selText = $(this).html();
+                            //    $("#yearSelector").html(selText);
+                            //});
+
+                            //$("#btnSearch").on('click', function () {
+                            //    alert($('.btn-select').text() + ", " + $('.btn-select2').text());
+                            //});
+
+                        }
+
+
+                        // Actions
+                        var actions = {
+                            searchOrder: function (id) {
+                                if (id == '' || isNaN(id)) window.location = '@Url.Action("orderlist", "DatePicker")';
+                                else window.location = '@Url.Action("searchorderslist", new { id = 0 })'.replace('0', '') + id;
+                            },
+                            showAll: function () {
+                                $('[data-year]').show();
+                            },
+                            filterTransactions: function () {
+                                // show all rows before filtering
+                                actions.showAll();
+
+                                // get the start and end dates
+                                var startDate = new Date($('#startDate').val());
+                                var endDate = new Date($('#endDate').val());
+
+                                //var rows = $('[data-year]');
+
+                                //rows.each(function (i) {
+                                //    var $this = $(this);
+                                //    var rowData = $(this).data();
+                                //    // c# months are 1-12 and javascript months are 0-11 so subtract one before comparing
+                                //    var rowDate = new Date(rowData.year, rowData.month - 1, rowData.day);
+                                //    // if date is within range, skip
+                                //    if (rowDate >= startDate && rowDate <= endDate) { return; }
+                                //    // if not, hide
+                                //    $this.hide();
+                                //});
+                            }
+                        };
+
+                        // Initialization
+                        function init() {
+                            registerEventHandlers();
+                        }
+                        init();
+                    });
+                </script>
+            }

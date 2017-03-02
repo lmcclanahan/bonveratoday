@@ -1,0 +1,53 @@
+@import "../mixins/_mixins.scss";
+.view-item {
+
+    .image { text-align: center; }
+
+    &.view-item-card {
+        .panel {  min-height: 260px; }
+        .image { height: 150px; overflow: hidden;  margin-top: 10px;
+            img { max-height: 150px; }
+        }
+        .details { margin-top: 10px;
+            .itemdescription { font-size: 1.1em; height: 4em; overflow: hidden; }
+            .price { margin-top: 10px; font-size: 1em; }
+            .itemcode {  }
+        }
+        .control-container { margin-top: 20px;
+        }
+        &.fuller-brush-logo {
+            .image {
+                img {width: 300px;}
+            }
+        }
+    }
+
+    &.view-item-sushi {
+        .details { margin-top: 10px;
+            .itemdescription { font-weight: bold;font-size: 1.1em; height: 1.8em; overflow: hidden;}
+            .price { margin-top: 0; font-size: 1em; }
+            .itemcode {  }
+        }
+        .image { height: 100px; overflow: hidden; float:left;padding-right:5px;
+            img { max-height: 100px; } 
+        }
+
+        .options { @include opacity(0); @include transition(opacity 0.08s linear); }
+        &:hover .options { @include opacity(100); }
+    }
+
+    &.view-item-detail {
+        .image { height: 200px; overflow: hidden; 
+            img { max-height: 200px; }
+        }
+        .details { 
+            .itemdescription { font-size: 1.4em; }
+            .itemcode { color: #aaa; font-size: 0.85em; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
+            .price { margin-top: 15px; font-size: 1.2em; }
+        }
+        .summary { font-size: 1.1em; margin-top: 3em; }
+        .options {
+
+        }
+    }
+}

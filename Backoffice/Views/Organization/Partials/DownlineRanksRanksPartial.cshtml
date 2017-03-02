@@ -1,0 +1,27 @@
+﻿@model DownlineRanksListViewModel
+
+    <div class="col-md-4 col-md-push-8 col-sm-12">
+        <ul class="list-group">
+            @foreach (var rank in Model.DownlineRanks.Where(c => c.Total > 0))
+            {
+                var percentTotal = Convert.ToDecimal(rank.Total) / Convert.ToDecimal(Model.DownlineRanks.Sum(c => c.Total)) * 100M;
+                if (percentTotal < 1M) { percentTotal = 0.5M; }
+
+                <li class="list-group-item">
+                    <div class="media">
+                        <div class="pull-left">
+                            <div class="no-margin">@CommonResources.Ranks(rank.Rank.RankID)</div>
+                        </div>
+                        <div class="media-body text-right">
+                            <strong class="media-heading no-margin">@rank.Total.ToString("N0")</strong>
+                        </div>
+                    </div>
+                    <div class="space-5"></div>
+                    <div class="progress progress-xs no-background">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="@percentTotal" aria-valuemin="0" aria-valuemax="100" style="width: @percentTotal%;"></div>
+                    </div>
+                </li>
+            }
+        </ul>
+
+    </div>

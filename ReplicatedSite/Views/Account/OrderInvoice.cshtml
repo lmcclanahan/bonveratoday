@@ -1,0 +1,114 @@
+﻿@model Order
+@{
+    ViewBag.Title = "Invoice #" + Model.OrderID;
+}
+
+<h2>Your Orders</h2>
+
+<nav class="navbar navbar-default" role="navigation">
+    <ul class="nav navbar-nav">
+        <li><a onclick="window.print()"><i class="fa-print"></i> Print</a></li>
+    </ul>
+</nav>
+
+<div id="view-orderinvoice">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <span class="lead">Invoice #@Model.OrderID</span><br />
+            Ordered @Model.OrderDate.ToString("M/d/yyyy")<br />
+            @if (Model.ShippedDate != null)
+            {
+                <text>Shipped @(((DateTime)Model.ShippedDate).ToString("M/d/yyyy"))<br /></text>
+            }
+            @if (Model.HasTrackingNumbers)
+            {
+                <text>Tracking: @string.Join(", ", Model.TrackingNumbers) <br /></text>
+            }
+        </div>
+    </div>
+
+    <div class="space-20"></div>
+
+    <div class="well">
+        <div class="row">
+            <div class="col-sm-6">
+                <img src="~/Content/images/bonvera-logo.PNG" class="img-responsive" style="max-width: 115px;" />
+                @Html.Partial("~/Views/Shared/DisplayTemplates/Address.cshtml", GlobalSettings.Company.Address)
+                <i class="fa-envelope"></i> @GlobalSettings.Emails.SupportEmail<br />                
+            </div>
+            <div class="col-sm-6">
+                <div class="pull-right">
+                    <div class="lead">Shipped to:</div>
+                    @Html.DisplayFor(c => c.Recipient, "ShippingAddress")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr class="active">
+                    <th>SKU</th>
+                    <th>Description</th>
+                    <th class="text-right">Quantity</th>
+                    <th class="text-right">Price per unit</th>
+                    <th class="text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var detail in Model.Details)
+                {
+                    <tr>
+                        <td>@detail.ItemCode</td>
+                        <td>@detail.ItemDescription</td>
+                    @*TW 6-30-2016 77999 if there is a shipping discount applied show these*@
+                    @*@if (detail.ItemCode == "SHPDISC")
+                    {
+                        <td class="text-right">1</td>
+                        <td class="text-right">&nbsp;</td>
+                        <td class="text-right"><span>-</span>@Convert.ToDecimal(Model.Other16).ToString("C"))</td>
+                    } else{*@
+                        <td class="text-right">@detail.Quantity.ToString("N0")</td>
+                        <td class="text-right">@detail.PriceEach.ToString("C")</td>
+                        <td class="text-right">@detail.PriceTotal.ToString("C")</td>
+                   
+                    </tr>
+                }
+                @if (Model.Details.Count() == 0)
+                {
+                    <tr>
+                        <td colspan="5" class="no-rows">
+                            * No items were purchased with this order *
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <td colspan="3"></td>
+                    <td class="text-right active">Subtotal</td>
+                    <td class="text-right active">@Model.Subtotal.ToString("C")</td>
+                </tr>
+                <tr>
+                    <td colspan="3"></td>
+                    <td class="text-right active">Shipping</td>
+                    <td class="text-right active">@Model.ShippingTotal.ToString("C")</td>
+                </tr>
+                <tr>
+                    <td colspan="3"></td>
+                    <td class="text-right active">Tax</td>
+                    <td class="text-right active">@Model.TaxTotal.ToString("C")</td>
+                </tr>
+                <tr>
+                    <td colspan="3"></td>
+                    <td class="text-right active text-strong">Grand Total</td>
+                    <td class="text-right active text-strong">@Model.Total.ToString("C")</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+</div>

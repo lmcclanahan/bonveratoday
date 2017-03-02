@@ -1,0 +1,302 @@
+﻿<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+  <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="1.0">
+    <Schema Namespace="CodeFirstNamespace" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+      <EntityType Name="Calendar">
+        <Key>
+          <PropertyRef Name="CalendarID" />
+        </Key>
+        <Property Name="CalendarID" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="None" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="CustomerID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Description" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="CalendarTypeID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="CreatedDate" Type="Edm.DateTime" Nullable="false" />
+        <NavigationProperty Name="Customer" Relationship="CodeFirstNamespace.Calendar_Customer" FromRole="Calendar_Customer_Source" ToRole="Calendar_Customer_Target" />
+        <NavigationProperty Name="CalendarType" Relationship="CodeFirstNamespace.CalendarType_Calendars" FromRole="CalendarType_Calendars_Target" ToRole="CalendarType_Calendars_Source" />
+        <NavigationProperty Name="CalendarEvents" Relationship="CodeFirstNamespace.CalendarEvent_Calendar" FromRole="CalendarEvent_Calendar_Target" ToRole="CalendarEvent_Calendar_Source" />
+        <NavigationProperty Name="CalendarSubscriptions" Relationship="CodeFirstNamespace.CalendarSubscription_Calendar" FromRole="CalendarSubscription_Calendar_Target" ToRole="CalendarSubscription_Calendar_Source" />
+      </EntityType>
+      <EntityType Name="Customer">
+        <Key>
+          <PropertyRef Name="CustomerID" />
+        </Key>
+        <Property Name="CustomerID" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="None" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="FirstName" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="LastName" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Company" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Email" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Phone" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+      </EntityType>
+      <EntityType Name="CalendarType">
+        <Key>
+          <PropertyRef Name="CalendarTypeID" />
+        </Key>
+        <Property Name="CalendarTypeID" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="CalendarTypeDescription" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="Calendars" Relationship="CodeFirstNamespace.CalendarType_Calendars" FromRole="CalendarType_Calendars_Source" ToRole="CalendarType_Calendars_Target" />
+      </EntityType>
+      <EntityType Name="CalendarEvent">
+        <Key>
+          <PropertyRef Name="CalendarEventID" />
+        </Key>
+        <Property Name="CalendarEventID" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="None" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="CalendarID" Type="Edm.Guid" Nullable="false" />
+        <Property Name="CalendarEventTypeID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="CalendarEventStatusID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="CalendarEventPrivacyTypeID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="CreatedByCustomerID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="IsPrivateCopy" Type="Edm.Boolean" Nullable="false" />
+        <Property Name="Description" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Summary" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Location" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Url" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="StartDate" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="EndDate" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="Field1" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Field2" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Field3" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Field4" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Field5" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Field6" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Field7" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Field8" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Field9" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Field10" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="CreatedDate" Type="Edm.DateTime" Nullable="false" />
+        <Property Name="CalendarEventRecurrenceTypeID" Type="Edm.Int32" Nullable="true" />
+        <Property Name="CalendarEventRecurrenceInterval" Type="Edm.Int32" Nullable="true" />
+        <Property Name="CalendarEventRecurrenceMaxInstances" Type="Edm.Int32" Nullable="true" />
+        <Property Name="CalendarEventRecurrenceEndDate" Type="Edm.DateTime" Nullable="true" />
+        <Property Name="WeeklyCalendarEventRecurrenceDays" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="MonthlyCalendarEventRecurrenceTypeID" Type="Edm.Int32" Nullable="true" />
+        <NavigationProperty Name="Calendar" Relationship="CodeFirstNamespace.CalendarEvent_Calendar" FromRole="CalendarEvent_Calendar_Source" ToRole="CalendarEvent_Calendar_Target" />
+        <NavigationProperty Name="CalendarEventPrivacyType" Relationship="CodeFirstNamespace.CalendarEventPrivacyType_CalendarEvents" FromRole="CalendarEventPrivacyType_CalendarEvents_Target" ToRole="CalendarEventPrivacyType_CalendarEvents_Source" />
+        <NavigationProperty Name="CalendarEventStatus" Relationship="CodeFirstNamespace.CalendarEventStatus_CalendarEvents" FromRole="CalendarEventStatus_CalendarEvents_Target" ToRole="CalendarEventStatus_CalendarEvents_Source" />
+        <NavigationProperty Name="CalendarEventType" Relationship="CodeFirstNamespace.CalendarEventType_CalendarEvents" FromRole="CalendarEventType_CalendarEvents_Target" ToRole="CalendarEventType_CalendarEvents_Source" />
+        <NavigationProperty Name="MonthlyCalendarEventRecurrenceType" Relationship="CodeFirstNamespace.MonthlyCalendarEventRecurrenceType_CalendarEvents" FromRole="MonthlyCalendarEventRecurrenceType_CalendarEvents_Target" ToRole="MonthlyCalendarEventRecurrenceType_CalendarEvents_Source" />
+        <NavigationProperty Name="CalendarEventRecurrenceType" Relationship="CodeFirstNamespace.CalendarEventRecurrenceType_CalendarEvents" FromRole="CalendarEventRecurrenceType_CalendarEvents_Target" ToRole="CalendarEventRecurrenceType_CalendarEvents_Source" />
+      </EntityType>
+      <EntityType Name="CalendarEventPrivacyType">
+        <Key>
+          <PropertyRef Name="CalendarEventPrivacyTypeID" />
+        </Key>
+        <Property Name="CalendarEventPrivacyTypeID" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="CalendarEventPrivacyTypeDescription" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="CalendarEvents" Relationship="CodeFirstNamespace.CalendarEventPrivacyType_CalendarEvents" FromRole="CalendarEventPrivacyType_CalendarEvents_Source" ToRole="CalendarEventPrivacyType_CalendarEvents_Target" />
+      </EntityType>
+      <EntityType Name="CalendarEventStatus">
+        <Key>
+          <PropertyRef Name="CalendarEventStatusID" />
+        </Key>
+        <Property Name="CalendarEventStatusID" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="CalendarEventStatusDescription" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="CalendarEvents" Relationship="CodeFirstNamespace.CalendarEventStatus_CalendarEvents" FromRole="CalendarEventStatus_CalendarEvents_Source" ToRole="CalendarEventStatus_CalendarEvents_Target" />
+      </EntityType>
+      <EntityType Name="CalendarEventType">
+        <Key>
+          <PropertyRef Name="CalendarEventTypeID" />
+        </Key>
+        <Property Name="CalendarEventTypeID" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="CalendarEventTypeDescription" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <Property Name="Color" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="CalendarEvents" Relationship="CodeFirstNamespace.CalendarEventType_CalendarEvents" FromRole="CalendarEventType_CalendarEvents_Source" ToRole="CalendarEventType_CalendarEvents_Target" />
+      </EntityType>
+      <EntityType Name="MonthlyCalendarEventRecurrenceType">
+        <Key>
+          <PropertyRef Name="MonthlyCalendarEventRecurrenceTypeID" />
+        </Key>
+        <Property Name="MonthlyCalendarEventRecurrenceTypeID" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="MonthlyCalendarEventRecurrenceTypeDescription" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="CalendarEvents" Relationship="CodeFirstNamespace.MonthlyCalendarEventRecurrenceType_CalendarEvents" FromRole="MonthlyCalendarEventRecurrenceType_CalendarEvents_Source" ToRole="MonthlyCalendarEventRecurrenceType_CalendarEvents_Target" />
+      </EntityType>
+      <EntityType Name="CalendarEventRecurrenceType">
+        <Key>
+          <PropertyRef Name="CalendarEventRecurrenceTypeID" />
+        </Key>
+        <Property Name="CalendarEventRecurrenceTypeID" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="CalendarEventRecurrenceTypeDescription" Type="Edm.String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="CalendarEvents" Relationship="CodeFirstNamespace.CalendarEventRecurrenceType_CalendarEvents" FromRole="CalendarEventRecurrenceType_CalendarEvents_Source" ToRole="CalendarEventRecurrenceType_CalendarEvents_Target" />
+      </EntityType>
+      <EntityType Name="CalendarSubscription">
+        <Key>
+          <PropertyRef Name="CustomerID" />
+          <PropertyRef Name="CalendarID" />
+        </Key>
+        <Property Name="CustomerID" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="None" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="CalendarID" Type="Edm.Guid" Nullable="false" p8:StoreGeneratedPattern="None" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <NavigationProperty Name="Calendar" Relationship="CodeFirstNamespace.CalendarSubscription_Calendar" FromRole="CalendarSubscription_Calendar_Source" ToRole="CalendarSubscription_Calendar_Target" />
+      </EntityType>
+      <Association Name="Calendar_Customer">
+        <End Role="Calendar_Customer_Source" Type="CodeFirstNamespace.Calendar" Multiplicity="*" />
+        <End Role="Calendar_Customer_Target" Type="CodeFirstNamespace.Customer" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <ReferentialConstraint>
+          <Principal Role="Calendar_Customer_Target">
+            <PropertyRef Name="CustomerID" />
+          </Principal>
+          <Dependent Role="Calendar_Customer_Source">
+            <PropertyRef Name="CustomerID" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="CalendarType_Calendars">
+        <End Role="CalendarType_Calendars_Source" Type="CodeFirstNamespace.CalendarType" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <End Role="CalendarType_Calendars_Target" Type="CodeFirstNamespace.Calendar" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="CalendarType_Calendars_Source">
+            <PropertyRef Name="CalendarTypeID" />
+          </Principal>
+          <Dependent Role="CalendarType_Calendars_Target">
+            <PropertyRef Name="CalendarTypeID" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="CalendarEvent_Calendar">
+        <End Role="CalendarEvent_Calendar_Source" Type="CodeFirstNamespace.CalendarEvent" Multiplicity="*" />
+        <End Role="CalendarEvent_Calendar_Target" Type="CodeFirstNamespace.Calendar" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <ReferentialConstraint>
+          <Principal Role="CalendarEvent_Calendar_Target">
+            <PropertyRef Name="CalendarID" />
+          </Principal>
+          <Dependent Role="CalendarEvent_Calendar_Source">
+            <PropertyRef Name="CalendarID" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="CalendarEventPrivacyType_CalendarEvents">
+        <End Role="CalendarEventPrivacyType_CalendarEvents_Source" Type="CodeFirstNamespace.CalendarEventPrivacyType" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <End Role="CalendarEventPrivacyType_CalendarEvents_Target" Type="CodeFirstNamespace.CalendarEvent" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="CalendarEventPrivacyType_CalendarEvents_Source">
+            <PropertyRef Name="CalendarEventPrivacyTypeID" />
+          </Principal>
+          <Dependent Role="CalendarEventPrivacyType_CalendarEvents_Target">
+            <PropertyRef Name="CalendarEventPrivacyTypeID" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="CalendarEventStatus_CalendarEvents">
+        <End Role="CalendarEventStatus_CalendarEvents_Source" Type="CodeFirstNamespace.CalendarEventStatus" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <End Role="CalendarEventStatus_CalendarEvents_Target" Type="CodeFirstNamespace.CalendarEvent" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="CalendarEventStatus_CalendarEvents_Source">
+            <PropertyRef Name="CalendarEventStatusID" />
+          </Principal>
+          <Dependent Role="CalendarEventStatus_CalendarEvents_Target">
+            <PropertyRef Name="CalendarEventStatusID" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="CalendarEventType_CalendarEvents">
+        <End Role="CalendarEventType_CalendarEvents_Source" Type="CodeFirstNamespace.CalendarEventType" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <End Role="CalendarEventType_CalendarEvents_Target" Type="CodeFirstNamespace.CalendarEvent" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="CalendarEventType_CalendarEvents_Source">
+            <PropertyRef Name="CalendarEventTypeID" />
+          </Principal>
+          <Dependent Role="CalendarEventType_CalendarEvents_Target">
+            <PropertyRef Name="CalendarEventTypeID" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="MonthlyCalendarEventRecurrenceType_CalendarEvents">
+        <End Role="MonthlyCalendarEventRecurrenceType_CalendarEvents_Source" Type="CodeFirstNamespace.MonthlyCalendarEventRecurrenceType" Multiplicity="0..1" />
+        <End Role="MonthlyCalendarEventRecurrenceType_CalendarEvents_Target" Type="CodeFirstNamespace.CalendarEvent" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="MonthlyCalendarEventRecurrenceType_CalendarEvents_Source">
+            <PropertyRef Name="MonthlyCalendarEventRecurrenceTypeID" />
+          </Principal>
+          <Dependent Role="MonthlyCalendarEventRecurrenceType_CalendarEvents_Target">
+            <PropertyRef Name="MonthlyCalendarEventRecurrenceTypeID" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="CalendarEventRecurrenceType_CalendarEvents">
+        <End Role="CalendarEventRecurrenceType_CalendarEvents_Source" Type="CodeFirstNamespace.CalendarEventRecurrenceType" Multiplicity="0..1" />
+        <End Role="CalendarEventRecurrenceType_CalendarEvents_Target" Type="CodeFirstNamespace.CalendarEvent" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="CalendarEventRecurrenceType_CalendarEvents_Source">
+            <PropertyRef Name="CalendarEventRecurrenceTypeID" />
+          </Principal>
+          <Dependent Role="CalendarEventRecurrenceType_CalendarEvents_Target">
+            <PropertyRef Name="CalendarEventRecurrenceTypeID" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="CalendarSubscription_Calendar">
+        <End Role="CalendarSubscription_Calendar_Source" Type="CodeFirstNamespace.CalendarSubscription" Multiplicity="*" />
+        <End Role="CalendarSubscription_Calendar_Target" Type="CodeFirstNamespace.Calendar" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <ReferentialConstraint>
+          <Principal Role="CalendarSubscription_Calendar_Target">
+            <PropertyRef Name="CalendarID" />
+          </Principal>
+          <Dependent Role="CalendarSubscription_Calendar_Source">
+            <PropertyRef Name="CalendarID" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+    </Schema>
+    <Schema Namespace="System.Data.Objects" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+      <EntityContainer Name="calendarcontext" m:IsDefaultEntityContainer="true">
+        <EntitySet Name="Calendars" EntityType="CodeFirstNamespace.Calendar" />
+        <EntitySet Name="ExigoCustomers" EntityType="CodeFirstNamespace.Customer" />
+        <EntitySet Name="CalendarTypes" EntityType="CodeFirstNamespace.CalendarType" />
+        <EntitySet Name="CalendarEvents" EntityType="CodeFirstNamespace.CalendarEvent" />
+        <EntitySet Name="CalendarEventPrivacyTypes" EntityType="CodeFirstNamespace.CalendarEventPrivacyType" />
+        <EntitySet Name="CalendarEventStatuses" EntityType="CodeFirstNamespace.CalendarEventStatus" />
+        <EntitySet Name="CalendarEventTypes" EntityType="CodeFirstNamespace.CalendarEventType" />
+        <EntitySet Name="MonthlyCalendarEventRecurrenceTypes" EntityType="CodeFirstNamespace.MonthlyCalendarEventRecurrenceType" />
+        <EntitySet Name="CalendarEventRecurrenceTypes" EntityType="CodeFirstNamespace.CalendarEventRecurrenceType" />
+        <EntitySet Name="CalendarSubscriptions" EntityType="CodeFirstNamespace.CalendarSubscription" />
+        <AssociationSet Name="Calendar_Customer" Association="CodeFirstNamespace.Calendar_Customer">
+          <End Role="Calendar_Customer_Source" EntitySet="Calendars" />
+          <End Role="Calendar_Customer_Target" EntitySet="ExigoCustomers" />
+        </AssociationSet>
+        <AssociationSet Name="CalendarType_Calendars" Association="CodeFirstNamespace.CalendarType_Calendars">
+          <End Role="CalendarType_Calendars_Source" EntitySet="CalendarTypes" />
+          <End Role="CalendarType_Calendars_Target" EntitySet="Calendars" />
+        </AssociationSet>
+        <AssociationSet Name="CalendarEvent_Calendar" Association="CodeFirstNamespace.CalendarEvent_Calendar">
+          <End Role="CalendarEvent_Calendar_Source" EntitySet="CalendarEvents" />
+          <End Role="CalendarEvent_Calendar_Target" EntitySet="Calendars" />
+        </AssociationSet>
+        <AssociationSet Name="CalendarEventPrivacyType_CalendarEvents" Association="CodeFirstNamespace.CalendarEventPrivacyType_CalendarEvents">
+          <End Role="CalendarEventPrivacyType_CalendarEvents_Source" EntitySet="CalendarEventPrivacyTypes" />
+          <End Role="CalendarEventPrivacyType_CalendarEvents_Target" EntitySet="CalendarEvents" />
+        </AssociationSet>
+        <AssociationSet Name="CalendarEventStatus_CalendarEvents" Association="CodeFirstNamespace.CalendarEventStatus_CalendarEvents">
+          <End Role="CalendarEventStatus_CalendarEvents_Source" EntitySet="CalendarEventStatuses" />
+          <End Role="CalendarEventStatus_CalendarEvents_Target" EntitySet="CalendarEvents" />
+        </AssociationSet>
+        <AssociationSet Name="CalendarEventType_CalendarEvents" Association="CodeFirstNamespace.CalendarEventType_CalendarEvents">
+          <End Role="CalendarEventType_CalendarEvents_Source" EntitySet="CalendarEventTypes" />
+          <End Role="CalendarEventType_CalendarEvents_Target" EntitySet="CalendarEvents" />
+        </AssociationSet>
+        <AssociationSet Name="MonthlyCalendarEventRecurrenceType_CalendarEvents" Association="CodeFirstNamespace.MonthlyCalendarEventRecurrenceType_CalendarEvents">
+          <End Role="MonthlyCalendarEventRecurrenceType_CalendarEvents_Source" EntitySet="MonthlyCalendarEventRecurrenceTypes" />
+          <End Role="MonthlyCalendarEventRecurrenceType_CalendarEvents_Target" EntitySet="CalendarEvents" />
+        </AssociationSet>
+        <AssociationSet Name="CalendarEventRecurrenceType_CalendarEvents" Association="CodeFirstNamespace.CalendarEventRecurrenceType_CalendarEvents">
+          <End Role="CalendarEventRecurrenceType_CalendarEvents_Source" EntitySet="CalendarEventRecurrenceTypes" />
+          <End Role="CalendarEventRecurrenceType_CalendarEvents_Target" EntitySet="CalendarEvents" />
+        </AssociationSet>
+        <AssociationSet Name="CalendarSubscription_Calendar" Association="CodeFirstNamespace.CalendarSubscription_Calendar">
+          <End Role="CalendarSubscription_Calendar_Source" EntitySet="CalendarSubscriptions" />
+          <End Role="CalendarSubscription_Calendar_Target" EntitySet="Calendars" />
+        </AssociationSet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

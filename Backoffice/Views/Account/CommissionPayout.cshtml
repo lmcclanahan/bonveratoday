@@ -1,0 +1,70 @@
+﻿@model Backoffice.Models.CommissionPayout.CommissionPayout
+@{
+    ViewBag.Title = Resources.Common.DirectDeposit;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div id="view-accountoverview">
+    <div class="row">
+        <div class="col-sm-3">
+            @Html.Navigation()
+        </div>
+
+        <div class="col-sm-9">
+            <div class="alert alert-info hide" id="directdeposit-alert">
+                <h4 class="success-header">@Resources.Common.Success</h4>
+
+                <p class="success-content">@Resources.Common.UpdatedDDInfo</p>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-9">
+                    @if (Model.IsComplete)
+                    {
+                        <label class="min-150">@Resources.Common.BankName</label>
+                        <span>@Model.BankName</span>
+
+                        <br />
+                        <label class="min-150">@Resources.Common.NameOnAccount</label>
+                        <span>@Model.NameOnAccount</span>
+
+                        <br />
+
+                        <label class="min-150">@Resources.Common.AccountEndingIn</label>
+                        <span>@Model.AccountNumber</span>
+                        <br />
+
+                        <label class="min-150">@Resources.Common.RoutingNumber</label>
+                        <span>@Model.RoutingNumber</span>
+
+
+                        <br />
+
+                        <a href="@Url.Action("managecommissionpayout", "account")" class="btn btn-info">@Resources.Common.Edit</a>
+
+                        <div class="space-40"></div>
+                    }
+                    else
+                    {
+                        <strong>@Resources.Common.DontHaveDDText</strong>
+                        <br />
+                        <div class="space-20"></div>
+                        <a href="@Url.Action("managecommissionpayout", "account")" class="btn btn-info">@Resources.Common.Create</a>
+                    }
+                </div>
+            </div>
+            <div class="col-sm-3">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    require(["jquery", "urls"], function ($, url) {
+        if (url.query("success") && url.query("success") == "True") {
+            $("#directdeposit-alert").removeClass("hide");
+        }
+    });
+</script>

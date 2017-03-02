@@ -1,0 +1,237 @@
+﻿@model AccountRegistrationViewModel
+@{
+    ViewBag.Title = "Create your Customer Account";
+    var error = ViewBag.Error != null ? ViewBag.Error : "";
+}
+
+<div class="space-10"></div>
+<div id="view-account-registration" class="container registration">
+    @if (error != null && error != "")
+    {
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error!</strong> @error
+        </div>
+    }
+    <div id="account-registration-form">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1 class="raleway-font">@ViewBag.Title</h1>
+                <div id="register-form-container">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.HiddenFor(c => c.EnrollerID)
+                        @Html.AntiForgeryToken()
+
+                        @* Enroller Search Panel *@
+                        if (Identity.Owner.IsOrphan)
+                        {
+                            @Html.Partial("Partials/_EnrollerSearchPanel")
+                        }
+                        @* End Enroller Search Panel *@
+
+
+                        @* Personal Info Panel *@
+                        @Html.EditorForModel("PersonalInfoPanel")
+                        @* End Personal Info Panel *@
+
+
+                        <div class="form-group">
+                            <button data-role="submit-form" id="btnConfirmRegistration" class="btn btn-success">Submit Registration</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        require(["jquery", "ajax", "toastr", "pubsub"], function ($, ajax, toastr) {
+
+            // Settings
+            var context = "#view-account-registration",
+                $context = $(context),
+                isenrollerValidUrl = "@Url.Action("IsEnrollerValid", "app")",
+                itemListUrl = "@Url.Action("itemlist","shopping")",
+                checkoutUrl = "@Url.Action("checkout", "shopping")",
+                completeUrl = "@Url.Action("registrationcomplete", "account", new { token = "tempToken" })";
+                defaultEnrollerID = @Identity.Owner.CustomerID,
+                enrollerIDSelector = "[name='@Html.NameFor(c => c.EnrollerID)']",
+                isPerformingSearch = false,
+                isSubmitting = false;
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $("#btnConfirmRegistration").on("click", function(e) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    actions.submitForm();
+                });
+
+
+                // Enroller validate methods
+                $("#enrollervalidate-search").on("click", function() {
+                    var $control = $('[data-role="enrollervalidate"]'),
+                        _val = $control.val();
+
+                    actions.enrollerValidate(_val);
+                });
+                $('[data-role="enrollervalidate"]').on("blur", function() {
+                    var $this = $(this),
+                        _val = $this.val();
+
+                    actions.enrollerValidate(_val);
+                });
+            }
+
+            // Actions
+            var actions = {
+                enrollerValidate: function (val) {
+
+                    if (isPerformingSearch == false && val != undefined && val.length > 0) {
+                        isPerformingSearch = true;
+                        actions.clearResult();
+
+                        ajax.json({
+                            url: isenrollerValidUrl,
+                            data: { filter: val },
+                            success: function (response) {
+                                if(response.success) {
+                                    $("#enroller-validate-result").html(response.resultHtml);
+                                    actions.updateEnrollerField(response.enrollerID)
+                                } else {
+                                    toastr.error(response.message);
+                                    $('[data-role="enrollervalidate"]').focus().val("");
+                                    actions.clearResult();
+                                    actions.updateEnrollerField(defaultEnrollerID);
+                                }
+                            },
+                            complete: function () {
+                                isPerformingSearch = false;
+                            }
+                        });
+                    }
+                },
+                clearResult: function() {
+                    $("#enroller-validate-result").html("");
+                },
+                updateEnrollerField: function (id) {
+                    $(enrollerIDSelector).val(id);
+                },
+                validateForm: function() {
+                    return $("#register-form-container form").valid();
+                },
+                submitForm: function () {
+                    $("[data-role='submit-form']").button("loading");
+
+                    if (!isSubmitting) {
+                        isSubmitting = true;
+                        if (actions.validateForm() == false) {
+                            $("[data-role='submit-form']").button("reset");
+                            isSubmitting = false;
+                            return false;
+                        }
+                        var model = helpers.getModel();
+
+                        var formdata = {};
+                        (function recurse(obj, current) {
+                            for (var key in obj) {
+                                var value = obj[key];
+                                var newKey = (current ? current + "." + key : key);  // joined key with dot
+                                if (value && typeof value === "object") {
+                                    recurse(value, newKey);  // it's a nested object, so do it again
+                                } else {
+                                    formdata[newKey] = value;  // it's not an object, so set the property
+                                }
+                            }
+                        })(model);
+
+                        var data = formdata;
+
+                        ajax.post({
+                            url: window.location,
+                            data: data,
+                            success: function (response) {
+                                if (response.success) {
+
+                                    if(response.action == "checkout"){
+                                        window.location = checkoutUrl;
+                                    }
+                                    else if(response.action == "itemlist"){
+                                        window.location = itemListUrl;
+                                    }
+                                    else if(response.action == "complete"){
+                                        var url = completeUrl.replace("tempToken", response.token);
+                                        window.location = url;
+                                    }
+                                    else{
+                                        window.location = response.action;
+                                    }
+                                }
+                                else {
+                                    isSubmitting = false;
+                                    toastr.error(response.message);
+                                }
+                            },
+                            error: function (xhr, error, status) {
+                                $("[data-role='submit']").button("reset");
+                                isSubmitting = false;
+                                console.log("Error: ", xhr);
+                            }
+                        });
+                    }
+                }
+            };
+
+            // Helpers
+            var helpers = {
+                getModel: function (selector) {
+                    // Serialize the form
+                    selector = selector || 'form';
+                    var $form = $(selector, $context);
+                    var o = {};
+                    var a = $form.find(':input').serializeArray();
+                    $.each(a, function () {
+                        if (o[this.name] !== undefined) {
+                            o[this.name] = o[this.name] || '';
+                        } else {
+                            o[this.name] = this.value || '';
+                        }
+                    });
+
+
+                    // Deeply convert it into our model.
+                    var model = {}, j, d;
+                    for (var m in o) {
+                        d = m.split(".");
+                        var startOfObj = model;
+                        for (j = 0; j < d.length  ; j += 1) {
+
+                            if (j == d.length - 1) {
+                                startOfObj[d[j]] = o[m];
+                            }
+                            else {
+                                startOfObj[d[j]] = startOfObj[d[j]] || {};
+                                startOfObj = startOfObj[d[j]];
+                            }
+                        }
+                    }
+
+
+                    return model;
+                }
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+
+        });
+    </script>
+}

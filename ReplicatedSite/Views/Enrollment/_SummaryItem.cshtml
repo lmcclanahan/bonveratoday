@@ -1,0 +1,25 @@
+﻿@model IItem
+@{
+    var canRemove = Model.ItemCode != GlobalUtilities.GetCurrentMarket().RequiredEnrollmentPackItemCode;
+}
+
+<tr data-itemcode="@Model.ItemCode" data-itemtype="@Model.Type">
+    <input type="hidden" name="ItemCode" value="@Model.ItemCode" />
+    <input type="hidden" name="ParentItemCode" value="@Model.ParentItemCode" />
+    <input type="hidden" name="GroupMasterItemCode" value="@Model.GroupMasterItemCode" />
+    <input type="hidden" name="DynamicKitCategory" value="@Model.DynamicKitCategory" />
+    <input type="hidden" name="Type" value="@Model.Type" />
+    <input type="hidden" name="ID" value="@Model.ID" />
+    <input type="hidden" name="Quantity" value="0" />
+
+    <td>@Model.ItemDescription</td>
+    <td>@Model.Quantity.ToString("N0")</td>
+    <td>@Model.Price.ToString("C")</td>
+    <td>
+        @if (canRemove)
+        { 
+            <span class="fa-times" data-role="removeitem"></span>
+        }
+    </td>
+</tr>
+

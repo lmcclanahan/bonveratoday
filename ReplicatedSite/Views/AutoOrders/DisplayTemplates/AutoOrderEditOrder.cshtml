@@ -1,0 +1,53 @@
+﻿@model  ReplicatedSite.ViewModels.AutoOrders.AutoOrderAddEditCartViewModel
+
+<div class="row margin-10 hidden-xs">
+    <div class="col-sm-6">
+        <label style="margin-left: 20px;">Item</label>
+    </div>
+    <div class="col-sm-4">
+        <label>Price</label>
+    </div>
+    <div class="col-sm-2">
+        <label>Quantity</label>
+    </div>
+</div>
+
+@Html.HiddenFor(c => c.AutoOrder.AutoOrderID)
+
+@for (int i = 0; i < Model.ProductsList.Count; i++)
+{
+    var product = Model.ProductsList[i];
+
+    <div class="row margin-10">
+        <div class="col-sm-2">
+            <p class="text-center"><img class="img-responsive" style="max-height: 50px;" src="@product.TinyImageUrl" /></p>
+        </div>
+        <div class="col-sm-4">
+            <label class="description">@product.ItemDescription</label>
+        </div>
+        <div class="col-sm-4">
+            <span class="price">@product.Price.ToString("C")</span>
+        </div>
+        <div class="col-sm-2">
+            @Html.HiddenFor(c => Model.ProductsList[i].ItemID)
+            @Html.HiddenFor(c => Model.ProductsList[i].ItemCode)
+            @Html.TextBoxFor(c => Model.ProductsList[i].Quantity, new
+                    {
+                        type = "number",
+                        min = 0,
+                        max = 100,
+                        @class = "text-center quantity",
+                        Value = Convert.ToInt32(product.Quantity).ToString("0"),
+                        style = "width: 100%;"
+                    })
+        </div>
+    </div>
+    <div class="space-30"></div>
+}
+
+
+<div class="row margin-10">
+    <div class="col-sm-12">
+        <button type="submit" id="update-autoorder" class="btn btn-sm btn-primary pull-right" data-autoorderid="@Model.AutoOrder.AutoOrderID">Update</button>
+    </div>
+</div>

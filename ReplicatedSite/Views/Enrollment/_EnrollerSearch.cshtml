@@ -1,0 +1,179 @@
+﻿<div id="enroller-validate-container">
+    <div class="space-20"></div>
+    <div id="enrollment-validation">
+        <h3>Choose the Enroller and Placement Sponsor</h3>
+        <p>(You can use username or Bonvera id# to validate)</p>
+        <div class="space-20 hidden-xs"></div>
+        <div class="search-container">
+            <label for="enroller-textbox" class="text-lg">Enroller</label>
+            <input class="input-sm form-control validation-textbox" id="enroller-textbox" type='text' data-validatefor="enroller" placeholder="username or id" />
+            <div id="enroller-validate-result"></div>
+        </div>
+
+
+        <div class="space-20"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Enroller Details</h3>
+            </div>
+            <div class="panel-body">
+                <div id="enroller-details-container">
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="search-container">
+            <label for="sponsor-textbox" class="text-lg">Placement Sponsor</label>
+            <input class="input-sm form-control validation-textbox" id="sponsor-textbox" type='text' value="" data-validatefor="sponsor" placeholder="username or id" />
+            <div id="sponsor-validate-result"></div>
+        </div>
+
+        <div class="space-20"></div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Sponsor Details</h3>
+            </div>
+            <div class="panel-body">
+                <div id="sponsor-details-container">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* This sets an input with the name set to EnrollerID when a valid search is performed. You must have a field on your page that has this exact name in order to use this partial - Mike M.*@
+<script>
+    require(["pubsub", "ajax", "enquire", "toastr"], function (pubsub, ajax, enquire, toastr) {
+
+        var validatedButtons = {
+            sponsor: false,
+            enroller: false
+        };
+
+        var customerIDs = {
+            sponsor: 0,
+            enroller: 0
+        };
+
+        var isValidating = false;
+
+        var actions = {
+            enrollerValidate: function (validateFor) {
+
+                var isEnroller = (validateFor == "enroller") ? true : false;
+                var $dataSelector = (isEnroller) ? $("#enroller-textbox") : $("#sponsor-textbox");
+                var data = $dataSelector.val();
+                var isEnroller = (validateFor == "enroller") ? true : false;
+
+                if (!isEnroller && customerIDs.enroller <= 0) {
+                    $("#sponsor-validate-result").html('<em class="text-danger"><b>Error: You must validate an enroller before validating a sponsor</b></em>');
+                }
+                else {
+                    var $dataSelector = (isEnroller) ? $("#enroller-textbox") : $("#sponsor-textbox");
+                    var data = $dataSelector.val();
+                    if (!isValidating) {
+                        isValidating = true;
+                        ajax.json({
+                            url: "@Url.Action("VerifyEnrollerSponsor", "app")",
+                            data: { input: data, isEnroller: isEnroller, EnrollerID: customerIDs.enroller },
+                            success: function (response) {
+
+                                if (response.valid) {
+
+                                    if (!isEnroller) {
+                                        validatedButtons.sponsor = true;
+                                        customerIDs.sponsor = response.customerid;
+                                        $("#sponsor-details-container").html(response.html);
+                                        $("#sponsor-validate-result").html(response.successhtml);
+                                        $(".validatesponsor").button("reset");
+                                        $("[name='SponsorID']").val(response.customerid);
+                                        isValidating = false;
+                                    }
+                                    else {
+                                        validatedButtons.enroller = true;
+                                        $("#enroller-validate-result").html(response.successhtml);
+                                        customerIDs.enroller = response.customerid;
+                                        $("#enroller-details-container").html(response.html);
+                                        $(".validateenroller").button("reset");
+                                        $("[name='EnrollerID']").val(response.customerid);
+                                        isValidating = false;
+
+                                    }
+                                }
+                                else {
+
+                                    if (!isEnroller) {
+                                        $("#sponsor-validate-result").html(response.html);
+
+                                        $("#sponsor-details-container").html("");
+                                        isValidating = false;
+
+                                    }
+                                    else {
+                                        $("#enroller-validate-result").html(response.html);
+
+                                        $("#enroller-details-container").html("");
+                                        isValidating = false;
+
+
+
+                                    }
+                                }
+                            },
+                            error: function (xhr, error, data) {
+                                console.log("server error", xhr.responseText);
+                                isValidating = false;
+
+                            }
+                        });
+                    }
+                }
+            }
+        };
+
+        $(".validation-textbox").on("change ,  drop", function () {
+            var textbox = $(this);
+
+            if (textbox.data('validatefor') == "sponsor") {
+                validatedButtons.sponsor = false;
+            }
+            else {
+                validatedButtons.enroller = false;
+            }
+        });
+        $(".validation-textbox").on("focusout", function () {
+            var textbox = $(this);
+            if (textbox.data('validatefor') == "sponsor") {
+                validatedButtons.sponsor = false;
+                if (customerIDs.enroller > 0) {
+
+                    actions.enrollerValidate(textbox.data('validatefor'), customerIDs.enroller);
+                }
+                else {
+                    $("#sponsor-validate-result").html('<em class="text-danger"><b>Error: You must validate an enroller before validating a sponsor</b></em>');
+                }
+            }
+            else {
+                validatedButtons.enroller = false;
+                actions.enrollerValidate(textbox.data('validatefor'));
+            }
+        });
+        $(function () {
+            var keyStop = {
+                13: "input:text, input:password", // stop enter = submit
+
+                end: null
+            };
+            $("#enroller-validate-container").bind("keydown", function (event) {
+                var selector = keyStop[event.which];
+
+                if (selector !== undefined && $(event.target).is(selector)) {
+                    event.preventDefault(); //stop event
+                    actions.enrollerValidate($(event.target).data('validatefor'));
+                }
+                return true;
+            });
+        });
+    })();
+</script>

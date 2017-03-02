@@ -1,0 +1,107 @@
+﻿@model ShippingAddressesViewModel
+@{
+    ViewBag.Title = Resources.Common.ShippingAddress;
+}
+
+<input type="hidden" class="activenavigation" value="shopping" />
+
+<div id="view-ordershipping" class="container checkout-shipping">
+
+    @if (Model.Addresses != null && Model.Addresses.Count() > 0)
+    {
+        <h3>@Resources.Common.SelectShippingAddress</h3>
+
+        <div class="row">
+            @foreach (var address in Model.Addresses)
+            {
+                <div class="col-sm-4">
+                    @Html.DisplayFor(c => address)
+
+                    <div class="space-15"></div>
+                    @using (Html.BeginForm(new { novalidate = "novalidate" }))
+                    {
+                        using (Html.BeginHtmlFieldPrefixScope("Address"))
+                        {
+                            @Html.Partial("~/Views/Shared/EditorTemplates/ShippingAddressOnFile.cshtml", address)
+                        }
+
+                        @Html.AntiForgeryToken()
+
+    <button type="submit" class="btn btn-selector">@Resources.Common.ShipToThisAddress</button>
+                    }
+                </div>
+            }
+        </div>
+        <div class="space-50"></div>
+        <hr />
+        <div class="space-30"></div>
+    }
+
+
+    <h3>@Resources.Common.AddNewAddress</h3>
+
+    <div class="row">
+        <div class="col-sm-6">
+            @using (Html.BeginForm())
+            {
+                var Address = new ShippingAddress();
+                Address.AddressType = AddressType.New;
+
+                @Html.EditorFor(c => Address)
+                
+                <div class="form-group">
+                    @Html.CheckBoxFor(c => c.SaveAddress)
+                    <span class="control-label">I would like to save this address for future use</span>
+                </div>             
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-selector">@Resources.Common.ShipToThisAddress</button>
+                </div>
+                
+                @Html.AntiForgeryToken()
+            }
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section scripts
+{
+    <script>
+        require(["jquery", "toastr", "forms"], function ($, toastr, forms) {
+
+            // Settings
+            var context = "#view-ordershipping",
+                $context = $(context),
+                errorMessage = "@Request.QueryString["error"]";
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+            }
+
+
+            // Helpers
+            var helpers = {
+                handleErrors: function () {
+                    if (errorMessage != null && errorMessage.length > 0) {
+                        toastr.error(errorMessage, "Error");
+                    }
+                }
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+
+                helpers.handleErrors();
+            }
+            init();
+
+        });
+    </script>
+}

@@ -1,0 +1,20 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
+    ViewBag.Title = "Unexpected Error";
+    Layout = "~/Views/Shared/_ErrorLayout.cshtml";
+}
+
+<div class="jumbotron">
+    <div class="container">
+        <div class="text-center">
+            <h1>Oops!</h1>
+            <p class="lead">
+                Something went wrong with that last click.
+            </p>
+            <p class="lead">
+                We're not sure exactly what happened, but we've let our tech guys know.
+            </p>
+            <p><a class="btn btn-primary btn-lg" role="button" onclick="history.go(-1);">Go Back</a></p>
+        </div>
+    </div>
+</div>

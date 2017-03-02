@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Documents for your Reference";
+}
+
+
+<div class="container">
+    <div class="row margin-0 text-center">
+        <div class="space-70 hidden-sm hidden-xs"></div>
+        <div class="space-40 visible-xs"></div>
+        <h2>Documents for your Reference</h2>
+        <div style="max-width:650px; margin: 0 auto;">
+            <p>
+                Here at Bonvera we think it's important for you to have all your resources in one location. <br />
+                Here are the items we feel will be important to you and your team
+            </p>
+        </div>
+        <div class="space-20"></div>
+
+        <a href="http://www.icaaboard.com" target="_blank">Independent Community Advisory Board </a><br />
+
+
+
+        <p>
+
+            <a href="@Url.Content("~/Content/documents/Bonvera_Comp_Plan_Revised_Final_07_05_16.pdf")" target="_blank">
+                Bonvera Compensation Plan
+            </a>
+            <br />
+
+            <a href="@Url.Content("~/Content/documents/Bonvera_Overview_Revised_Final_07_05_16.pdf")" target="_blank">
+                Bonvera Compensation Plan Overview
+            </a>
+            <br />
+
+            <a href="@Url.Content("~/content/documents/BonveraPoliciesAndProcedures.pdf")" target="_blank">
+                    @Resources.Common.BonveraPoliciesAndProcedures
+            </a>
+                <br />
+
+            @*T.W. 78516 8/2/2016 Replaced App agreement PDF with updated resource*@
+            @*I.M. 80178 9/19/2016 Replaced lines 40 and 41 with new Url.Content file path *@
+            <a href="@Url.Content("~/content/documents/BonveraApplicationAgreement.pdf")" target="_blank">Associate Enrollment Form</a><br />
+            <a href="@Url.Content("~/content/documents/BonveraSmartShopper.pdf")" target="_blank">Smart Shopper Enrollment Form</a><br />
+
+
+
+
+            @*D.H. 8-10-2016 #79444 Added PDF and removed Enrollment and Order Forms*@
+            <a href="@Url.Content("~/Content/documents/BonveraDebitCreditCard.pdf")" target="_blank"> Debit/Credit Card Authorization Agreement </a><br />
+            <a href="@Url.Content("~/Content/documents/BonveraMultipleApplicant.pdf")" target="_blank"> Multiple Applicant, Partnership or Corporation Registration</a><br />
+            <a href="@Url.Content("~/Content/documents/BonveraAssociateProductOrder.pdf")" target="_blank"> Independent Associate Product Order </a><br />
+            <a href="@Url.Content("~/Content/documents/BonveraRetailProduct.pdf")" target="_blank"> Retail Customer Product Order </a><br />
+            <a href="@Url.Content("~/Content/documents/BonveraReturnMerchandise.pdf")" target="_blank"> Return Merchandise Authorization </a><br />
+        </p>
+        <div class="space-30"></div>
+        <div class="space-30"></div>
+        <p>
+            <div id="bonveraimage" class="row margin-0">
+                <img src="@Url.Content("~/content/images/logo_with_gradient.png")" id="site-logo" class="img-responsive hidden-xs" />
+                <img src="@Url.Content("~/content/images/logo-mobile.png")" id="site-logo-mobile" class="img-responsive visible-xs" />
+            </div>
+        </p>
+
+
+    </div>
+</div>

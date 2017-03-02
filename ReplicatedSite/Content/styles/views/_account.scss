@@ -1,0 +1,116 @@
+#view-account {
+    .panel-heading {
+        padding: 15px;
+        background-color: #fafafa;
+
+        .panel-title {
+            padding: 0;
+            font-size: 20px;
+        }
+    }
+    .orderlist {
+        .order-widget {
+            margin-bottom: 15px;
+        }
+    }
+}
+
+#view-accountoverview {
+    .detail {
+        display: block;
+    }
+
+    .form {
+        display: none;
+    }
+
+    .editbutton {
+        display: block;
+    }
+
+    .panel-body.edit {
+        background-color: #F5F5F5;
+
+        .detail {
+            display: none;
+        }
+
+        .form {
+            display: block;
+        }
+
+        .editbutton {
+            display: none;
+        }
+    }
+
+    .space-50 {
+        max-height: 1px;
+        min-height: 1px;
+        overflow: hidden;
+        margin: 0 0 50px 0;
+    }
+}
+
+/* Registration */
+#view-account-registration {
+    .panel-heading { padding: 15px; background-color: #fafafa;
+        .panel-title { padding: 0; font-size: 20px; }
+    }
+
+    #register-form-container { margin-top: 40px; }
+    #enroller-validate-container { margin-top: 20px; margin-bottom: 40px; }
+    #personal-info-panel { margin-top: 20px; }
+    /* Used for Smart Shopper Register options - smartshopper/register */
+    #smart-shopper-option-container { margin-top: 40px; }
+    /* Container for Smart Shopper Register page which contains personal info, credit card, shipping address and enroller validation partial */
+    #smart-shopper-payment-container { margin-top: 30px; }
+    #kit-container { margin-bottom: 30px; 
+        img {  }
+        .choice-panel { min-height: 450px; }
+    }
+        /* Container showing checkout message for Smart Shopper Register option - When they choose to checkout with Auto Order instead of paying the fee */
+        #smart-shopper-checkout-container { margin-top: 10px; }
+        .panel { margin-left: 0; margin-right: 0;
+
+            &.active { border-color: $blue;
+
+                .panel-heading { background-color: $blue !important; color: white; 
+                                 /* These border definitions are used to make the header of the selected option flush with the back ground color change - Mike M. */
+                                 border-top-left-radius: 0 !important; border-top-right-radius: 0 !important; }
+
+                &.panel-lime { border-color: $green !important;
+                    .panel-heading { background-color: $green !important; }
+                }
+            }
+
+
+            .panel-heading {
+                h4 { display: inline; max-width: 80%; }
+
+                [data-role="check"] { display: none; }
+            }
+
+            article { min-height: 300px;
+                img:not(.item-added-img) { display: block; margin: 0 auto; max-width: 95%; max-height: 150px; margin-bottom: 5px; }
+
+                .details { min-height: 50px; display: block; padding: 0 20px; color: #7E7E7E; font-size: 12px; font-weight: bold; text-align: center;
+
+                    strong { color: #000; font-size: 14px; }
+
+                    ul { margin: 0;
+
+                        li { text-align: left; padding: 0 0 5px 0; }
+                    }
+                }
+            }
+        }
+    }
+        
+    #btnConfirmRegistration { margin: 20px 0; }
+
+ 
+    #confirm-modal { min-height: 450px; }
+#will-call-message-container {
+    .alert { font-weight: bold; border-width: 2px; border-color: #21708f; }
+}

@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Our Products";
+}
+
+<input type="hidden" class="activenavigation" value="ourproducts" />
+
+<div id="view-our-products">
+    <div class="space-20"></div>
+    <h3>@ViewBag.Title</h3>
+    <div class="space-10"></div>
+    <p>Bonvera has established multiple levels of products and services to easily identify their profitability and value.</p>
+    <div class="space-10"></div>
+    <p>
+        <strong class="underline">Private Label</strong> – Products designed & distributed exclusively for Bonvera. Our Phyzix product line of nutritious energy drinks and protein bars stand out among their peers in their perspective categories.
+        Phyzix will redefine your view of healthful energy. Now you can enjoy delicious on-the-go energy, great for nutritious snacking and fast recovery.
+        <a href="@Url.Action("itemlist", "shopping", new { parentCategoryKey = "", subCategoryKey = "" })" class="btn btn-primary">@Resources.Common.Shop</a>
+    </p>
+    <div class="space-10"></div>
+    <p><strong class="underline">Name Brand</strong> - Products carried by your local grocery, convenience, and big-box stores from major manufacturers such as Proctor Gamble & SC Johnson. Priced right and delivered to your door, these items are competitively sourced to assure great pricing and business volume. </p>
+    <div class="space-10"></div>
+    <p><strong class="underline">Partner Stores</strong> - As part of the Bonvera community, you’ll find specially negotiated discounts and associated business volume from the stores you know.</p>
+    <div class="space-10"></div>
+    <p>In summary, buy the brands you trust and, along the way, try some new ones that your friends and family will rave about. Make shopping fun, and earn money. </p>
+    <p>Welcome to Bonvera!</p>
+    <div class="space-20"></div>
+</div>

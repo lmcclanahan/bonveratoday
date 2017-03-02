@@ -1,0 +1,177 @@
+﻿@model Backoffice.ViewModels.LoginViewModel
+@{
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+    ViewBag.Title = Resources.Common.SignIn;
+    var isPasswordResetRedirect = Request.QueryString["p"] != null && Request.QueryString["p"] == "r";
+    var forgotPasswordUrl = GlobalSettings.Company.BaseReplicatedeUrl + "/{0}/account/forgotpassword".FormatWith(GlobalSettings.ReplicatedSites.DefaultWebAlias);
+}
+
+<div id="view-sitelogin">
+    <div class="text-center">
+        <img src="@Url.Content("~/content/images/bonvera-logo.PNG")" class="img-responsive" />
+    </div>
+
+    <div class="space-30"></div>
+
+    @using (Html.BeginForm())
+    {
+        <div class="form-group">
+            @Html.TextBoxFor(c => c.LoginName, new { @class = "form-control", placeholder = Resources.Common.Username })
+        </div>
+
+        <div class="form-group">
+            @Html.PasswordFor(c => c.Password, new { @class = "form-control", value = Model.Password, placeholder = Resources.Common.Password })
+        </div>
+
+        <a id="loginbutton" class="btn btn-primary" data-loading-text="Loading...">@Resources.Common.SignIn</a>
+        <span class="pull-right"><a href="@forgotPasswordUrl">Forgot Password?</a></span>
+    }
+</div>
+
+
+
+@section scripts
+{
+    <style>
+        body {
+	        background: url('@Url.Content("~/Content/images/login/clouds.png")') repeat-x 0 100% #8EC1DA;
+            background-attachment: fixed;
+            -webkit-animation: animatedBackground 40s linear infinite;
+            -moz-animation: animatedBackground 40s linear infinite;
+            -ms-animation: animatedBackground 40s linear infinite;
+            animation: animatedBackground 40s linear infinite;
+        }
+        @@-webkit-keyframes animatedBackground {
+	        from { background-position: 0 100%; }
+	        to { background-position: 100% 100%; }
+        }
+        @@-mos-keyframes animatedBackground {
+	        from { background-position: 0 100%; }
+	        to { background-position: 100% 100%; }
+        }
+        @@-ms-keyframes animatedBackground {
+	        from { background-position: 0 100%; }
+	        to { background-position: 100% 100%; }
+        }
+        @@keyframes animatedBackground {
+	        from { background-position: 0 100%; }
+	        to { background-position: 100% 100%; }
+        }
+    </style>
+
+    <script>
+        require(["jquery", "ajax", "cookies", "urls", "app", "toastr", "forms", "bootstrap"], function ($, ajax, cookies, url, app, toastr) {
+
+            // Settings
+            var context = '#view-sitelogin',
+                $context = $(context),
+                cookiename = '@(GlobalSettings.Exigo.Api.CompanyKey)LoginName',
+                landingUrl = '@Url.Action("index", "dashboard")',
+                loginUrl = '@Url.Action("login")',
+                isPasswordResetRedirect = @isPasswordResetRedirect.ToString().ToLower();
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+
+                // Login Form
+                $('#loginbutton', $context).on('click', function (event) {
+                    event.preventDefault();
+                    $("#loginbutton").button("loading");
+                    actions.signin();
+                });
+                $('input', $context).on('keypress', function (event) {
+                    if (event.which == 13) {
+                        event.preventDefault();
+                        actions.signin();
+                    }
+                });
+            }
+
+
+            // Actions
+            var actions = {
+                clearCookies: function () {
+                    cookies.clear(cookiename);
+                },
+                loadCookies: function () {
+                    var savedLoginName = cookies.get(cookiename);
+                    if (savedLoginName) $('#LoginName').val(savedLoginName);
+                },
+                saveCookies: function () {
+                    // Get the expiration date of the cookie
+                    var expires = new Date();
+                    expires.setDate(expires.getDate() + 365);
+
+                    // Set the cookies
+                    cookies.set(cookiename, $('#LoginName').val(), {
+                        expires: expires
+                    });
+                },
+                signin: function () {
+
+                    // Validate the form
+                    if (!$('form', $context).valid()) {
+                        $("#loginbutton").button("reset");
+                        return false;
+                    }
+
+                    // Submit the form
+                    ajax.json({
+                        url: loginUrl,
+                        data: $('form').serializeObject(),
+                        beforeSend: function () {
+                            toastr.clear();
+                        },
+                        success: function (response) {
+                            if (!response.Status) {
+                                actions.throwError(Resources.Common.LoginFailed, response.ErrorMessage);
+                                $("#loginbutton").button("reset");
+                            }
+                            else {
+                                // Save the cookies
+                                actions.saveCookies();
+
+                                // Redirect
+                                window.location = (response.RedirectUrl != '') ? response.RedirectUrl : decodeURIComponent(url.current.queryKey.ReturnUrl || response.LandingUrl);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            actions.throwError(Resources.Common.LoginFailed, error);
+                            $("#loginbutton").button("reset");
+                        }
+                    });
+                },
+                throwError: function (title, error) {
+                    toastr.error(error, title);
+                    $('#Password').focus();
+                    $("#loginbutton").button("reset");
+                }
+            };
+
+
+            // Initialization
+            function _init() {
+
+                // Register the event handlers
+                registerEventHandlers();
+
+                // Load the saved cookies into the form
+                actions.loadCookies();
+
+                // Focus on the right field
+                if ($('#LoginName').val() == '') $('#LoginName').focus();
+                else $('#Password').focus();
+
+                // Handle password reset redirect messaging
+                if (isPasswordResetRedirect) {
+                    $(function() {
+                        toastr.success("Your password has been reset, please log in with your new password");
+                    });
+                }
+            }
+            _init();
+
+        });
+    </script>
+}

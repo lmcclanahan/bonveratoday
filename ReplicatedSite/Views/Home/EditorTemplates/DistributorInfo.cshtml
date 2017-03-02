@@ -1,0 +1,115 @@
+﻿@model DistributorSearch
+@{
+    var contextID = Guid.NewGuid().ToString();
+
+    var defaultCountryCode = GlobalSettings.Company.Address.Country;
+    var defaultRegionCode = GlobalSettings.Company.Address.State;
+
+}
+
+
+<div class="view-Distributor view-Distributor-info-search info" id="view-distributor-info-search" data-container="view-dinfo-search">
+
+    @*<div class="form-group">
+            @Html.HiddenFor(c => c.Country, new
+            {
+                htmlAttributes = new
+                {
+                  data_region_bind = "#" + Html.IdFor(c => c.State) + "_" + contextID,
+                  data_role = "Country"
+                }
+            })
+        </div>*@
+    <div class="row margin-5">
+        <div class="col-sm-4">
+            <div class="form-group">
+                @Html.LabelFor(c => c.DistributorFirstName, new { @class = "control-label" })
+                @Html.EditorFor(c => c.DistributorFirstName, new
+        {
+            htmlAttributes = new
+                 {
+                     @class = "form-control",
+                     id = "dfirst",
+                     name = Html.NameFor(c => c.DistributorFirstName),
+                     data_role = Model.DistributorFirstName,
+                     value = Model.DistributorFirstName,
+                     @placeholder = "Distributor's First Name"
+
+                 }
+        })
+                @Html.ValidationMessageFor(c => c.DistributorFirstName)
+            </div>
+
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                @Html.LabelFor(c => c.DistributorLastName, new { @class = "control-label" })
+                @Html.EditorFor(c => c.DistributorLastName, new
+          {
+              htmlAttributes = new
+              {
+                  @class = "form-control",
+                  id = "dlast",
+                  name = Html.NameFor(c => c.DistributorLastName),
+                  data_role = Model.DistributorLastName,
+                  value = Model.DistributorLastName,
+                  @placeholder = "Distributor's Last Name"
+              }
+          })
+                @Html.ValidationMessageFor(c => c.DistributorLastName)
+            </div>
+
+        </div>
+        <div class="col-sm-2">
+            <div class="form-group">
+                @Html.LabelFor(c => c.DistributorState, new { @class = "control-label" })
+                @Html.DropDownListFor(c => c.DistributorState,
+                    selectList: Html.Regions(defaultCountryCode, defaultRegionCode),
+                    htmlAttributes: new
+                    {
+                        @class = "form-control",
+                        id = "dstate",
+                        name = Html.NameFor(c => c.DistributorState),
+                        data_role = Model.DistributorState,
+                        value = Model.DistributorState
+                    })
+                @Html.ValidationMessageFor(c => c.DistributorState)
+            </div>
+
+        </div>
+    </div>
+    <div class="row margin-5">
+        <div class="form-group col-sm-4">
+            @Html.LabelFor(c => c.DistributorCity, new { @class = "control-label" })
+            @Html.EditorFor(c => c.DistributorCity, new
+                {
+                    @class = "form-control",
+                    name = Html.NameFor(c => c.DistributorCity),
+                    id = "dcity",
+                    data_role = Model.DistributorCity,
+                    value = Model.DistributorCity,
+                    @placeholder = ""
+                })
+        </div>
+        <div class="form-group col-sm-4">
+            @Html.LabelFor(c => c.DistributorZipCode, new { @class = "control-label" })
+            @Html.EditorFor(c => c.DistributorZipCode, new
+                {
+                    @class = "form-control",
+                    id = "dzip",
+                    name = Html.NameFor(c => c.DistributorZipCode),
+                    data_role = Model.DistributorZipCode,
+                    value = Model.DistributorZipCode,
+                    @placeholder = ""
+                })
+        </div>
+
+    </div>
+    <div class="space-5"></div>
+
+    <button role="button" class="btn btn-success" data-role="search" id="dinfo-search">Search</button>
+
+</div>
+
+
+

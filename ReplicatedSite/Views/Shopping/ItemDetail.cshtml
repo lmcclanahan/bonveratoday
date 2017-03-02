@@ -1,0 +1,26 @@
+﻿@model ItemDetailViewModel
+@{
+    ViewBag.Title = Model.Item.ItemDescription;
+    Layout = "~/Views/Shared/_ShoppingLayout.cshtml";
+}
+
+<input type="hidden" class="activenavigation" value="shopping" />
+
+@section navigation
+{
+    <div class="space-20"></div>
+    @Html.Partial("Partials/Navigation/_CategoryBreadCrumb")
+    <div class="space-10"></div>
+}
+
+<div class="shop">
+    <div class="container product-detail">
+        <div data-widget="item" id="view-item" class="view-item view-item-detail">
+            @Html.Partial("Partials/Items/_ItemDetailModule", Model.Item)
+
+            <div class="space-20"></div>
+            @Html.Raw(Model.Item.LongDetail1)
+        </div>
+    </div>
+    <div class="space-50"></div>
+</div>

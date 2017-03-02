@@ -1,0 +1,38 @@
+﻿@model DistributorSearch
+@{
+    var contextID = Guid.NewGuid().ToString();
+
+}
+
+<div class="view-distributor info distributorID" id="view-distributorIdSearch-@contextID" data-container="view-distributorId-search">
+    <div class="row margin-5">
+        <div class="col-sm-9">
+            @Html.LabelFor(c => c.DistributorID, new { @class = "control-label" })
+        </div>
+    </div>
+    <div class="form-group row margin-5">
+
+        <div class="space-5"></div>
+
+        <div class="col-sm-7">
+            @Html.EditorFor(c => c.DistributorID, new
+        {
+            htmlAttributes = new
+                 {
+                     @class = "form-control",
+                     id = Html.IdFor(c => c.DistributorID),
+                     name = Html.NameFor(c => c.DistributorID),
+                     data_role = "search-field",
+                     value = Model.DistributorID,
+                     @placeholder = "Distributor's ID"
+
+                 }
+        })
+            @Html.ValidationMessageFor(c => c.DistributorID)
+        </div>
+        <div class="col-sm-3">
+            <button role="button" class="btn btn-primary search" data-role="search" id="distributorId-search">Search</button>
+        </div>
+    </div>
+</div>
+

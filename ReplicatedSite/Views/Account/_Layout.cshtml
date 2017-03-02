@@ -1,0 +1,40 @@
+﻿@{
+    Layout = "~/Views/Shared/_DefaultLayout.cshtml";
+}
+
+<h2>@Resources.Common.AccountSettings</h2>
+
+<div id="view-account">
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="panel panel-default">
+                <div class="list-group">
+                    @{
+                        var sitemap = Settings.SiteMap.Current.Items.Single(c => c.ID == "account") as NavigationSiteMapNode;
+                        var nodes = (sitemap.Children.Any()) ? sitemap.Children : new List<NavigationSiteMapNode>() { sitemap };
+                    }
+
+                    @foreach (var item in nodes.Where(c => c.IsVisible()).Where(c => c is NavigationSiteMapNode).Cast<NavigationSiteMapNode>())
+                    {
+                        <a href="@item.Url" target="@item.Target" class="list-group-item @item.DeviceVisibilityCssClass @(item.IsActive() ? "active" : "")">                           
+                            @if (item.HasIcon)
+                            {
+                                <i class="@item.Icon"></i>
+                            }
+                            @item.Label
+                        </a>
+                    }
+                </div>
+            </div>        
+        </div>
+        <div class="col-sm-9">
+            @RenderBody()
+        </div>
+    </div>
+    <div class="space-50"></div>
+</div>
+
+@section scripts
+{
+    @RenderSection("scripts", false)
+}

@@ -1,0 +1,236 @@
+﻿@model BackofficeSubscriptionsViewModel
+@{
+    ViewBag.Title = "Subscription Renewal";
+    Layout = "~/Views/Shared/_AuthenticatedLayout.cshtml";
+    var hasExpiredItems = Model.OrderCalcResponse != null && Model.OrderCalcResponse.Details != null && Model.OrderCalcResponse.Details.Count() > 0;
+
+    var isMonthlyExpired = (hasExpiredItems && Model.OrderCalcResponse.Details.Any(c => c.ItemCode == GlobalSettings.Backoffices.MonthlySubscriptionItemCode));
+}
+
+<style>
+    #subscription-container em { font-size: 13px; display: inline-block; line-height: 15px; }
+
+    #subscription-container .alt-header { font-family: 'didot-italic',Georgia,sans-serif; font-size: 40px; padding: 8px 0; border-bottom: 1px solid #ccc; margin-bottom: 0; }
+
+    #subscription-container .expiredsubscription-message { font-weight: normal; font-family: 'Roboto-Regular', Georgia; line-height: 30px; margin-top: 0; }
+
+    #subscription-container .ll-well { padding: inherit 30px; }
+
+        #subscription-container .ll-well label { font-size: 14px; }
+</style>
+
+<div id="subscription-container">
+    <div class="space-30"></div>
+    <h1 class="alt-header">Renew your subscription</h1>
+    <div class="space-50"></div>
+
+    <div class="ll-well">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h3 class="expiredsubscription-message">
+                        Your back office monthly access fee of $9.95 is due. In order to have access to your back office kindly process your payment now.
+                        Please refer to the <a href="@Url.Content("~/content/documents/BonveraPoliciesAndProcedures.pdf")" target="_blank">Policies and Procedures</a>
+                        to read more about the back office access fee. <strong>If you choose not to renew your back office, no action is required. You still have access to the rest of the site except the Commissions and Organization menu items.</strong>
+                    </h3>
+                    <div class="space-20"></div>
+
+                    @if (Model.PaymentMethods != null && Model.PaymentMethods.Count() > 0)
+                    {
+
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead style="background-color: #EEECDF">
+                                    <tr>
+                                        <th colspan="2">@Resources.Common.YourPaymentMethods</th>
+                                        <th>@Resources.Common.Name</th>
+                                        <th class="text-right" style="width: 100px;">@Resources.Common.Expires</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var method in Model.PaymentMethods)
+                                    {
+                                        if (method is CreditCard)
+                                        {
+                                            var creditcard = method as CreditCard;
+                                            
+                                            <tr id="card">
+                                                <td style="width: 180px;">
+                                                    @using (Ajax.BeginForm("RenewSubscription", new AjaxOptions
+                                                    {
+                                                        OnBegin = "renewalModule.onBegin",
+                                                        OnSuccess = "renewalModule.onSuccess",
+                                                        OnFailure = "renewalModule.onFailure",
+                                                        OnComplete = "renewalModule.onComplete"
+                                                    }))
+                                                    {
+                                                        <input type="hidden" name="Type" value="@creditcard.Type" />
+
+                                                        <button type="submit" class="btn btn-primary btnSubmitPayment" data-loading-text="Processing, please wait">@Resources.Common.PayWithThisCard</button>
+                                                    }
+                                                </td>
+                                                <td>@Resources.Common.CardEndingIn @creditcard.CardNumber</td>
+                                                <td>@creditcard.NameOnCard</td>
+                                                <td class="@((creditcard.IsExpired) ? "text-danger" : "") text-right">
+                                                    @creditcard.ExpirationDate.ToString("M/yyyy")
+                                                    @if (creditcard.IsExpired)
+                                                    {
+                                                        <text><br />@Resources.Common.Expired</text>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        if (Model.PaymentMethods.Where(c => c is CreditCard).Count() == 2)
+                        {
+
+                            <div class="alert alert-success alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <strong>
+                                    You have 2 credit cards on file. Therefore no additional cards will be saved. In order to modify current cards please go to your account settings page.
+                                    To change your payment options click <a href="@Url.Action("paymentmethodlist", "account")">HERE</a>.
+                                </strong>
+                            </div>
+                        }
+                        <div class="space-50"></div>
+                    }
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <p><a data-toggle="#newcardcontainer" class="btn btn-link"><i class="fa-plus"></i> @Resources.Common.AddCard</a></p>
+    @using (Ajax.BeginForm("RenewSubscription", new AjaxOptions
+                        {
+                            OnBegin = "renewalModule.onBegin",
+                            OnSuccess = "renewalModule.onSuccess",
+                            OnFailure = "renewalModule.onFailure",
+                            OnComplete = "renewalModule.onComplete"
+                        }))
+    {
+        <div id="newcardcontainer" style="display: none;">
+
+
+            @{var creditcard = new CreditCard();
+            }
+
+            <input type="hidden" name="paymonthly" value="@isMonthlyExpired.ToString().ToLower()" />
+
+
+            <div class="row margin-5">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(c => creditcard.NameOnCard)
+                        @Html.EditorFor(c => creditcard.NameOnCard)
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        @Html.LabelFor(c => creditcard.CardNumber)
+                        @Html.EditorFor(c => creditcard.CardNumber)
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="form-group">
+                        <label for="inputEmail3" class="control-label">Expiration Date</label>
+                        <div class="row margin-5">
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(c => creditcard.ExpirationMonth, Html.Months(), new
+                            {
+                                @class = "form-control"
+                            })
+                            </div>
+                            <div class="col-sm-4">
+                                @Html.DropDownListFor(c => creditcard.ExpirationYear, Html.ExpirationYears(), new
+                            {
+                                @class = "form-control"
+                            })
+                                @Html.ValidationMessageFor(c => creditcard.IsExpired)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @Html.EditorFor(c => creditcard.BillingAddress)
+
+            <div class="space-30"></div>
+
+            <button type="submit" class="btn btn-primary btnSubmitPayment" id="btnSubmitPayment" data-loading-text="Processing, please wait">Submit Payment</button>
+
+            <div class="space-70"></div>
+        </div>
+
+    }
+    @*else
+        {
+        <div class="alert alert-success" role="alert">Looks like you are all caught up on your subscriptions, click <a href="@Url.Action("index", "dashboard")" class="">here</a> to return to your dashboard.</div>
+        }*@
+</div>
+<script>
+    var renewalModule = {};
+
+    require(["jquery", "app", "forms", "toastr", "pubsub"], function ($, app, forms, toastr) {
+
+        var dashboardUrl = "@Url.Action("thankyou", "subscriptions")",
+        context = "#subscription-container",
+        $context = $(context);
+
+        function registerEventHandlers() {
+            $('[data-toggle]', $context).on('click', function () {
+                var $target = $($(this).data('toggle'));
+                $target.slideToggle('fast');
+            });
+
+
+        }
+
+        var actions = {
+            begin: function () {
+                $("button[data-loading-text]").button("loading");
+            },
+            success: function (response) {
+                console.log(response);
+
+                if (response.success) {
+                    //C.C. 11-14-2016 #81686 Commented out Green Success popup per client request
+                    //toastr.success("Congratulations! You have back office access for the next 30 days, You will be redirected to your dashboard in several minutes.", "Success");
+
+                    setTimeout(function () {
+                        window.location = dashboardUrl;
+                    }, 3000);
+                }
+                else {
+                    toastr.error("Your payment was not successful, please retry");
+                    $("button[data-loading-text]").button("reset");
+                }
+            },
+            failure: function (xhr) {
+                console.log("failed", xhr);
+                $("button[data-loading-text]").button("reset");
+                toastr.error("Your payment was not successful, please retry");
+            },
+            complete: function () {
+
+            }
+        };
+
+        function _init() {
+            registerEventHandlers();
+        }
+        _init();
+
+        renewalModule = {
+            onBegin: actions.begin,
+            onSuccess: actions.success,
+            onFailure: actions.failure,
+            onComplete: actions.complete
+        };
+    });
+</script>

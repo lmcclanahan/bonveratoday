@@ -1,0 +1,107 @@
+﻿@model Backoffice.ViewModels.AutoOrders.AutoOrderPaymentViewModel
+
+<div class="autoOrder-payment-cc top-bar-green">
+    <div class="row row-head">
+        <div class="no-padding col-xs-12">
+            <h4>@Resources.Common.SavedPaymentMethods</h4>
+        </div>
+    </div>
+    <div class="row-body">
+        @if (Model.PaymentMethods.Any(p => p.CanBeParsedAs<CreditCard>()))
+        {
+            <div class="row bottom-margin">
+                <div class="col-xs-8 col-xs-offset-1"><strong>@Resources.Common.Description</strong></div>
+                <div class="col-xs-3"><strong>@Resources.Common.Expires</strong></div>
+            </div>
+
+            foreach (var paymentMethod in Model.PaymentMethods.Where(p => p.CanBeParsedAs<CreditCard>()))
+            {
+                var card = paymentMethod.As<CreditCard>();
+                var cardSelected = (Model.SelectedCardType == card.Type) ? "checked" : "";
+
+                <div class="row bottom-margin">
+                    <div class="col-xs-1 first-col">
+                        @if (card.Type == CreditCardType.Primary)
+                        {
+                            <input type="hidden" name="type" value="@Common.Api.ExigoWebService.AutoOrderPaymentType.PrimaryCreditCard" />
+                        }
+                        else
+                        {
+                            <input type="hidden" name="type" value="@Common.Api.ExigoWebService.AutoOrderPaymentType.SecondaryCreditCard" />
+                        }
+
+                        <input type="radio" name="rdoPmt" value="credit" @cardSelected />
+                    </div>
+                    <div class="col-xs-8">
+                        <p class="no-margin">
+                            <span class="no-margin paymentlabel" for="rdoPmt1">@Resources.Common.CardEndingIn @card.CardNumber</span>
+                        </p>
+                    </div>
+                    <div class="col-xs-3 last-col">@card.ExpirationMonth/@card.ExpirationYear</div>
+                </div>
+            }
+        }
+
+        <div class="space-10"></div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <p><a class="btn btn-sm btn-default" href="@Url.Action("paymentmethodlist", "account")"><i class="fa-edit"></i> @Resources.Common.ClickToManagePayments</a></p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="autoOrder-cart-buttons">
+            <button type="button" class="btn btn-sm btn-danger btn-cancel autoOrder-link" data-loading-text="Loading..."><span><i class="fa-times-circle"></i> @Resources.Common.CancelUppercase </span></button>
+            <button type="submit" data-role="savepaymentmethod" class="btn btn-sm btn-success autoOrder-link" data-loading-text="Loading..."><span><i class="fa-save"></i> @Resources.Common.SaveUppercase </span></button>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    require(["ajax"], function (ajax) {
+        $(".paymentlabel").on("click", function () {
+            $(this).parents(".row").first().find('input').click();
+        });
+
+        $("[data-role='savepaymentmethod']").on("click", function () {
+            $("button").each(function () {
+                $(this).button("loading");
+            });
+            var autoorderid = "@Model.AutoorderID",
+                selectedOption = $("[name='rdoPmt']:checked");
+
+            var type = selectedOption.siblings("[name='type']").first().val();
+
+            if (type === undefined) {
+                $("[type='button']").each(function () {
+                    $(this).button("reset");
+                });
+                return;
+            }
+            else {
+                ajax.json({
+                    url: "@Url.Action("setautoorderpaymentmethodpreference", "autoorders")",
+                    data: { autoorderid: autoorderid, type: type },
+                    success: function (response) {
+                        $("button").each(function () {
+                            $(this).button("reset");
+                        });
+                        window.trigger("paymentalert", response);
+                    },
+                    error: function (xhr, error, data) {
+                        $("[type='button']").each(function () {
+                            $(this).button("reset");
+                        });
+                        console.log("server error", xhr.responseText);
+                    }
+                });
+            }
+        });
+    })();
+</script>

@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = Resources.Common.Volumes;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-sm-3">
+        @Html.Navigation()
+    </div>
+
+    <div class="col-sm-9">
+
+        <div id="grid" style="height: 600px"></div>
+
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script>
+        require(["jquery", "kendogrids"], function ($, kendogrids) {
+            $("#grid").kendoGrid(kendogrids.options({
+                groupable: false,
+                columns: [
+                    { field: "PeriodID", hidden: true, type: "number" },
+                    { field: "PeriodDescription", title: "@Resources.Common.Period", sortable: false, filterable: false, width: 120 },
+                    { field: "RankDescription", title: "@Resources.Common.PaidRank", width: 120 },
+                    { field: "Team1TGBV", title: "Team 1 TGBV", type: "number", format: "{0:N0}", attributes: { "class": "text-right" }, width: 140 },
+                    { field: "Team2TGBV", title: "Team 2 TGBV", type: "number", format: "{0:N0}", attributes: { "class": "text-right" }, width: 140 },
+                    { field: "Team3TGBV", title: "Team 3 TGBV", type: "number", format: "{0:N0}", attributes: { "class": "text-right" }, width: 140 },
+                    { field: "Team4TGBV", title: "Team 4 TGBV", type: "number", format: "{0:N0}", attributes: { "class": "text-right" }, width: 140 },
+                    { field: "Team5TGBV", title: "Team 5 TGBV", type: "number", format: "{0:N0}", attributes: { "class": "text-right" }, width: 140 },
+                    { field: "Team6TGBV", title: "Team 6 TGBV", type: "number", format: "{0:N0}", attributes: { "class": "text-right" }, width: 140 }
+                ],
+                dataSource: {
+                    sort: { field: "PeriodID", dir: "desc" }
+                }
+            }));
+        });
+    </script>
+}

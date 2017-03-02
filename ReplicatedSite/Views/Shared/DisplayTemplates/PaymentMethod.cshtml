@@ -1,0 +1,43 @@
+﻿@model IPaymentMethod
+@{
+    var showAddress = ViewData["hideaddress"] == null;
+}
+
+<div class="view-paymentmethod">
+    @if (Model is CreditCard)
+    {
+        var card = Model as CreditCard;
+
+        <text>
+            Credit/debit card ending in @card.CardNumber.Substring(card.CardNumber.Length - 4, 4)<br />
+            Expires: @card.ExpirationDate.ToString("M/yyyy")
+
+            @if (showAddress)
+            {
+                <div class="space-10"></div>
+                <h5>Billing Address</h5>
+                @card.NameOnCard<br />
+                @Html.DisplayFor(c => card.BillingAddress)
+            }
+        </text>
+    }
+
+
+    @if (Model is BankAccount)
+    {
+        var account = Model as BankAccount;
+
+        <text>
+            @account.BankName
+            @account.NameOnAccount's account ending in @account.AccountNumber.Substring(account.AccountNumber.Length - 4, 4)
+
+            @if (showAddress)
+            {
+                <div class="space-10"></div>
+                <h5>Billing Address</h5>
+                @account.NameOnAccount<br />
+                @Html.DisplayFor(c => account.BillingAddress)
+            }
+        </text>
+    }
+</div>

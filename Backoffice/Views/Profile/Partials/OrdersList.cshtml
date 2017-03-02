@@ -1,0 +1,23 @@
+﻿<div id="view-orderslist">    
+    <div class="grid"></div>
+</div>
+
+<script>
+    require(["kendogrids"], function (kendoGrid) {
+
+        var cultureCode = "@Identity.Current.Market.CultureCode";
+        kendo.culture(cultureCode);
+
+
+        kendoGrid.create("#view-orderslist .grid", {
+            url: '@Request.Url.AbsolutePath',
+            sort: { field: "OrderDate", dir: "desc" },
+            columns: [
+                { field: "OrderDate", title: Resources.Common.OrderDate, type: "date", format: "{0:d}" },
+                { field: "SubTotal", title: Resources.Common.Total, type: "number", format: "{0:C}", attributes: { "class": "text-right" } },
+                // the naming here is misleading BV is actually stored in the CV table, but has been left as is for sorting purposes
+                { field: "CommissionableVolumeTotal", title: Resources.Common.BV, type: "number", format: "{0:N0} " + Resources.Common.BV, attributes: { "class": "text-right" } }
+            ]
+        });
+    });
+</script>

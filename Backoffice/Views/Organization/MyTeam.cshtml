@@ -1,0 +1,300 @@
+﻿@model MyTeamViewModel
+@{
+    ViewBag.Title = Resources.Common.MyTeam;
+
+}
+<h2>@ViewBag.Title</h2>
+<div class="row myTeam">
+    <input type="hidden" value="@Model.CurrentTeamMember.CustomerID" id="currentcustomerid" />
+    <div class="col-sm-12">
+
+        <div class="row">
+            <div class="col-sm-6">
+                <label for="periods-partial" class="text-lg">Choose a month</label>
+
+                <div id="periods-partial">
+
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <label for="user-textbox" class="text-lg">User Search</label>
+
+                <input class="input-md form-control search-textbox" id="user-textbox" type='text' value="" placeholder="Bonvera ID# or Last Name" />
+                <div id="user-validate-result"></div>
+            </div>
+        </div>
+
+        <div class="space-10"></div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="pull-right "><a class="btn btn-primary btn-block  return" style="display:none;">Return to Me</a></div>
+            </div>
+        </div>
+        <div class="space-20"></div>
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div id="MyTeamCurrentTeamMember">
+            </div>
+            <div id="MyTeamDashboard">
+            </div>
+        </div>
+        <div class="space-25"></div>
+        <div id="MyTeamTable">
+        </div>
+    </div>
+    <div id="test">
+
+    </div>
+</div>
+@section scripts
+{
+    <script>
+        require(["jquery", "ajax","pubsub"], function ($, ajax,pubsub) {
+
+            // Settings
+
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+
+
+                $(function () {
+                    var keyStop = {
+                        13: "input:text, input:password", // stop enter = submit
+
+                        end: null
+                    };
+                    $("#user-textbox").bind("keydown", function (event) {
+                        var selector = keyStop[event.which];
+
+                        if (selector !== undefined && $(event.target).is(selector)) {
+
+                            actions.checkIfInTeam( $(event.target).val());
+                        }
+                        return true;
+                    });
+                });
+                $(".left-button").on("click", function () {
+                    var maxScroll = ($('#inner-wrap').width() - $('#slide-wrap').scrollLeft()) - $('#slide-wrap').width();
+
+                    var $scrollLeft = $('.float-wrap').scrollLeft();
+                    if (0 == $('#slide-wrap').scrollLeft()) {
+                    }
+                    else {
+                        $('#slide-wrap').animate({
+                            scrollLeft: "-=" + 250 + "px"
+                        });
+                    }
+                });
+                $(".right-button").on("click", function () {
+                    var maxScroll = ($('#inner-wrap').width() - $('#slide-wrap').scrollLeft()) - $('#slide-wrap').width();
+                    if (0 == maxScroll) {
+                    } else {
+                        $('#slide-wrap').animate({
+                            scrollLeft: "+=" + 250 + "px"
+                        });
+                    }
+                });
+                $(".return").on("click",function(){
+                    window.trigger("myTeam.ReturnToMe");
+                });
+                window.on("myTeam.ReloadPeriods", function (data) {
+
+                    var team = $(".team-number-top").val();
+
+
+                    actions.getAll(data.id,team);
+                });
+
+
+                window.on("myTeam.ReloadTeamMember", function (data) {
+                    $(".return").show();
+                    actions.getCurrentTeamMember(data.id);
+                    actions.getPeriods(data.id);
+                });
+                window.on("myTeam.ReloadDashboard", function (data) {
+                    $(".return").show();
+
+                    actions.getTeamDashboard(data.id,data.team);
+
+                    actions.getPeriods(data.id);
+
+                });
+                window.on("myTeam.ChooseCustomer",function(id){
+                    $("#addtocart-modalcontainer .modal").modal("hide");
+                    actions.getAll(id,1);
+                    $("#user-validate-result").html("<em class='text-success'><b>Success! - ID# "+id+" Found! Navigating now</b></em>");
+                    $(".return").show();
+                    $("#currentcustomerid",".myTeam").val(id);
+
+                });
+                window.on("myTeam.ReturnToMe",function(){
+
+                    var id = "@Identity.Current.CustomerID";
+                    var team = 1;
+                    $(".return").hide();
+                    actions.getAll(id,team);
+                });
+
+            }
+
+            // Actions
+            var actions = {
+
+                getCurrentTeamMember: function (id) {
+                    var period = $("#periodSelect").val();
+                    ajax.json({
+                        url: "@Url.Action("FetchMyTeamCurrentTeamMember", "organization")",
+                        data: { id: id, period: period },
+                        success: function (response) {
+                            if (response.success) {
+
+                                $("#MyTeamCurrentTeamMember").html(response.html);
+
+                            }
+                            else {
+
+                            }
+                        }
+                    });
+                },
+                getPeriods: function (id) {
+                    var period = $("#periodSelect").val();
+                    ajax.json({
+                        url: "@Url.Action("FetchMyTeamPeriodsView", "organization")",
+                        data: { id: id, period: period},
+                        success: function (response) {
+                            if (response.success) {
+
+                                $("#periods-partial").html(response.html);
+
+                            }
+                            else {
+
+                            }
+                        }
+                    });
+                },
+                getTeamDashboard: function (id, team) {
+                    var period = $("#periodSelect").val();
+                    ajax.json({
+                        url: "@Url.Action("FetchMyTeamDashboard", "organization")",
+                        data: { id: id, team: team, period: period },
+
+                        success: function (response) {
+                            if (response.success) {
+                                $("#MyTeamDashboard").html(response.html);
+                                $("#top-customer-team").val(team);
+
+                            }
+                            else {
+
+                            }
+                        }
+                    });
+                },
+                getTeamTable: function (id, team) {
+
+
+
+                    var period = $("#periodSelect").val();
+                    ajax.html({
+                        url: "@Url.Action("FetchMyTeamTable", "organization")",
+                        data: { id: id, team: team, period: period },
+
+                        success: function (response) {
+
+                            $("#MyTeamTable").html(response);
+
+                            $("#top-customer-team").val(team);
+
+                        }
+                    });
+                },
+                reloadTable: function (id, team){
+                    var period = $("#periodSelect").val();
+
+
+                    var data = { id: id, team: team, period: period };
+
+                    window.trigger("myTeam.ReloadTable", data);
+                    actions.reloadTeamSelector(id,team);
+                },
+                reloadTeamSelector: function(id,team){
+
+                    var period = $("#periodSelect").val();
+                    ajax.json({
+                        url: "@Url.Action("FetchMyTeamCount", "organization")",
+                        data: { id: id, period: period },
+
+                        success: function (response) {
+                            if (response.success) {
+                                $(".team-number-top").html("");
+                                for (var i = 1; i <= response.count; i++) {
+
+                                    $(".team-number-top").append("<option value = '" + i + "'> Team " + i + " </option>");
+                                }
+                            }
+                        }
+                    });
+                },
+                checkIfInTeam: function(input){
+
+                    var period = $("#periodSelect").val();
+
+                    var currentcustomerid =  $("#currentcustomerid",".myTeam").val();
+
+                    ajax.json({
+                        url: "@Url.Action("IsInMyTeam", "organization")",
+                        data: {periodid: period, currentcustomerid: currentcustomerid, input: input },
+
+                        success: function (response) {
+                            if (response.success) {
+
+
+
+                                if(response.multiple){
+                                    $("#addtocart-modalcontainer .modal-body").html("");
+                                    $("#addtocart-modalcontainer .modal-body").html(response.resultsview);
+                                    $("#addtocart-modalcontainer .modal").modal("show");
+
+                                }
+                                else{
+                                    actions.getAll(response.customerid,1);
+                                    $("#user-validate-result").html("<em class='text-success'><b>Success! - ID# "+response.customerid+" Found! Navigating now</b></em>");
+                                    $(".return").show();
+                                    $("#currentcustomerid",".myTeam").val(response.customerid);
+                                }
+                            }
+                            else {
+
+
+                                $("#user-validate-result").html("<em class='text-danger'><b>"+response.message+"</b></em>")
+                            }
+                        }
+                    });
+                },
+                getAll: function(id, team){
+                    actions.getCurrentTeamMember(id);
+                    actions.getTeamDashboard(id,team);
+                    actions.reloadTable(id,team);
+                    actions.getPeriods(id);
+                    $("#user-validate-result").html("");
+                }
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+                actions.getCurrentTeamMember(@Model.CurrentTeamMember.CustomerID);
+                actions.getTeamDashboard(@Model.CurrentTeamMember.CustomerID, 1);
+                actions.getTeamTable(@Model.CurrentTeamMember.CustomerID, 1);
+                actions.getPeriods(@Model.CurrentTeamMember.CustomerID);
+
+            }
+            init();
+
+        });
+    </script>
+}

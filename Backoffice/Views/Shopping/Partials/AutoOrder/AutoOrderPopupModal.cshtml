@@ -1,0 +1,218 @@
+﻿@model int    
+<div id="auto-order-container">
+    @Resources.Common.Loading...
+</div>
+<div class="modal-footer">
+    <div class="existing-auto-order hide">
+        <div class="clearfix"></div>
+        <div class="space-30"></div>
+        <button type="button" class="btn btn-default" data-dismiss="modal" data-role="autoorder.cancel">@Resources.Common.Cancel</button>
+        <button type="button" class="btn btn-primary" data-role="autoorder.update" id="existingAutoOrderSave">@Resources.Common.SaveChanges</button>
+    </div>
+    <div class="new-auto-order hide">
+        <button type="button" class="btn btn-default" data-dismiss="modal">@Resources.Common.ContinueShopping</button>
+        <a data-role="checkout" class="btn btn-primary">@Resources.Common.Checkout</a>
+    </div>
+</div>
+
+<script>
+    require(["jquery", "ajax", "toastr", "pubsub", "extensions"], function ($, ajax, toastr) {
+        var context = "#addtocart-modalcontainer",
+            $context = $(context),
+            getAutoOrderUrl = "@Url.Action("getautoorderdetails", "shopping")",
+            updateAutoOrderUrl = "@Url.Action("updateautoorder", "shopping")",
+            cancelupdateUrl = "@Url.Action("cancelautoorderupdate", "shopping")",
+            checkoutUrl = "@Url.Action("checkout", "shopping")",
+            modalContainerSelector = "#addtocart-modalcontainer #auto-order-container",
+            autoshipID = parseInt("@Model");
+
+        function registerEventHandlers() {
+            // Set the header of the loading modal on initial load
+            $("#view-item .modal-header h4").html("@Resources.Common.AutoShip");
+
+            // Ensure auto ship modal bindings only occur once
+            if ($context.hasClass("bound") == false) {
+                $context.addClass("bound");
+
+                window.on("autoordermodal.update", function () {
+                    actions.getautoship();
+                });
+            }
+
+            $context.on("click", "[data-role='autoorder.update']", function () {
+                var autoOrderID = $('[name="AutoOrderID"]').val();
+
+                if (autoOrderID > 0) {
+                    actions.updateautoship(function () {
+                        toastr.success("@Resources.Common.AutoShipIDUpdated".format(autoOrderID), "Success");
+                        $(".modal").modal("hide");
+
+                        window.trigger("autoorder.updated", autoOrderID);
+                    });
+                } else {
+                    actions.updateautoship(function() {
+                        actions.getautoship();
+                    });
+                }
+            });
+
+
+            $context.on("click", "[data-role='autoorder.cancel']", function () {
+                actions.cancelupdate();
+            });
+
+            $context.on("change", "[data-price-each]", function () {
+                var $this                  = $(this),
+                    quantity               = $this.val(),
+                    $parentContainer       = $this.parents("[data-item-code]").first(),
+                    itemcode               = $parentContainer.data("item-code"),
+                    priceEach              = $this.data("price-each"),
+                    $priceDisplayContainer = $parentContainer.find("[data-price-display]");
+
+                if (quantity < 0) {
+                    $this.val("0");
+                    return;
+                }
+
+                var price = priceEach * quantity;
+                $priceDisplayContainer.html(price.format("C"));
+
+                // Handle the display of the subtotal and total fields
+                var $subtotalContainer = $(".order-subtotal-computed span");
+                var subtotal = 0;
+
+                $("#auto-order-cart [data-price-each]").each(function () {
+                    var _val = parseFloat($(this).data("price-each")) * $(this).val();
+                    subtotal += _val;
+                });
+                $subtotalContainer.html(subtotal.format("C"));
+            });
+
+            $context.on("click", "[data-role='checkout']", function () {
+                actions.updateautoship(null, function () {
+                    window.location = checkoutUrl;
+                });
+            });
+
+            $context.on("click", '[data-role="autoorder.load"]', function () {
+                actions.getautoship();
+            });
+        }
+
+        var actions = {
+            getautoship: function () {
+                ajax.json({
+                    url: getAutoOrderUrl,
+                    cache: false,
+                    data: { autoshipID: autoshipID },
+                    success: function (response) {
+
+                        if (response.success) {
+                            $(modalContainerSelector).html(response.html);
+
+                            if (response.isExistingAutoOrder) {
+                                $(context + " .existing-auto-order").removeClass("hide");
+                                $(context + ' [data-role="autoorder.update"].update').hide();
+                            } else {
+                                $(context + " .new-auto-order").removeClass("hide");
+                            }
+                        } else {
+                            console.log("actions.getautoship failed: ", response.message);
+                        }
+                    }
+                });
+            },
+            updateautoship: function (onsuccess, oncomplete) {
+                var model = helpers.getupdatedAutoOrder();
+
+                // In case we need to add some sort of confirmation before saving the auto order, this has been split into a new function
+                actions.processUpdate(model, onsuccess, oncomplete);
+            },
+            processUpdate: function (model, onsuccess, oncomplete) {
+
+                ajax.json({
+                    url: updateAutoOrderUrl,
+                    cache: false,
+                    data: {
+                        items: model.items,
+                        autoorderID: model.autoorderID
+                    },
+                    beforeSend: function () {
+                        $("[data-role='autoorder.update']").button('Updating');
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            // get the current cart item count and update the counter
+                            ajax.json({
+                                url: "@Url.Action("GetCartItemQuantity", "Shopping")",
+                                success: function (response) {
+                                    if (response.success) {
+                                        $("#my-cart").html(response.count);
+                                    } else {
+                                        console.log("error fetching quick shop modal", response.message);
+                                    }
+                                }
+                            });
+
+                            $(context + " .modal-body").html(response.html);
+                            $("[data-role='autoorder.update']").button('reset');
+                            if (onsuccess) onsuccess();
+
+                            window.trigger("autoorder.updated");
+                        } else {
+                            console.log("actions.updateautoship failed: ", response.message);
+                            toastr.error(response.message);
+                        }
+                    },
+                    complete: function () {
+                        if (oncomplete) oncomplete();
+                    }
+                });
+            },
+            cancelupdate: function () {
+                ajax.json({
+                    url: cancelupdateUrl,
+                    success: function () {
+                        console.log("successful cancel");
+                    }
+                });
+            }
+        };
+
+        var helpers = {
+            getupdatedAutoOrder: function () {
+                var model = {
+                    autoorderID: $("[name='AutoOrderID']").val(),
+                    items: helpers.getitems()
+                };
+
+                return model;
+            },
+            getitems: function () {
+                var $table = $("#auto-order-cart-table tbody");
+                var items = [];
+                var itemLength = $table.children("tr").length;
+                var rawItems = $table.children("tr");
+
+                for (var i = 0; i < itemLength; i++) {
+                    var itemID = $(rawItems[i]).find("[name='ID']").val();
+                    var itemQuantity = $(rawItems[i]).find("[name='Quantity']").val();
+                    var itemCode = $(rawItems[i]).data("item-code");
+                    items.push({ ID: itemID, Quantity: itemQuantity, ItemCode: itemCode });
+                }
+
+                return items;
+            }
+        };
+
+        function _init() {
+
+            registerEventHandlers();
+
+            actions.getautoship();
+
+        }
+        _init();
+    });
+</script>
+

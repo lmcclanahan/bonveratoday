@@ -1,0 +1,106 @@
+﻿@model AccountNotificationsViewModel
+@{
+    ViewBag.Title = Resources.Common.Notifications;
+
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div id="view-accountnotifications">
+    <div class="row">
+        <div class="col-sm-3">
+            @Html.Navigation()
+        </div>
+
+        <div class="col-sm-9">
+            @if (Model.IsOptedIn)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @Resources.Common.NotificationStatus
+                    </div>
+                    <div class="panel-body">
+                        <p>@Resources.Common.CurrentlyReceivingNotificationsAt: <strong>@Model.Email</strong></p>
+                        <p><a href="@Url.Action("unsubscribe")" class="btn btn-primary btn-sm">@Resources.Common.Unsubscribe</a></p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <p>
+                    @Resources.Common.NotificationSubscriptionInstructions
+                </p>
+
+                <form id="subscribeform">
+                    <div class="form-group">
+                        @Html.LabelFor(c => c.Email, new { @class = "control-label" })
+
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa-envelope"></i>
+                            </span>
+                            @Html.TextBoxFor(c => c.Email, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">@Resources.Common.Subscribe</button>
+                </form>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+
+    <script>
+        require(["jquery", "ajax", "toastr", "bootstrap", "extensions"], function ($, ajax, toastr) {
+
+        // Settings
+        var context = "#view-accountnotifications",
+            $context = $(context);
+
+
+        // Event Handlers
+        function registerEventHandlers() {
+            $("#subscribeform button[type='submit']", $context).on('click', function (event) {
+                event.preventDefault();
+
+                actions.subscribe();
+            });
+        }
+
+
+        // Actions
+        var actions = {
+            subscribe: function () {
+                $("#subscribeform button[type='submit']", $context).button('Subscribing');
+
+                ajax.json({
+                    url: '@Url.Action("sendemailverification")',
+                    data: $('#subscribeform').serializeObject(),
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success("@Resources.Common.SendVerificationEmailSuccess", "@Resources.Common.Success");
+                        } else {
+                            toastr.error("@Resources.Common.SendVerificationEmailFailure: " + response.error);
+                        }
+                    },
+                    complete: function() {
+                        $("#subscribeform button[type='submit']", $context).button('reset');
+                    }
+                });
+            }
+        };
+
+
+        // Initialization
+        function init() {
+            registerEventHandlers();
+        }
+        init();
+    });
+    </script>
+}

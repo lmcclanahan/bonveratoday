@@ -1,0 +1,168 @@
+﻿@model ItemListViewModel
+@{
+    var isKitCategory = (ViewData["IsKitCategory"] != null && ViewData["IsKitCategory"].CanBeParsedAs<bool>()) ? Convert.ToBoolean(ViewData["IsKitCategory"]) : false;
+    var hasAutoOrderItems = Model.HasAutoOrderItems;
+    //78017 7/21/2016 T.W. Now ALL categories will be sorted by tier ascending and per tier by BV ascending.
+    //if (Model.CategoryID != null)
+    //{
+    //    // 77207 5/19/2016 PM Separated item list into tier 1 and not tier 1, ordered tier 1 by ascending BV, then united both lists.
+    //    var tier1 = Model.Items.Where( i => i.Field2 == "1").OrderBy(i => i.BV).ToList();
+    //    var tierNot1 = Model.Items.Where(i => i.Field2 != "1").OrderBy(i => i.Field2).ThenByDescending(i => i.BV).ToList();
+
+    //    Model.Items = tier1.Union(tierNot1).ToList();
+    //}
+
+    //var currentTier = 1;
+
+    var firstOrderPackItemCode = GlobalUtilities.GetCurrentMarket().FirstOrderPackItemCode;
+    var hasFirstOrderPack = Model.Items.Where(c => c.ItemCode == firstOrderPackItemCode).Count() > 0;
+    var hideForLive = GlobalSettings.HideForLive;
+}
+
+<div class="container" id="itemListModule">
+    <h2 class="tier-title">@Model.CurrentCategory.ItemCategoryDescription</h2>
+    <div class="row margin-10">
+        @if (hasFirstOrderPack)
+        {
+            var firstOrderPack = Model.Items.Where(c => c.ItemCode == firstOrderPackItemCode).FirstOrDefault();
+            <div class="col-xs-12 first-order-pack-container">
+                <h2 class="tier-title">First Order Pack</h2>
+            </div>
+
+            <div class="col-sm-6 col-md-4 product item-fields first-order-pack-container" data-itemcode="@firstOrderPack.ItemCode">
+                <div data-widget="item" id="view-item-@Guid.NewGuid()" class="view-item view-item-card">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="image">
+                                        <a href="@Url.Action("itemdetail", new { itemcode = firstOrderPack.ItemCode })">
+                                            <img src="@firstOrderPack.SmallImageUrl" />
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    @Html.HiddenFor(c => firstOrderPack.ItemID)
+                                    @Html.HiddenFor(c => firstOrderPack.ItemTypeID)
+
+                                    <input type="hidden" name="ItemCode" value="@firstOrderPack.ItemCode" />
+                                    <input type="hidden" name="Type" value="@firstOrderPack.Type" />
+                                    <input type="hidden" name="ParentItemCode" value="@firstOrderPack.ParentItemCode" />
+                                    <input type="hidden" name="description" value="@firstOrderPack.ItemDescription" />
+                                    <input type="hidden" name="Quantity" value="1" />
+                                    <div class="details">
+                                        <div class="itemdescription"> @firstOrderPack.ItemDescription</div>
+                                        <div class="price">@firstOrderPack.Price.ToString("C")</div>
+                                        <div class="price-first-order-discount text-success"><i class="fa-asterisk"></i> @Resources.Common.FirstOrderPackCheckoutPriceText</div>
+                                    </div>
+                                    <div class="control-container">
+                                        @if (!hideForLive)
+                                        {
+                                            @*Trigger button for quick shop popup modal. Calls Shopping/QuickShopModal *@
+                                            <a class="btn btn-primary quick-shop-btn" data-toggle="modal" data-target=".quickShopModal-@firstOrderPack.ItemCode" data-quick-shop="@firstOrderPack.ItemCode">Shop Now ></a>
+                                            <div class="space-10"></div>
+                                            <a class="btn btn-info" data-role="item.addtoorder" data-itemcode="@firstOrderPack.ItemCode" data-type="Order">Add to Cart ></a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @foreach (var item in Model.Items.Where(c => c.ItemCode != firstOrderPackItemCode))
+        {
+            //bool newTier = (Convert.ToInt32(item.Field2) == currentTier && Model.Items.Where(i => Convert.ToInt32(i.Field2) == currentTier).FirstOrDefault().ItemCode == item.ItemCode);
+            @*if (newTier)
+            {
+                var tierTitle = "";
+                switch (currentTier)
+                {
+                    case 1:
+                        tierTitle = "Our own Phyzix branded Products";
+                        break;
+                    case 2:
+                        tierTitle = "Name Brand Products";
+                        break;
+                    default:
+                        break;
+                }
+                <div class="clearfix"></div>
+                <div class="col-xs-12">
+                    <h2 class="tier-title">@tierTitle</h2>
+                </div>
+                currentTier++;
+            }*@
+            var contextID = Guid.NewGuid();
+
+            <div class="col-sm-6 col-md-4 product item-fields" data-itemcode="@item.ItemCode">
+                <div data-widget="item" id="view-item-@contextID" class="view-item view-item-card">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="image">
+                                        <a href="@Url.Action("itemdetail", new { itemcode = item.ItemCode })">
+                                            <img src="@item.SmallImageUrl" />
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    @Html.HiddenFor(c => item.ItemID)
+                                    @Html.HiddenFor(c => item.ItemTypeID)
+
+                                    <input type="hidden" name="ItemCode" value="@item.ItemCode" />
+                                    <input type="hidden" name="Type" value="@item.Type" />
+                                    <input type="hidden" name="ParentItemCode" value="@item.ParentItemCode" />
+                                    <input type="hidden" name="description" value="@item.ItemDescription" />
+                                    <input type="hidden" name="Quantity" value="1" />
+                                    <div class="details">
+                                        <div class="itemdescription"> @item.ItemDescription</div>
+                                        @*  <div class="second-line">
+                                                @item.ShortDetail1
+                                            </div>*@
+                                        <div class="price">@item.Price.ToString("C")</div>
+                                        @* P.M. 78567 7/19/2016 Added BV to item list module *@
+                                        @* P.M. 78567 08/02/2016 Removed Dollar sign from BV *@
+                                        <div class="bv">@Resources.Common.BV @item.BV.ToString("0.00")</div>
+
+                                        @*Trigger button for quick shop popup modal. Calls Shopping/QuickShopModal *@
+                                        <div class="space-20"></div>
+                                        <a class="btn btn-primary btn-block quick-shop-btn" data-toggle="modal" data-target=".quickShopModal-@item.ItemCode" data-quick-shop="@item.ItemCode"><i class="fa-info"></i> @Resources.Common.ShopNowText</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="control-container">
+                                @if (!hideForLive)
+                                {
+                                    <div class="row">
+                                        <div class="col-sm-6 col-xs-12">
+                                            <a class="btn btn-info hidden-xs" data-role="item.addtoorder" data-itemcode="@item.ItemCode" data-type="AutoOrder">
+                                                <i class="fa-refresh"></i> Add to Replenish
+                                            </a>
+                                            <div class="hidden-lg hidden-md hidden-sm">
+                                                <a class="btn btn-info btn-block" data-role="item.addtoorder" data-itemcode="@item.ItemCode" data-type="AutoOrder">
+                                                    <i class="fa-refresh"></i> Add to Replenish
+                                                </a>
+                                                <div class="space-10"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12">
+                                            <a class="btn btn-primary btn-block" data-role="item.addtoorder" data-itemcode="@item.ItemCode" data-type="Order">
+                                                <i class="fa-shopping-cart"></i> Add to Cart
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="space-10"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

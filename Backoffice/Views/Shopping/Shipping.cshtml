@@ -1,0 +1,149 @@
+﻿@model ShippingAddressesViewModel
+@{
+    ViewBag.Title = Resources.Common.ShippingAddress;
+}
+
+<div id="view-ordershipping" class="container checkout-shipping">
+
+    @if (Model.Addresses != null && Model.Addresses.Count() > 0)
+    {
+        <h3>@Resources.Common.SelectShippingAddress</h3>
+
+        <div class="row">
+            @foreach (var address in Model.Addresses)
+            {
+                <div class="col-sm-4">
+                    @Html.DisplayFor(c => address)
+
+                    <div class="space-15"></div>
+                    @using (Html.BeginForm( new { novalidate = "novalidate" }))
+                    {
+                        using (Html.BeginHtmlFieldPrefixScope("Address"))
+                        {                         
+                            @Html.Partial("~/Views/Shared/EditorTemplates/ShippingAddressOnFile.cshtml", address)
+                        }
+
+
+                        @Html.AntiForgeryToken()
+
+    <button type="submit" class="btn btn-primary">@Resources.Common.ShipToThisAddress</button>
+                    }
+                </div>
+            }   
+        </div>
+        <div class="space-50"></div>
+        <hr />
+        <div class="space-30"></div>
+    }
+
+
+    <h3>@Resources.Common.AddNewAddress</h3>
+
+    <div class="row">
+        <div class="col-sm-6">
+            @using (Html.BeginForm())
+            {
+                var Address = new ShippingAddress();
+                Address.AddressType = AddressType.New;
+
+                @Html.EditorFor(c => Address)
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" data-button-type="addnew">@Resources.Common.ShipToThisAddress</button>
+                </div>
+
+
+                @Html.AntiForgeryToken()
+            }
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section scripts
+{
+    <script>
+        require(["jquery", "toastr", "forms"], function ($, toastr, forms) {
+
+            // Settings
+            var context = "#view-ordershipping",
+                $context = $(context),
+                errorMessage = "@Request.QueryString["error"]";
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+            }
+
+
+            // Helpers
+            var helpers = {
+                handleErrors: function () {
+                    if (errorMessage != null && errorMessage.length > 0) {
+                        toastr.error(errorMessage, "Error");
+                    }
+                }
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+
+                helpers.handleErrors();
+            }
+            init();
+
+
+            //82825 20170118 DV. Dynamically change the City/State/ZipCode label to follow Haiti format
+            $("[data-role='Country']").change(function () {
+
+                if ($("[data-role='Country'] option:selected").val() == "HT") {
+                    $("#lblAddress1").html("Commune / Department / Postal Code");
+                }
+                else {
+                    $("#lblAddress1").html("City / State / Zip");
+                }
+            });
+
+            @*82825 20170118 DV. Since MVC does not like to dynamically set the [RegularExpression] data annotation attribute, then for now we'll have to stick with JavaScript
+              Also, client wants this behavior on NON Shipping Address pages only. Reminder to self:  Put all of this code in module pattern and move function to a utility file *@
+            function validateUSZip()
+            {
+                if ($("[data-role='Country'] option:selected").val() == "US") {
+                    if (!/^\d{5}(-\d{4})?$/.test($("[data-role='Zip'").val())) {
+                        $("[data-valmsg-for='Zip'").css("color", "#FF0000");
+                        $("[data-valmsg-for='Zip'").html("InvalidZipCode");
+                        return false;
+            }
+            else {
+                            $("[data-valmsg-for='Zip'").css("color", "");
+                            $("[data-valmsg-for='Zip'").html("");
+                            $(":submit").removeClass("disabled");
+                            $(":submit").removeAttr("disabled", "");
+                            $(":submit").text("Save Changes");
+                            return true;
+            }
+            }
+
+            }
+
+            $("[data-role='Zip'").focusout(function () {
+                if (!validateUSZip())
+            {
+                    return false;
+            }
+            });
+
+            $("[data-button-type='addnew']").click(function () {
+                if (!validateUSZip()) {
+                    return false;
+            }
+            });
+
+        });
+    </script>
+}

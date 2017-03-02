@@ -1,0 +1,135 @@
+﻿@model IEnumerable<Order>
+@{
+    ViewBag.Title = "Your Account";
+    Layout = "~/Views/Account/_Layout.cshtml";
+
+    var action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    var page = Convert.ToInt32(ViewContext.RouteData.Values["page"]);
+    var isSearch = ViewBag.IsSearch != null && ViewBag.IsSearch == true;
+    var isPartnerStoreOrders = ViewBag.isPartnerStoreOrders != null && ViewBag.isPartnerStoreOrders == true;
+}
+<h3 class="page-header no-margin">Your orders</h3>
+<div class="space-20"></div>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+            <input type="search" id="searchordersfilter" value="@ViewContext.RouteData.Values["id"]" class="form-control input-sm" placeholder="Order#..." />
+        </div>
+        <button type="button" id="searchorders" class="btn btn-primary btn-sm">Search Orders</button>
+        @if (isSearch)
+        {
+            <a href="@Url.Action("orderlist")" class="btn btn-default btn-sm">Clear</a>
+        }
+    </div>
+    <div class="navbar-right" style="margin-right: 10px;">
+        <a href="@Url.Action(action, new { page = (page == 1) ? page : page - 1 })" class="btn btn-default btn-sm navbar-btn"><i class="fa-chevron-left"></i> Newer</a>
+        <a href="@Url.Action(action, new { page = (Model.Count() > 0) ? page + 1 : page })" class="btn btn-default btn-sm navbar-btn">Older <i class="fa-chevron-right"></i></a>
+    </div>
+</nav>
+
+<ul class="nav nav-pills">
+    <li class="@((action == "openorderslist") ? "active" : "")"><a href="@Url.Action("openorderslist")">Open Orders</a></li>
+    <li class="@((action == "shippedorderslist") ? "active" : "")"><a href="@Url.Action("shippedorderslist")">Shipped Orders</a></li>
+    <li class="@((action == "declinedorderslist") ? "active" : "")"><a href="@Url.Action("declinedorderslist")">Declined Orders</a></li>
+    <li class="@((action == "cancelledorderslist") ? "active" : "")"><a href="@Url.Action("cancelledorderslist")">Cancelled Orders</a></li>
+    <li class="@((action == "orderlist") ? "active" : "")"><a href="@Url.Action("orderlist")">All Orders</a></li>
+    <li class="@((action == "partnerstoreorderslist") ? "active" : "")"><a href="@Url.Action("PartnerStoreOrdersList")">@Resources.Common.PartnerStores</a></li>
+
+    @if (isSearch)
+    {
+        <li class="@((action == "searchorderslist") ? "active" : "")"><a href="@Url.Action("searchorderslist")">Search Results</a></li>
+    }
+</ul>
+<div class="space-10"></div>
+
+<div class="orderlist well">
+    @if (isSearch)
+    {
+        <h4>@Model.Count() order(s) found</h4>
+    }
+    @if (!isPartnerStoreOrders)
+    {
+        foreach (var order in Model.OrderByDescending(c => c.OrderDate).Take(10))
+        {
+            @Html.DisplayFor(c => order, "OrderSummary")
+        }
+    }
+    else
+    {
+        foreach (var order in Model.OrderByDescending(c => c.OrderDate).Take(10))
+        {
+            <div class="ordersummary">
+                <div class="panel panel-default">
+                    <div class="panel-body no-padding">
+                        <div class="row margin-0">
+                            <div class="col-sm-3 details-container">
+                                <div class="padded-container">
+                                    <div class="text-lg">@order.OrderDate.ToString("MMMM d, yyyy")</div>
+                                    <div>Bonvera Order # @order.OrderID</div>
+                                    <p>
+                                        @Resources.Common.PartnerStores :  @order.Other11.ToString()
+                                    </p>
+
+                                    <dl class="dl">
+                                        <dt>@Resources.Common.OrderTotal</dt>
+                                        <dd><span class="text-danger">@order.Total.ToString("0.00")</span></dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+    }
+    @if (Model.Count() == 0)
+    {
+        <hr />
+        <p class="text-center text-muted">* No orders found *</p>
+    }
+</div>
+<nav class="well well-sm no-padding">
+    <div class="text-center">
+        <a href="@Url.Action(action, new { page = (page == 1) ? page : page - 1 })" class="btn btn-default navbar-btn"><i class="fa-chevron-left"></i> Newer</a>
+        <a href="@Url.Action(action, new { page = (Model.Count() > 0) ? page + 1 : page })" class="btn btn-default navbar-btn">Older <i class="fa-chevron-right"></i></a>
+    </div>
+</nav>
+
+@section scripts
+{
+    <script>
+        require(["jquery", "forms"], function ($, forms) {
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $('#searchordersfilter').on('keypress', function (event) {
+                    if (event.which == 13) {
+                        event.preventDefault();
+                        actions.searchOrder($('#searchordersfilter').val());
+                    }
+                });
+                $('#searchorders').on('click', function () {
+                    actions.searchOrder($('#searchordersfilter').val());
+                });
+            }
+
+
+            // Actions
+            var actions = {
+                searchOrder: function (id) {
+                    if (id == '' || isNaN(id)) window.location = '@Url.Action("orderlist")';
+                    else window.location = '@Url.Action("searchorderslist", new { id = 0 })'.replace('0', '') + id;
+                }
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+
+        });
+    </script>
+}

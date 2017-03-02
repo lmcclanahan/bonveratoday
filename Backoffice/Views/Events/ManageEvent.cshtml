@@ -1,0 +1,780 @@
+﻿@model CalendarEvent
+@{
+    var isNewEvent = Model.CalendarEventID == Guid.Empty;
+    var isCopyingEvent = isNewEvent && Model.IsPrivateCopy;
+
+    var title = Resources.Common.NewEvent;
+    if (!isNewEvent)
+    {
+        if (isCopyingEvent) { title = Resources.Common.NewCopiedEvent; }
+        else { title = Resources.Common.Edit + " \"{0}\"".FormatWith(Model.Description); }
+    }
+    ViewBag.Title = title;
+
+    var currentCultureCode = System.Threading.Thread.CurrentThread.CurrentCulture.Name;
+}
+
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-sm-3">
+        @Html.Navigation()
+    </div>
+    <div class="col-sm-9">
+        <div id="view-manageevent">
+
+            @using (Html.BeginForm("saveevent", "events", FormMethod.Post, new { @class = "no-validate" }))
+            {
+                @Html.HiddenFor(c => c.CalendarEventID)
+                @Html.HiddenFor(c => c.CalendarEventStatusID)
+                @Html.HiddenFor(c => c.CreatedByCustomerID)
+                @Html.HiddenFor(c => c.CreatedDate)
+                @Html.HiddenFor(c => c.IsPrivateCopy)
+                @Html.HiddenFor(c => c.Url)
+                @Html.HiddenFor(c => c.Field1)
+                @Html.HiddenFor(c => c.Field2)
+                @Html.HiddenFor(c => c.Field3)
+                @Html.HiddenFor(c => c.Field4)
+                @Html.HiddenFor(c => c.Field5)
+                @Html.HiddenFor(c => c.Field6)
+                @Html.HiddenFor(c => c.Field7)
+                @Html.HiddenFor(c => c.Field8)
+                @Html.HiddenFor(c => c.Field9)
+                @Html.HiddenFor(c => c.Field10)
+
+
+
+                <div class="form-group">
+                    @Html.TextBoxFor(c => c.Description, new
+                    {
+                        @class = "form-control input-lg",
+                        placeholder = Resources.Common.UntitledEvent
+                    })
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-horizontal">
+                            <input id="StartDate" name="StartDate" class="input-sm" type="text" data-type="date" value="@Model.StartDate.ToString("MM/dd/yyyy")" />
+                            <span class="view-timepickerwrapper">
+                                <input id="StartTime" name="StartTime" class="input-sm" type="text" data-type="time" value="@Model.StartDate.ToString("h:mm tt")" />
+                            </span>
+                            to
+                            <span class="view-timepickerwrapper">
+                                <input id="EndTime" name="EndTime" class="input-sm" type="text" data-type="time" value="@Model.EndDate.ToString("h:mm tt")" />
+                            </span>
+                            <input id="EndDate" name="EndDate" class="input-sm" type="text" data-type="date" value="@Model.EndDate.ToString("MM/dd/yyyy")" />
+
+                            <input type="hidden" name="TimeZone" id="TimeZoneDefault" value="@TimeZoneInfo.Local.Id" />
+
+                            <span class="view-timepickerwrapper">
+                                <a data-toggle="timezones" data-target="#view-timezones">@Resources.Common.TimeZone</a>
+                                <span id="view-timezones" class="hidden">
+                                    <select name="TimeZone" id="TimeZone" class="form-control input-sm form-control-inline">
+                                        @foreach (var zone in ViewBag.TimeZones)
+                                        {
+                                            <option value="@zone.Id" @((zone.Id == (TimeZoneInfo.Local.Id)) ? "selected" : "")>@zone.DisplayName</option>
+                                        }
+                                    </select>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="space-10"></div>
+                        <label class="checkbox-inline">
+                            @Html.CheckBoxFor(c => c.AllDay) @Resources.Common.AllDay
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="isrecurringevent" />
+                            <span id="isrecurringeventtext">@(Resources.Common.Repeat)...</span>
+                            <span class="isrecurringeventsummary">
+                                <strong data-role="recurrencesummary"></strong>
+                            </span>
+                        </label>
+                        <span class="isrecurringeventsummary" style="display: inline-block; vertical-align: middle; padding-left: 5px;">
+                            <a data-role="editrecurringsettings">(@Resources.Common.Edit)</a>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="space-40"></div>
+                <ul class="nav nav-tabs" id="eventdetailtabs">
+                    <li class="active"><a href="#tab-eventdetails" data-toggle="tab">@Resources.Common.EventDetails</a></li>
+                    <li><a href="#tab-recurringsettings" data-toggle="tab">@Resources.Common.RepeatSettings</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab-eventdetails">
+
+                        <div class="space-20"></div>
+                        <div class="form-horizontal">
+
+                            @if (ViewBag.CalendarEventTypes.Count == 1)
+                            {
+                                @Html.HiddenFor(c => c.CalendarEventTypeID)
+                            }
+                            else
+                            {
+                                <div class="form-group">
+                                    <label for="CalendarEventTypeID" class="col-sm-2 control-label">@Resources.Common.EventType:</label>
+                                    <div class="col-sm-10">
+                                        @Html.DropDownListFor(c => c.CalendarEventTypeID,
+                                        selectList: ((List<CalendarEventType>)ViewBag.CalendarEventTypes).Select(c => new SelectListItem()
+                                        {
+                                            Value = c.CalendarEventTypeID.ToString(),
+                                            Text = c.CalendarEventTypeDescription,
+                                            Selected = (c.CalendarEventTypeID == Model.CalendarEventTypeID)
+                                        }),
+                                        htmlAttributes: new
+                                        {
+                                            @class = "form-control form-control-inline"
+                                        })
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="form-group">
+                                <label for="Location" class="col-sm-2 control-label">@Resources.Common.Where:</label>
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(c => c.Location, new
+                                    {
+                                        @class = "form-control",
+                                        placeholder = Resources.Common.EnterLocation
+                                    })
+                                </div>
+                            </div>
+
+
+                            @if (ViewBag.Calendars.Count == 1)
+                            {
+                                @Html.HiddenFor(c => c.CalendarID)
+                            }
+                            else
+                            {
+                                <div class="form-group">
+                                    <label for="CalendarID" class="col-sm-2 control-label">@Resources.Common.Calendar:</label>
+                                    <div class="col-sm-10">
+                                        <div class="form-inline">
+                                            @Html.DropDownListFor(c => c.CalendarID,
+                                            selectList: ((List<Calendar>)ViewBag.Calendars).Select(c => new SelectListItem()
+                                            {
+                                                Value = c.CalendarID.ToString(),
+                                                Text = c.Description,
+                                                Selected = (c.CalendarID == Model.CalendarID)
+                                            }),
+                                            htmlAttributes: new
+                                            {
+                                                @class = "form-control"
+                                            })
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+
+                            <div class="form-group">
+                                <label for="Summary" class="col-sm-2 control-label">@Resources.Common.Description:</label>
+                                <div class="col-sm-10">
+                                    @Html.TextAreaFor(c => c.Summary, new
+                                    {
+                                        @class = "form-control"
+                                    })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="CalendarEventPrivacyTypeID" class="col-sm-2 control-label">@Resources.Common.Privacy:</label>
+                                <div class="col-sm-10">
+                                    <label class="radio-inline">
+                                        @Html.RadioButtonFor(c => c.CalendarEventPrivacyTypeID, 1) @Resources.Common.Public
+                                    </label>
+                                    <label class="radio-inline">
+                                        @Html.RadioButtonFor(c => c.CalendarEventPrivacyTypeID, 2) @Resources.Common.Private
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="tab-recurringsettings">
+
+                        <div class="space-20"></div>
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label for="CalendarEventRecurrenceTypeID" class="col-sm-2 control-label">@Resources.Common.Repeats:</label>
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(c => c.CalendarEventRecurrenceTypeID,
+                                            selectList: new List<SelectListItem>()
+                                            {
+                                                new SelectListItem() { Value = "", Text = Resources.Common.DoNotRepeatEvent },
+                                                new SelectListItem() { Value = "1", Text = Resources.Common.Daily },
+                                                new SelectListItem() { Value = "2", Text = Resources.Common.Weekly },
+                                                new SelectListItem() { Value = "3", Text = Resources.Common.Monthly },
+                                                new SelectListItem() { Value = "4", Text = Resources.Common.Yearly }
+                                            },
+                                            htmlAttributes: new
+                                            {
+                                                @class = "form-control"
+                                            })
+                                </div>
+                            </div>
+
+                            <div id="view-eventrepeatingoptions">
+                                <div class="form-group">
+                                    <label for="CalendarEventRecurrenceInterval" class="col-sm-2 control-label">@Resources.Common.RepeatEvery:</label>
+                                    <div class="col-sm-10">
+                                        @{
+                            var calendarEventRecurrenceIntervalSelectList = new List<SelectListItem>();
+                            for (int i = 1; i <= 30; i++)
+                            {
+                                calendarEventRecurrenceIntervalSelectList.Add(new SelectListItem
+                                {
+                                    Value = i.ToString(),
+                                    Text = i.ToString()
+                                });
+                            }
+                                        }
+                                        @Html.DropDownListFor(c => c.CalendarEventRecurrenceInterval,
+                                            selectList: calendarEventRecurrenceIntervalSelectList,
+                                            htmlAttributes: new
+                                            {
+                                                @class = "form-control form-control-inline"
+                                            })
+                                        <span class="view-repeattypespecificsettings" data-types="1">@Resources.Common.Days.ToLower()</span>
+                                        <span class="view-repeattypespecificsettings" data-types="2">@Resources.Common.Weeks.ToLower()</span>
+                                        <span class="view-repeattypespecificsettings" data-types="3">@Resources.Common.Months.ToLower()</span>
+                                        <span class="view-repeattypespecificsettings" data-types="4">@Resources.Common.Years.ToLower()</span>
+                                    </div>
+                                </div>
+
+                                <div class="view-repeattypespecificsettings" data-types="2">
+                                    <div class="form-group">
+                                        <label for="WeeklyCalendarEventRecurrenceDays" class="col-sm-2 control-label">@Resources.Common.RepeatOn:</label>
+                                        <div class="col-sm-10">
+
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" value="1" name="WeeklyCalendarEventRecurrenceDays"> M
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" value="2" name="WeeklyCalendarEventRecurrenceDays"> T
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" value="3" name="WeeklyCalendarEventRecurrenceDays"> W
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" value="4" name="WeeklyCalendarEventRecurrenceDays"> T
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" value="5" name="WeeklyCalendarEventRecurrenceDays"> F
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" value="6" name="WeeklyCalendarEventRecurrenceDays"> S
+                                            </label>
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" value="0" name="WeeklyCalendarEventRecurrenceDays"> S
+                                            </label>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="view-repeattypespecificsettings" data-types="3">
+                                    <div class="form-group">
+                                        <label for="MonthlyCalendarEventRecurrenceTypeID" class="col-sm-2 control-label">@Resources.Common.RepeatBy:</label>
+                                        <div class="col-sm-10">
+
+                                            <label class="radio-inline">
+                                                @Html.RadioButtonFor(c => c.MonthlyCalendarEventRecurrenceTypeID, 1) @Resources.Common.DayOfMonth
+                                            </label>
+                                            <label class="radio-inline">
+                                                @Html.RadioButtonFor(c => c.MonthlyCalendarEventRecurrenceTypeID, 2) @Resources.Common.DayOfWeek
+                                            </label>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="RepeatingStartDate" class="col-sm-2 control-label">@Resources.Common.StartsOn:</label>
+                                    <div class="col-sm-10">
+                                        <div class="form-control-static" id="RepeatingStartDate"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" id="calendareventrecurrenceendsettings">
+                                    <label for="Location" class="col-sm-2 control-label">@Resources.Common.Ends:</label>
+                                    <div class="col-sm-10">
+
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="0" name="CalendarEventRecurrenceEndSettings" checked />
+                                                @Resources.Common.Never
+                                            </label>
+                                        </div>
+
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="1" name="CalendarEventRecurrenceEndSettings" />
+                                                @Resources.Common.After
+                                                @Html.TextBoxFor(c => c.CalendarEventRecurrenceMaxInstances,
+                                            htmlAttributes: new
+                                            {
+                                                @class = "form-control form-control-inline input-sm",
+                                                style = "width: 50px;",
+                                                min = "1"
+                                            })
+                                                @Resources.Common.Occurrences.ToLower()
+                                            </label>
+                                        </div>
+
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" value="2" name="CalendarEventRecurrenceEndSettings" />
+                                                @Resources.Common.On
+                                                @Html.TextBoxFor(c => c.CalendarEventRecurrenceEndDate,
+                                            htmlAttributes: new
+                                            {
+                                                @class = "input-sm",
+                                                data_type = "date"
+                                            })
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr />
+
+                                <div class="form-group">
+                                    <label for="Location" class="col-sm-2 control-label">@Resources.Common.Summary:</label>
+                                    <div class="col-sm-10">
+                                        <div class="form-control-static">
+                                            <strong data-role="recurrencesummary"></strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                if (!isNewEvent)
+                {
+                    <div class="pull-right">
+                        <a href="@Url.Action("deleteevent", new { eventid = Model.CalendarEventID })" class="btn btn-default">@Resources.Common.Delete</a>
+                    </div>
+                }
+
+                <button type="button" class="btn btn-primary" data-role="save">@((isNewEvent) ? Resources.Common.CreateEvent : Resources.Common.SaveChanges)</button>
+                <a href="@Url.Action("calendar")" class="btn btn-link">@Resources.Common.Cancel</a>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section scripts
+{
+    <style>
+        .k-state-disabled .k-input {
+            cursor: not-allowed;
+            background-color: #eee;
+        }
+    </style>
+
+    <script>
+        require(["jquery", "ajax", "moment", "calendars", "kendo", "bootstrap", "extensions"], function ($, ajax, moment, calendars) {
+
+
+            // Settings
+            var context            = "#view-manageevent",
+                $context           = $(context),
+                currentCultureCode = "@currentCultureCode",
+                defaults           = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+
+                // Saving changes
+                $('[data-role="save"]', $context).on('click', function() {
+                    actions.save();
+                });
+
+                // Dates and Times
+                $('[data-type="date"]', $context).kendoDatePicker({
+                    culture: currentCultureCode,
+                    parseFormats: ["MM/dd/yyyy"]
+                }).on("focus click", function () {
+                    $(this).data("kendoDatePicker").open();
+                });
+
+                $('[data-type="time"]', $context).kendoTimePicker({
+                    culture: currentCultureCode,
+                    interval: 30,
+                    parseFormats: ["h:mm tt"]
+                }).on("focus click", function () {
+                    $(this).data("kendoTimePicker").open();
+                }).data("kendoTimePicker");
+
+
+                // Update the end time when you set the start time
+                $('#StartTime', $context).data("kendoTimePicker").bind("change", function () {
+                    var start = $('#StartTime').data("kendoTimePicker");
+                    var end = $('#EndTime').data("kendoTimePicker");
+                    var startTime = start.value();
+
+                    if (startTime) {
+                        startTime = new Date(startTime);
+
+                        end.max(startTime);
+
+                        startTime.setMinutes(startTime.getMinutes() + this.options.interval);
+
+                        end.min(startTime);
+                        end.value(startTime);
+                    }
+                });
+                $('#StartDate', $context).data("kendoDatePicker").bind("change", function () {
+                    var start = $('#StartDate').data("kendoDatePicker");
+                    var end = $('#EndDate').data("kendoDatePicker");
+                    var repeatingEnd = $('#CalendarEventRecurrenceEndDate').data("kendoDatePicker");
+
+                    var startDate = start.value(),
+                        endDate = end.value();
+
+                    if (startDate) {
+                        startDate = new Date(startDate);
+                        startDate.setDate(startDate.getDate());
+                        end.min(startDate);
+                        repeatingEnd.min(startDate);
+                    } else if (endDate) {
+                        start.max(new Date(endDate));
+                    } else {
+                        endDate = new Date();
+                        start.max(endDate);
+                        end.min(endDate);
+                        repeatingEnd.min(startDate);
+                    }
+
+                    end.value(start.value());
+                });
+                $('#EndDate', $context).data("kendoDatePicker").min($('#StartDate', $context).data("kendoDatePicker").value());
+
+
+                // Toggle the timezones
+                $('[data-toggle="timezones"]', $context).on('click', function () {
+                    $(this).remove();
+                    $('#TimeZoneDefault', $context).remove();
+                    $($(this).data('target')).removeClass('hidden');
+                });
+
+
+                // All day toggle
+                $('#AllDay', $context).on('change', function () {
+                    if ($(this).is(':checked')) {
+                        $('.view-timepickerwrapper', $context).addClass('hidden');
+                    }
+                    else {
+                        $('.view-timepickerwrapper', $context).removeClass('hidden');
+                    }
+                }).triggerHandler('change');
+
+
+                // Is recurring event checkbox indicator
+                $('#isrecurringevent', $context).on('click', function () {
+                    var $this = $(this);
+                    if ($this.is(':checked')) {
+                        $('#eventdetailtabs a[href="#tab-recurringsettings"]').tab('show');
+                        $('[name="CalendarEventRecurrenceTypeID"]', $context).val(1).triggerHandler('change');
+                    }
+                    else {
+                        $('#eventdetailtabs a[href="#tab-eventdetails"]').tab('show');
+                        $('[name="CalendarEventRecurrenceTypeID"]', $context).val('').triggerHandler('change');
+                    }
+                });
+
+                // Repeating start date
+                $('#StartDate', $context).on('change', function () {
+                    $('#RepeatingStartDate').text($(this).val());
+                }).triggerHandler('change');
+
+
+                // Repeating settings
+                $('[data-role="editrecurringsettings"]', $context).on('click', function () {
+                    $('#eventdetailtabs a[href="#tab-recurringsettings"]').tab('show');
+                });
+                $('[name="CalendarEventRecurrenceTypeID"]', $context).on('change', function () {
+                    var type = $(this).val(),
+                        $wrapper = $('#view-eventrepeatingoptions');
+
+
+                    // Toggle the main settings wrapper and update summaries
+                    if (type == '') {
+                        $('#isrecurringevent', $context).prop('checked', false);
+                        $('#isrecurringeventtext', $context).text("@(Resources.Common.Repeat)...");
+                        $('.isrecurringeventsummary', $context).hide();
+                        $wrapper.hide();
+                    }
+                    else {
+                        $('#isrecurringevent', $context).prop('checked', true);
+                        $('#isrecurringeventtext', $context).text("@(Resources.Common.Repeats):");
+                        $('.isrecurringeventsummary', $context).show();
+                        $wrapper.show();
+                    }
+
+
+                    // Get all the togglable views
+                    $('.view-repeattypespecificsettings', $context).each(function () {
+                        var $this = $(this),
+                            types = $this.data('types').toString().split(',');
+
+                        var typeFound = false;
+                        for (var i = 0; i < types.length; i++) {
+                            if (type == types[i]) {
+                                $this.show();
+                                typeFound = true;
+                                break;
+                            }
+                        }
+                        if (!typeFound) $this.hide();
+                    });
+
+
+                    // Set some specific type defaults if a required value is missing
+                    if (type == '3') {
+                        if ($('[name="MonthlyCalendarEventRecurrenceTypeID"]:checked', $context).length == 0) {
+                            $('[name="MonthlyCalendarEventRecurrenceTypeID"]', $context).first().prop('checked', true);
+                        }
+                    }
+
+                }).triggerHandler('change');
+
+                // Toggle type-specific recurrence settings
+                $('#calendareventrecurrenceendsettings input:radio', $context).on('change', function () {
+                    $('#calendareventrecurrenceendsettings input:radio', $context).each(function () {
+                        var $this = $(this),
+                            $relatedInput = $this.parent().find('input:not(:radio)');
+
+                        if ($relatedInput) {
+                            if ($this.is(':checked')) {
+                                switch ($this.val()) {
+                                    case '1':
+                                        $relatedInput.prop('disabled', false);
+                                        $relatedInput.val('5');
+                                        break;
+                                    case '2':
+                                        var datepicker = $relatedInput.data("kendoDatePicker");
+                                        if (datepicker) {
+                                            datepicker.enable();
+                                            datepicker.value($('#StartDate').val());
+                                            datepicker.open();
+                                        }
+                                        break;
+                                }
+                            }
+                            else {
+                                var datepicker = $relatedInput.data("kendoDatePicker");
+                                if (datepicker) {
+                                    datepicker.enable(false);
+                                    datepicker.value('');
+                                }
+                                else {
+                                    $relatedInput.val('');
+                                    $relatedInput.prop('disabled', true);
+                                }
+                            }
+                        }
+                    })
+                }).filter(':checked').triggerHandler('change');
+
+                $('input, select, textarea', $context).on('change', function() {
+                    helpers.updateRecurrenceSettingsSummary();
+                }).first().triggerHandler('change');
+            }
+
+
+            // Actions
+            var actions = {
+                loadDefaults: function () {
+                    // Recurring settings
+                    // Weekly recurring days
+                    for (var i = 0; i < defaults.WeeklyCalendarEventRecurrenceDaysInWeek.length; i++) {
+                        var day = defaults.WeeklyCalendarEventRecurrenceDaysInWeek[i];
+                        $('[name="WeeklyCalendarEventRecurrenceDays"][value="{0}"]'.format(day), $context).prop('checked', true);
+                    }
+
+                    // End settings
+                    if(defaults.CalendarEventRecurrenceMaxInstances) {
+                        $('[name="CalendarEventRecurrenceEndSettings"][value="1"]', $context).prop('checked', true);
+                    }
+                    else if(defaults.CalendarEventRecurrenceEndDate) {
+                        $('[name="CalendarEventRecurrenceEndSettings"][value="2"]', $context).prop('checked', true);
+                    }
+                    else {
+                        $('[name="CalendarEventRecurrenceEndSettings"][value="0"]', $context).prop('checked', true);
+                    }
+                },
+                save: function() {
+                    var request = helpers.getServerRequest();
+                    $('[data-role="save"]', $context).button('Saving');
+
+                    ajax.json({
+                        url: '@Url.Action("saveevent")',
+                        data: request,
+                        success: function(response) {
+
+                            $('[data-role="save"]', $context).button('reset');
+
+                            if(response.success) {
+                                window.location = "@Url.Action("calendar")";
+                            }
+                            else {
+                                toastr.error(response.message, "Could not create event.");
+                            }
+                        }
+                    });
+                }
+            };
+
+
+            // Helpers
+            var helpers = {
+                getServerRequest: function () {
+                    var request = {};
+
+
+                    // Set all the known fields that have a name attribute (including hidden fields)
+                    var $fields = $('[name]', $context);
+                    $fields.each(function () {
+                        var $field = $(this);
+                        var name = $field.attr('name');
+                        var value = $field.val();
+
+                        // If we already have this name saved, don't save it again
+                        if(!request[name]) {
+                            if ($field.is(':radio') || $field.is(':checkbox')) {
+                                value = $('[name="{0}"]:checked'.format(name), $context).val();
+                            }
+
+                            request[name] = value;
+                        }
+                    });
+
+
+                    // Now, set the additional fields that require some additional logic
+                    // Start and end dates
+                    if (request.AllDay && request.AllDay === "true") {
+                        request.StartTime = request.EndTime = "12:00 AM";
+                    }
+                    request.StartDate += " " + request.StartTime;
+                    request.EndDate += " " + request.EndTime;
+                    delete request.StartTime;
+                    delete request.EndTime;
+
+
+                    // Recurring settings
+                    if (request.CalendarEventRecurrenceTypeID == "") {
+                        request.CalendarEventRecurrenceTypeID = null;
+                        delete request.CalendarEventRecurrenceInterval;
+                    }
+                    else {
+                        request.CalendarEventRecurrenceTypeID = Number(request.CalendarEventRecurrenceTypeID);
+                        request.CalendarEventRecurrenceInterval = Number(request.CalendarEventRecurrenceInterval);
+                    }
+
+                    // Recurring weekly settings
+                    if (request.CalendarEventRecurrenceTypeID == 2) {
+                        var weeklyRecurringDays = [];
+                        $('[name="WeeklyCalendarEventRecurrenceDays"]:checked', $context).each(function () {
+                            weeklyRecurringDays.push($(this).val());
+                        });
+
+                        // Sort the days
+                        weeklyRecurringDays = weeklyRecurringDays.sort(function (a, b) {
+                            return a - b;
+                        });
+
+                        // If we don't have any days selected, include the current start day
+                        if (weeklyRecurringDays.length == 0) {
+                            weeklyRecurringDays.push(new moment($('#StartDate').data("kendoDatePicker").value()).day());
+                        }
+
+                        // Set the request value
+                        request.WeeklyCalendarEventRecurrenceDays = weeklyRecurringDays.sort(function (a, b) {
+                            return a - b;
+                        }).join(",");
+                    }
+                    else {
+                        delete request.WeeklyCalendarEventRecurrenceDays;
+                    }
+
+                    if (request.CalendarEventRecurrenceTypeID == 3) {
+                        request.MonthlyCalendarEventRecurrenceTypeID = Number(request.MonthlyCalendarEventRecurrenceTypeID);
+                    }
+                    else {
+                        delete request.MonthlyCalendarEventRecurrenceTypeID;
+                    }
+
+                    // Recurring end settings
+                    request.CalendarEventRecurrenceMaxInstances = Number(request.CalendarEventRecurrenceMaxInstances);
+                    switch(request.CalendarEventRecurrenceEndSettings)
+                    {
+                        case "0":
+                            delete request.CalendarEventRecurrenceMaxInstances;
+                            delete request.CalendarEventRecurrenceEndDate;
+                            break;
+                        case "1":
+                            delete request.CalendarEventRecurrenceEndDate;
+                            break;
+                        case "2":
+                            request.CalendarEventRecurrenceEndDate += " 12:00 AM";
+                            delete request.CalendarEventRecurrenceMaxInstances;
+                            break;
+                    }
+                    delete request.CalendarEventRecurrenceEndSettings;
+
+
+                    // Return the request
+                    return request;
+                },
+                updateRecurrenceSettingsSummary: function () {
+                    var request = helpers.getServerRequest();
+                    var result = calendars.getCalendarEventRecurrenceSummary(request);
+
+                    $('[data-role="recurrencesummary"]', $context).text(result);
+                }
+            };
+
+
+            // Initialization
+            function init() {
+
+                // Load any remaining default values
+                actions.loadDefaults();
+
+
+                // Register all event handlers
+                registerEventHandlers();
+
+
+                // Focus on the first empty field
+                setTimeout(function () {
+                    $('input[value=""]:visible', $context).first().focus();
+                }, 250);
+            }
+            init();
+
+        });
+    </script>
+}

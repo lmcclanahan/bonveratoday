@@ -1,0 +1,16 @@
+﻿@model MyTeamViewModel
+
+
+
+<div class="row">
+    <div class="col-sm-1">Team</div>
+    <div class="col-sm-3">
+        <select id="top-customer-team" class="form-control team-number-top" data-id="@Model.CurrentTeamMember.CustomerID">
+            @for (var i = 1; i <= Model.CurrentTeamMemberTeamCount; i++)
+            {
+                <option value="@i"> Team @i</option>
+            }
+
+        </select>
+    </div>
+</div>

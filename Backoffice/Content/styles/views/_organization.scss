@@ -1,0 +1,285 @@
+
+.jOrgChart {
+    .node {
+        width: 45px;
+        font-size: 11px;
+        cursor: pointer;
+
+        .node-body {
+            height: 70px !important;
+            width: 45px;
+            border-radius: 3px;
+            border: 1px solid #000;
+
+            &.rank-0 {
+                background: #35363B;
+            }
+
+            &.rank-1 {
+                background: green;
+            }
+
+            &.rank-2 {
+                background: aqua;
+            }
+
+            &.rank-3 {
+                background: pink;
+            }
+
+            &.rank-4 {
+                background: violet;
+            }
+
+            &.rank-5 {
+                background: limegreen;
+            }
+
+            &.rank-6 {
+                background: blue;
+            }
+
+            &.rank-7 {
+                background: yellow;
+            }
+
+            &.rank-8 {
+                background: purple;
+            }
+
+            &.rank-9 {
+                background: brown;
+            }
+
+            .fa-heart {
+                color: red;
+                float: left;
+            }
+
+            .fa-repeat {
+                color: orange;
+                float: right;
+            }
+        }
+
+        .node-options {
+            width: 45px;
+        }
+
+        &.null-node {
+            visibility: hidden;
+        }
+
+        &.open-node {
+            .node-body {
+                background: #CCC;
+
+                [class*=fa-] {
+                    background: transparent;
+                    color: #000;
+                    font-size: 44px;
+                    position: relative;
+                    top: 7px;
+                    left: -2px;
+                }
+            }
+        }
+    }
+
+    .line.null-node,
+    .top.null-node,
+    .left.null-node,
+    .right.null-node {
+        border: 0 !important;
+        background-color: transparent !important;
+    }
+}
+
+
+#view-tree-viewer {
+    .key-item {
+        display: block;
+        width: 20px;
+        height: 20px;
+        border: 1px solid #000;
+
+        &.icon {
+            border: none;
+        }
+
+        &.rank-0 {
+            background: #35363B;
+        }
+
+        &.rank-1 {
+            background: green;
+        }
+
+        &.rank-2 {
+            background: aqua;
+        }
+
+        &.rank-3 {
+            background: pink;
+        }
+
+        &.rank-4 {
+            background: violet;
+        }
+
+        &.rank-5 {
+            background: limegreen;
+        }
+
+        &.rank-6 {
+            background: blue;
+        }
+
+        &.rank-7 {
+            background: yellow;
+        }
+
+        &.rank-8 {
+            background: purple;
+        }
+
+        &.rank-9 {
+            background: brown;
+        }
+
+        &.fa-plus-circle {
+            color: black;
+        }
+
+        &.fa-heart {
+            color: red;
+        }
+
+        &.fa-repeat {
+            color: orange;
+        }
+
+        &[class*=fa-] {
+            font-size: 22px;
+            position: relative;
+            top: -1px;
+        }
+    }
+
+    .table-hover {
+        thead {
+            background: #DDD;
+        }
+
+        tbody tr {
+            cursor: pointer;
+        }
+    }
+
+    #search-results-container {
+        max-height: 300px;
+        overflow-y: auto;
+        display: none;
+    }
+
+    #upline-container {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+}
+
+.view-treenode-popover {
+    min-height: 60px;
+}
+
+
+
+#inner-wrap {
+    float: left;
+    width: 1300px;
+}
+
+#slide-wrap {
+    width: 95%;
+    height: 100px;
+    overflow: hidden;
+    padding-left: 7%;
+
+    @media(max-width: 392px) {   width: 85%; }
+    
+    @media(max-width: 705px) {   width: 85%; }
+}
+
+.team-div {
+    width: 200px;
+    height: 200px;
+    float: left;
+    cursor: pointer;
+}
+
+.team-div:hover {
+    width: 200px;
+    height: 200px;
+    float: left;
+    cursor: pointer;
+    background-color: #ddd;
+    border: 1px solid black;
+}
+
+.space {
+    width: 50px;
+    height: 200px;
+    float: left;
+}
+
+.small-space {
+    width: 15px;
+    height: 200px;
+    float: left;
+}
+
+.right-button {
+    min-width: 15px;
+    width: auto;
+    height: 100px;
+    float: right;
+}
+
+.left-button {
+    min-width: 15px;
+    width: auto;
+    height: 100px;
+    float: left;
+}
+
+.left-glyphicon {
+    top: 45%;
+    left: 10%;
+}
+
+.right-glyphicon {
+    top: 45%;
+    left: 10%;
+}
+
+.team-header {
+    background-color: #050000;
+    color: white;
+    border-radius: 5px;
+}
+
+.outer {
+    max-width: 1000px;
+    overflow: hidden;
+}
+
+.dashboard-heading {
+    background-color: #006098;
+    border-radius: 5px;
+    color: white;
+    border: none;
+}
+
+.form-dropdown-kendo{
+    padding: 0;
+}

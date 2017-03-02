@@ -1,0 +1,55 @@
+﻿@model IEnumerable<CalendarEvent>
+@{
+    var calendarEventsByDate = Model.GroupBy(c => c.StartDate.BeginningOfDay(),
+        (startDate, events) => new { StartDate = startDate, Events = events });
+}
+
+<div id="view-agendaeventlist">
+    <div class="table-responsive">
+        <table class="table table-condensed table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>@Resources.Common.Date</th>
+                    <th>@Resources.Common.Time</th>
+                    <th>@Resources.Common.Event</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var calendarEventByDate in calendarEventsByDate)
+                {
+                    var eventsInDate = calendarEventByDate.Events.Count();
+                    var headerRendered = false;                    
+                    
+                    foreach (var calendarEvent in calendarEventByDate.Events)
+                    {
+                        <tr class="@((DateTime.Now.BeginningOfDay() == calendarEventByDate.StartDate) ? "info" : "")">
+                            @if (!headerRendered)
+                            {
+                                <td style="width: 170px;" class="active" rowspan="@eventsInDate">
+                                    <div class="date">
+                                        <div class="dayofmonth">@calendarEventByDate.StartDate.ToString("dd", System.Threading.Thread.CurrentThread.CurrentUICulture)</div>
+                                        <div class="dayofweek">@calendarEventByDate.StartDate.ToString("dddd", System.Threading.Thread.CurrentThread.CurrentUICulture)</div>
+                                        <div class="shortdate text-muted">@calendarEventByDate.StartDate.ToString("MMMM, yyyy", System.Threading.Thread.CurrentThread.CurrentUICulture)</div>
+                                    </div>
+                                </td>
+                            }
+                            <td style="width: 150px;">
+                                @calendarEvent.StartDate.ToShortTimeString()
+                            </td>
+                            <td> 
+                                @if (calendarEvent.IsRecurringEventInstance)
+                                {
+                                    @:<i class="fa-repeat text-muted"></i>&nbsp;
+                                }
+                                @calendarEvent.Description
+                            </td>
+                        </tr>
+                        headerRendered = true;
+                    }                    
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+﻿@model ItemDetailViewModel
+@{
+    var item = Model.Item;
+}
+
+
+@Html.Partial("Partials/Items/_ItemDetailModule", Model.Item)
+<div class="row">
+    <div class="col-sm-4">
+        <p>
+            <a href="@Url.Action("itemdetail", new { itemcode = Model.Item.ItemCode })" class="btn btn-link link-to-product-detail-page" style=" padding-left: 50px;">@Resources.Common.ViewFullProductDetails <i class="fa-angle-double-right"></i></a>
+        </p>
+    </div>
+    <div class="col-sm-8 ">
+        <a href="@Url.Action("checkout")" class="btn btn-link link-to-product-detail-page pull-right">@Resources.Common.ProceedToCheckout</a>
+        <a href="@Url.Action("cart", "shopping")" class="btn btn-link link-to-product-detail-page pull-right">@Resources.Common.ViewCart</a>
+    </div>
+
+
+</div>

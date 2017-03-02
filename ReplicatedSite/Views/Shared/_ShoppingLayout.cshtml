@@ -1,0 +1,64 @@
+﻿@{
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+@section styles { @RenderSection("styles", required: false) }
+@section header { @RenderSection("header", required: false) }
+@section scripts { @RenderSection("scripts", required: false) }
+
+
+@RenderSection("navigation", false)
+
+
+@RenderSection("facebook", false)
+
+
+
+<main class="container-fluid" id="site-content">
+    <div class="row">
+
+        <div class="col-md-9">
+            @RenderBody()
+        </div>
+
+        <!-- sidebar on largesites -->
+        <div id="largecart" class="col-md-3 pull-left">
+            <!--REVIEW ORDER-->
+            <h2 class="tier-title">Bonvera Private Label</h2>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    Review Order <div class="pull-right">
+                        <small>
+                            <a class="afix-1" href="#">Edit Cart</a><
+                        </small>
+                    </div>
+                </div>
+                <div class="panel-body" id="panelshopbody">
+
+
+
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <strong>Subtotal</strong>
+                            <div class="pull-right"><span>$</span><span>200.00</span></div>
+                        </div>
+                        <div class="col-xs-12">
+                            <small>Shipping</small>
+                            <div class="pull-right"><span>-</span></div>
+                        </div>
+                    </div>
+                    <div class="form-group"><hr /></div>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <strong>Order Total</strong>
+                            <div class="pull-right"><span>$</span><span>150.00</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--REVIEW ORDER END-->
+        </div>
+        <!-- end sidebar -->
+    </div>
+
+</main>

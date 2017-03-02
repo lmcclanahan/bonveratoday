@@ -1,0 +1,63 @@
+﻿@model ExigoService.AutoOrder
+
+
+@using (Ajax.BeginForm("updateautoordershippingaddress", "autoorders", new AjaxOptions
+{
+    OnSuccess = "onUpdateShippingAddressSuccess"
+}))
+{
+    @Html.AntiForgeryToken()
+    <div class="top-bar-blue no-padding no-margin-top">
+        <div class="row-24 row-head">
+            <div class="col-xs-24">
+                <h4>@Resources.Common.EditShippingAddress</h4>
+                <span class="autoorder-cart-name">@Resources.Common.OrderUppercase</span>
+                <span class="autoorder-cart-value">#@Model.AutoOrderID</span>
+                <input type="hidden" name="autoorderid" value="@Model.AutoOrderID">
+            </div>
+
+        </div>
+        <div class="row row-body">
+            <div class="alert alert-danger alert-dismissable" id="shippingaddressalert">
+                <button type="button" class="close" data-role="hide-alert" aria-hidden="true">&times;</button>
+                <h4 class="alert alert-error-header">@Resources.Common.SorryErrorText</h4>
+                <h4 class="alert alert-success-header">@Resources.Common.ShippingAddressUpdated</h4>
+                <p class="alert alert-message-body"></p>
+            </div>
+            <div class="col-xs-12">
+                @Html.EditorFor(a => a.Recipient)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="autoorder-cart-buttons">
+                <button type="button" class="btn btn-sm btn-danger btn-cancel autoOrder-link" data-loading-text="Loading..."><span><i class="fa-times-circle"></i> @Resources.Common.CancelUppercase </span></button>
+                <button type="submit" class="btn btn-sm btn-success autoOrder-link" data-loading-text="Loading..."><span><i class="fa-save"></i> @Resources.Common.SaveUppercase </span></button>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    function onUpdateShippingAddressSuccess(response) {
+        $("button[data-loading-text]").each(function () {
+            $(this).button("reset");
+        });
+        window.trigger("shippingaddressalert", response);
+    }
+
+    function registerEventHandlers() {
+        $("button[data-loading-text]").on("click", function () {
+            $(this).button("loading");
+        });
+
+    }
+
+
+    // Initialization
+    function init() {
+        registerEventHandlers();
+    }
+    init();
+</script>

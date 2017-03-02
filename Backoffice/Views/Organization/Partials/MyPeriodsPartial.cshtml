@@ -1,0 +1,36 @@
+﻿@model MyTeamViewModel
+
+
+
+    <select class="form-control" id="periodSelect">
+
+        @foreach (var period in Model.Periods.OrderByDescending(c => c.StartDate))
+        {
+            <option class="text-center" value="@period.PeriodID" @((period.PeriodID == Model.CurrentPeriod) ? "selected" : "")>@period.PeriodDescription</option>
+        }
+
+    </select>
+
+<script>
+    require(["jquery", "ajax", "pubsub", "kendogrids", "urls", "extensions"], function ($, ajax, pubsub, kendoGrid, UrlHelper) {
+
+        var currentCustomer = "@Model.CurrentTeamMember.CustomerID";
+        function registerEventHandlers() {
+
+            $("#periodSelect").on("change", function () {
+
+                var period = $(this).val();
+
+                var data = { period: period, id: currentCustomer };
+                window.trigger("myTeam.ReloadPeriods", data);
+            })
+
+        }
+        // Initialization
+        function init() {
+            registerEventHandlers();
+        }
+        init();
+
+    });
+</script>

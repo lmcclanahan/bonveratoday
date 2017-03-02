@@ -1,0 +1,46 @@
+@import "../mixins/_mixins";
+
+// Form Group Errors
+.has-feedback .form-control-feedback { display: none; position: absolute; right: 5px; margin-top: -34px; top: inherit; width: 16px; background: transparent; }
+.has-success .form-control-feedback { display: block; }
+.has-error .form-control-feedback { display: block; }
+
+.has-feedback select + .form-control-feedback { right: 15px; }
+
+// Form Fields
+.form-control-inline { display: inline-block !important; width: auto !important; }
+
+// Ensure that checkbox and radio labels cannot be selected
+.radio label,
+.checkbox label { @include disable-highlighting(); }
+
+
+// Passwords
+.passwordStrengthBar { 
+    background: white; 
+    border: 1px solid #ccc; 
+    border-radius: 3px;
+    margin: 1px 0; 
+    width: auto; 
+} 
+ 
+.passwordStrengthBar div { 
+    height: 6px; 
+    width: 0; 
+} 
+ 
+.passwordStrengthBar div.strong { 
+    background-color: #32cd32; 
+} 
+ 
+.passwordStrengthBar div.medium { 
+    background-color: yellow; 
+} 
+ 
+.passwordStrengthBar div.weak { 
+    background-color: orange; 
+} 
+ 
+.passwordStrengthBar div.useless { 
+    background-color: red; 
+} 

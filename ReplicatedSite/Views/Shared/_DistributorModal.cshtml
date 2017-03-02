@@ -1,0 +1,163 @@
+﻿
+<div class="distributor-search">
+
+    <div class="row margin-15">
+        <div class="col-md-6">
+            Search for a Distributor by entering their Customer ID, First or Last name
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+
+                <div class="panel-body">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="modal-search-field" />
+                        <a class="input-group-addon btn btn-primary" data-role="modal-distributor-search"><span class="fa-search"></span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row margin-15" id="modal-search-results-container" style="display: none;">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Search Results</div>
+                <div class="panel-body" style="padding: 0;">
+
+                    <div id="modal-search-results"></div>
+                    <script id="modal-search-results-template" data-target="#modal-search-results" type="text/x-handlebars-template">
+                        {{#each enrollers}}
+                        <div class="row margin-10">
+                            <div class="col-sm-2">
+                                <img src="{{AvatarURL}}" />
+                            </div>
+                            <div class="col-sm-7 modal-results-info">
+                                <span><span class="name">{{FullName}}</span>, ID# <span class="id">{{CustomerID}}</span></span><br />
+                                <span>{{MainCity}}, {{MainState}}</span><br />
+                                <a href="{{ReplicatedSiteUrl}}" data-url="{{ReplicatedSiteUrl}}">{{ReplicatedSiteUrl}}</a>
+                            </div>
+                            <div class="col-sm-3">
+                                <a data-role="Select-Distributor-Link" class="btn btn-primary btn-block">Choose <i class="fa-angle-double-right"></i></a>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="@Url.Action("DistributorSearch", "Home")" class="btn btn-link">More Search Options <i class="fa-long-arrow-right"></i></a>
+    <input type="hidden" id="distributorID" name="DistributorID" value="@Identity.Owner.CustomerID" />
+</div>
+
+
+<script>
+    require(["jquery", "ajax", "handlebars", "toastr", "pubsub"], function ($, ajax, Handlebars, toastr) {
+
+        // Settings
+        var context = ".distributor-search",
+            $context = $(context);
+
+
+        // Event Handlers
+        function registerEventHandlers() {
+            $('#modal-search-field').on("keypress", function (e) {
+                if (e.which == 13) {
+                    e.preventDefault();
+                    $('[data-role="modal-distributor-search"]').click();
+                }
+            });
+
+            $('[data-role="modal-distributor-search"]', $context).on('click', function () {
+                var query = $('#search-field', $context).val();
+
+                if (query != "") {
+                    actions.search(query);
+                }
+                else {
+                    $('#modal-search-field', $context).focus();
+                }
+            });
+
+            $('#modal-search-results', $context).on("click", '[data-role="Select-Distributor-Link"]', function () {
+                var $activeRow = $(this).parents('.row:first'),
+                    id = $('.id', $activeRow).html(),
+                    name = $('.name', $activeRow).html(),
+                    url = $("[data-url]", $activeRow).data("url");
+
+                enroller = {
+                    CustomerID: id,
+                    FullName: name,
+                    Url: url
+                }
+
+                $('#distributorID').val(parseInt(enroller.CustomerID));
+
+                window.trigger("registration.showchosenenrollerid", enroller);
+                window.trigger("registration.enrolleridchosen");
+            });
+
+            $('[data-role="corporatesignup"]', $context).on('click', function () {
+
+                window.trigger("registration.showchosenenrollerid", "corporate");
+                window.trigger("registration.enrolleridchosen");
+            });
+
+            // Pubsub events
+            window.on('registration.showchosenenrollerid', function (enroller) {
+                actions.redirectToReferrer(enroller.Url);
+            });
+        }
+
+
+        // Actions
+        var actions = {
+            redirectToReferrer: function (url) {
+                if (url != "") {
+                    window.location = url;
+                }
+            },
+            search: function (query) {
+
+                ajax.json({
+                    url: "@Url.Action("getdistributors", "account")",
+                    data: { query: query },
+                    success: function (response) {
+                        if (response.success) {
+
+                            if (response.enrollers.length == 0) {
+                                toastr.error("This search returned no results.", "We're sorry");
+                                $("#modal-search-field").val("");
+                                return;
+                            }
+
+                            var source = $("#modal-search-results-template").html();
+                            var template = Handlebars.compile(source);
+                            var html = template(response);
+                            $("#modal-search-results").html(html);
+
+                            $("#modal-search-results-container").show();
+                        }
+                        else {
+                            console.log("message", response.message);
+                            toastr.error("This search returned no results.", "We're sorry");
+                        }
+                    }
+                });
+            }
+        };
+
+
+        // Initialization
+        function init() {
+            registerEventHandlers();
+
+        }
+        init();
+
+    });
+</script>
+
+<style>
+    .results-info { padding-left: 30px; }
+</style>

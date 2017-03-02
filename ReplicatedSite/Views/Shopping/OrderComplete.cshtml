@@ -1,0 +1,35 @@
+﻿@model OrderCompleteViewModel
+@{
+    ViewBag.Title = "Thank You";
+}
+
+<input type="hidden" class="activenavigation" value="shopping" />
+
+<div class="container cart complete shop">
+    <div class="row">
+        <div class="col-sm-12">
+            <h2 class="hidden-print">Thank You!</h2>
+            <p class="hidden-print">We have received your order.</p>
+
+
+            @if (Model.Order.ShipMethodID == Model.WillCallShipMethodID)
+            {
+                <div class="alert alert-success alert-dismissible" role="alert" id="will-call-alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                       @Html.Raw(Resources.Common.WillCallCompleteMessage)                 
+                </div>
+            }
+            <h3 class="hidden-print">Your Order</h3>
+
+            @Html.Partial("../Account/_OrderInvoice", Model.Order)
+
+            @if (Identity.Customer != null)
+            {
+                <p class="hidden-print">Click <a href="@Url.Action("OrderList", "account")">@Resources.Common.OrderHistory</a> to view all of your orders.</p>
+            }
+            <div class="space-30"></div>
+
+        </div>
+    </div>
+</div>
+

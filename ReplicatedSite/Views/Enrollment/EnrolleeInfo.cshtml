@@ -1,0 +1,450 @@
+﻿@model EnrollmentPropertyBag
+@{
+    ViewBag.Title = "Personal Information";
+    var enrollerPhone = ViewBag.EnrollerPhone;
+    var enrollerEmail = ViewBag.EnrollerEmail;
+    var enrollerName = ViewBag.EnrollerName;
+    
+}
+
+<div class="container" id="view-enrollment">
+    <h2>@ViewBag.Title</h2>
+
+    <div id="view-enrollee-info">
+        @using (Html.BeginForm())
+        {
+            <div class="row">
+                <div class="col-sm-8">
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                Personal Information
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            @Html.EditorForModel("PersonalInformation")
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                Your Address
+                            </h3>
+                        </div>
+                        <div class="panel-body">
+                            @Html.EditorForModel("HomeAddress")
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            @if (GlobalSettings.Globalization.HideForLive)
+                            {
+                                <h3 class="panel-title">Your Login</h3>
+                            }
+                            else
+                            {
+                                <h3 class="panel-title">Your Personal Website & Login</h3>
+                            }
+                        </div>
+                        <div class="panel-body">
+                            @Html.EditorForModel("LoginInformation")
+                        </div>
+                    </div>
+
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Shipping Information</h3>
+                        </div>
+                        <div class="panel-body">
+                            @Html.EditorForModel("ShippingInformation")
+                        </div>
+                    </div>
+
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Billing / Payment</h3>
+                        </div>
+                        <div class="panel-body">
+                            @Html.EditorForModel("Billing")
+                        </div>
+                    </div>
+
+                    @*Added auto renewal option in enrollment for IAA account and ICAA membership*@
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Annual Renewal</h3>
+                        </div>
+                        <div class="panel-body">
+                            @Html.EditorForModel("AnnualRenewal")
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Terms and Conditions</h3>
+                        </div>
+                        <div class="panel-body">
+                            @Html.EditorForModel("TermsAndConditions")
+                        </div>
+                    </div>
+
+                    @Html.AntiForgeryToken()
+
+                    <button type="button" class="btn btn-primary btn-lg" data-loading-text="Loading..." data-role="submit">Submit</button>
+                    <div class="space-30"></div>
+
+                </div>
+                <div class="col-sm-4">
+
+                    <div id="view-enrollmentsummary">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    Your Enroller
+                                </h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="media">
+                                    <div class="pull-left">
+                                        <img class="media-object" src="@Url.Avatar(Model.EnrollerID)" style="max-width: 50px;" />
+                                    </div>
+                                    <div class="media-body">
+                                        <strong class="media-heading">@enrollerName</strong><br />
+                                        <a href="mailto:@enrollerEmail" target="_blank">@enrollerEmail</a><br />
+                                        @enrollerPhone
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        @if (Model.SponsorID > 0)
+                        {
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        Your Placement Sponsor
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="media">
+                                        <div class="pull-left">
+                                            <img class="media-object" src="@Url.Avatar(Model.SponsorID)" style="max-width: 50px;" />
+                                        </div>
+                                        <div class="media-body">
+                                            <strong class="media-heading">@ViewBag.SponsorName</strong><br />
+                                            <a href="mailto:ViewBag.SponsorEmail" target="_blank">@ViewBag.SponsorEmail</a><br />
+                                            @ViewBag.SponsorPhone
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <div id="summary-container">
+                        <!-- Dynamically Injected -->
+                    </div>
+                    @if (!GlobalSettings.Globalization.HideForLive)
+                    {
+                        <a href="@Url.Action("packs", "enrollment")" class="btn btn-primary">Add/Edit Packs</a>
+                    }
+
+                    <div class="space-15"></div>
+
+                    @Html.Raw(GlobalUtilities.DisplayDebugControlPanel())
+
+                </div>
+            </div>
+
+
+
+        }
+    </div>
+</div>
+
+
+@section scripts
+{
+    <style>
+        .control-label.required:after { content: " *"; color: #C80000; }
+    </style>
+    <script>
+        require(["jquery", "ajax", "app", "debug", "forms", "toastr", "extensions"], function ($, ajax, app, debug, forms, toastr) {
+
+            // Settings
+            var context = "#view-enrollment",
+                $context = $(context),
+                removeItemsURL = '@Url.Action("deleteitemfromcart", "enrollment")',
+                updateItemSummaryURL = '@Url.Action("updateitemsummary", "enrollment")',
+                checkoutUrl = "@Url.Action("checkout")",
+                shipMethodRadioNameSelector = "input[type='radio'][name='@Html.NameFor(c => c.ShipMethodID)']";
+
+            // State
+            var state = {
+                validated: false
+            };
+
+            // Event Handlers
+            function registerEventHandlers() {
+
+                // Remove item button
+                $context.on('click', '[data-role="removeitem"]', function () {
+                    var $this = $(this),
+                        $itemParent = $this.parents('tr'),
+                        itemcode = $itemParent.data('itemcode'),
+                        itemtype = $itemParent.data('itemtype'),
+                        $item = $('[data-itemcode="' + itemcode + '"][data-itemtype="' + itemtype + '"]').serializeObject();
+
+                    actions.removeItem($item);
+                });
+
+                $context.on('change', '#birthday-checkbox', function () {
+                    var $this = $(this),
+                        isChecked = $this.is(":checked"),
+                        $birthdayContainer = $("#birthday-container");
+
+                    if (isChecked) {
+                        $birthdayContainer.show();
+                    }
+                    else {
+                        $birthdayContainer.hide();
+                    }
+                });
+
+                $('[data-role="submit"]', $context).on('click', function () {
+                    var hasAgreedToTerms = helpers.validateTermsCheckboxes();
+
+                    if (hasAgreedToTerms) {
+                        $(this).button("loading");
+                        actions.submitForm();
+                    } else {
+                        toastr.error("Please agree to the terms and conditions before proceeding.");
+                    }
+                });
+
+                // Decorate all required fields
+                $('[data-val-required]').each(function () {
+                    $('.control-label[for="{0}"]'.format($(this).attr('id'))).addClass('required');
+                });
+
+                $context.on("change", shipMethodRadioNameSelector, function () {
+                    var $this = $(this);
+
+                    if ($this.is(":checked")) {
+                        actions.updateItemSummary($this.val());
+                    }
+                });
+
+                debug.ControlPanelControls(context);
+            }
+
+
+            // Actions
+            var actions = {
+                updateItemSummary: function (shipMethodID) {
+                    var $container = $('#summary-container');
+
+                    if (shipMethodID == undefined) {
+                        shipMethodID = 0;
+                    }
+
+                    ajax.json({
+                        url: updateItemSummaryURL,
+                        beforeSend: function () {
+                            $container.html('<p class="text-center"><strong>Loading Summary...</strong></p>');
+                        },
+                        data: { shipMethodID: shipMethodID, hideShippingAndTax: true },
+                        success: function (response) {
+
+                            if (response.success) {
+                                $container.html(response.html);
+                            }
+                            else {
+                                console.log("failed");
+                            }
+                        },
+                        error: function (xhr, error, status) {
+                            console.log("Error: ", xhr);
+                        }
+                    });
+                },
+                removeItem: function ($item) {
+                    ajax.json({
+                        url: removeItemsURL,
+                        data: {
+                            itemcode: $item.ItemCode,
+                            type: $item.Type
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                console.log("item deleted");
+                                actions.updateItemSummary();
+                            }
+                            else {
+                                console.log("failed");
+                            }
+                        },
+                        error: function (xhr, error, status) {
+                            console.log("Error: ", xhr);
+                        }
+                    });
+                },
+                submitForm: function () {
+                    debugger;
+                    if (actions.validateForm() == false) {
+                        $("[data-role='submit']").button("reset");
+                        return false;
+                    }
+                    var model = helpers.getFilteredModel();
+
+                    var formdata = {};
+                    (function recurse(obj, current) {
+                        for (var key in obj) {
+                            var value = obj[key];
+                            var newKey = (current ? current + "." + key : key);  // joined key with dot
+                            if (value && typeof value === "object") {
+                                recurse(value, newKey);  // it's a nested object, so do it again
+                            } else {
+                                formdata[newKey] = value;  // it's not an object, so set the property
+                            }
+                        }
+                    })(model);
+
+                    var data = formdata;
+
+                    ajax.post({
+                        url: window.location,
+                        data: data,
+                        success: function (response) {
+                            window.location = checkoutUrl;
+                            console.log("Success: ", response);
+
+                        },
+                        error: function (xhr, error, status) {
+                            $("[data-role='submit']").button("reset");
+                            console.log("Error: ", xhr);
+                        }
+                    });
+                },
+                validateForm: function () {
+                    if (!$('form:first', $context).valid()) {
+
+                        var scrollToTop = 0;
+                        var firstError = $('[data-valmsg-for]:visible:first');
+                        if (firstError.length > 0) {
+                            var fieldName = $(firstError).data('valmsg-for');
+                            var $field = $('[name="' + fieldName + '"]:visible');
+                            $field.focus();
+                        }
+
+                        return false;
+                    }
+
+
+                    var $password = $('#Customer_Password').val(),
+                        $confirmPassword = $('#confirm-password').val(),
+                        $hint = $('#passwordHint').val();
+
+                    var isTermsChecked = helpers.validateTermsCheckboxes();
+
+                    if (isTermsChecked === false) {
+
+                        return false;
+                    }
+
+                    return true;
+                }
+            };
+
+
+            // Helpers
+            var helpers = {
+                getModel: function (selector) {
+                    // Serialize the form
+                    selector = selector || 'form';
+                    var $form = $(selector, $context);
+                    var o = {};
+                    var a = $form.find(':input').serializeArray();
+                    $.each(a, function () {
+                        if (o[this.name] !== undefined) {
+                            o[this.name] = o[this.name] || '';
+                        } else {
+                            o[this.name] = this.value || '';
+                        }
+                    });
+
+
+                    // Deeply convert it into our model.
+                    var model = {}, j, d;
+                    for (var m in o) {
+                        d = m.split(".");
+                        var startOfObj = model;
+                        for (j = 0; j < d.length  ; j += 1) {
+
+                            if (j == d.length - 1) {
+                                startOfObj[d[j]] = o[m];
+                            }
+                            else {
+                                startOfObj[d[j]] = startOfObj[d[j]] || {};
+                                startOfObj = startOfObj[d[j]];
+                            }
+                        }
+                    }
+
+
+                    return model;
+                },
+                getFilteredModel: function () {
+                    var model = helpers.getModel();
+
+                    // Commission Settings
+                    model.DirectDeposit = helpers.getModel('[data-bind="@Html.NameFor(c => c.Customer.PayableTypeID)"]:visible').DirectDeposit;
+
+                    // Payment Method
+                    model.PaymentMethod = helpers.getModel('[data-bind="@Html.NameFor(c => c.PaymentTypeID)"]:visible').PaymentMethod;
+
+                    return model;
+                },
+                getRandomString: function (length) {
+                    length = length || 7;
+                    var text = "";
+                    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+                    for (var i = 0; i < length; i++)
+                        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+                    return text;
+                },
+                getRandomNumber: function (length) {
+                    length = length || 10;
+                    var text = "";
+                    var possible = "0123456789";
+
+                    for (var i = 0; i < length; i++)
+                        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+                    return text;
+                },
+                validateTermsCheckboxes: function () {
+                    return $(".terms-checkbox:checked").length == $(".terms-checkbox").length;
+                }
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+                actions.updateItemSummary();
+            }
+            init();
+
+        });
+    </script>
+}

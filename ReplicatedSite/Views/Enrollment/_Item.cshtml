@@ -1,0 +1,32 @@
+﻿@model IItem
+
+<div class="item-container" data-itemcode="@Model.ItemCode" data-itemtype="@Model.Type">
+
+    <input type="hidden" name="ItemCode" value="@Model.ItemCode" />
+    <input type="hidden" name="ParentItemCode" value="@Model.ParentItemCode" />
+    <input type="hidden" name="GroupMasterItemCode" value="@Model.GroupMasterItemCode" />
+    <input type="hidden" name="DynamicKitCategory" value="@Model.DynamicKitCategory" />
+    <input type="hidden" name="Type" value="@Model.Type" />
+    <input type="hidden" name="ID" value="@Model.ID" />
+
+    <div class="row margin-10">
+        <div class="col-xs-2">
+            <img src="@Model.SmallImageUrl" class="img-responsive" />
+        </div>
+        <div class="col-xs-6">
+            <strong>@Html.Raw(Model.ItemDescription)</strong>
+            <div class="space-5"></div>
+            <strong>BV: </strong><span>@Model.BV.ToString("N0")</span>
+            <div class="space-5"></div>
+            <strong>Price: </strong><span>@Model.Price.ToString("C")</span>
+        </div>
+        <div class="col-xs-4">
+            <div class="quantity-container">
+                <a class="btn btn-sm btn-primary" data-role="decrementquantity">-</a>
+                <input type="text" name="Quantity" value="0" class="quantity-box" />
+                <a class="btn btn-sm btn-primary" data-role="incrementquantity">+</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="space-10"></div>

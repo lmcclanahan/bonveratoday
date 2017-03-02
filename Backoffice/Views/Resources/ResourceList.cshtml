@@ -1,0 +1,185 @@
+﻿@model ResourceListViewModel
+@{
+    ViewBag.Title = "Resource Library";
+    
+    //var resourceCategoryIDs = Model.ResourceList.Select(c => c.ResourceCategoryID).Distinct();
+
+    //var resourceCategories = new List<ResourceCategory>();
+    //foreach (var categoryID in resourceCategoryIDs)
+    //{
+    //    var resource = Model.Resources.FirstOrDefault(c => c.ResourceCategoryID == categoryID);
+    //    if (resource != null && resource.ResourceCategory!=null)
+    //    {
+    //        resourceCategories.Add(resource.ResourceCategory);
+    //    }
+        
+    //}
+}
+
+
+<h2>
+    @ViewBag.Title
+    <span class="pull-right">
+        @if (Identity.Current.CustomerID == 1)
+        {
+            <a class="btn btn-default" href="@Url.Action("manageresources")">Manage Resources</a>
+        }
+    </span>
+    <span class="clearfix"></span>
+</h2>
+
+
+<div id="view-resourcelist">
+
+    <div class="visible-xs" style="position: fixed; left: 0; bottom: -20px; right: 0; z-index: 2000;">
+        <div class="well well-sm">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa-search"></i></span>
+                <input type="search" class="form-control" data-role="search" placeholder="Filter by title..." />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="well well-sm hidden-xs">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa-search"></i></span>
+                    <input type="search" class="form-control" data-role="search" placeholder="Filter by title..." />
+                </div>
+
+                <div class=" space-10"></div>
+                <ul class="list-group no-margin">
+                    <li class="list-group-item"><a href="@Url.Action("resourcelist", new { categoryID = "" })">All</a></li>
+                    @foreach (var r in Model.ResourceCategories)
+                    {
+                        <li class="list-group-item"><a href="@Url.Action("resourcelist", new { categoryID = r.ResourceCategoryID })">@r.ResourceCategoryDescription</a></li>
+                    }
+                </ul>
+            </div>
+
+            <div class="panel panel-info hidden-xs">
+                <div class="panel-heading">Tooltips</div>
+                <ul class="list-group">
+                    <li class="list-group-item"><small>Search by type, description or date.</small></li>
+                    <li class="list-group-item"><small>Using the search option will return results from all resource categories.</small></li>
+                    <li class="list-group-item"><small>Click on a Resource Category to show only the resource items within the selected category.</small></li>
+                    <li class="list-group-item"><small>Clicking on the link in the "Src Url" column will allow you to view or download the src.</small></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div class="table-responsive">
+                
+                @foreach (var category in Model.ResourceCategories)
+                {
+                    <div class="panel panel-default table-responsive">
+                        <div class="panel-heading">@category.ResourceCategoryDescription</div>
+                        <table class="table table-hover table-bordered">
+                            <tr class="active"><th class="thumb-nail">Thumbnail</th><th>Type</th><th>Description</th><th>Src Url</th><th>Date</th></tr>
+                            @if (Model.ResourceList.Where(r => r.ResourceCategoryID == category.ResourceCategoryID).Count() > 0)
+                            {
+                                foreach (var resource in Model.ResourceList.Where(r => r.ResourceCategoryID == category.ResourceCategoryID))
+                                {
+                                    <tr data-role="resource" data-content="@resource.Title @resource.Description">
+                                        <td class="thumb-nail pop-over">
+                                            @if (@resource.UploadedThumbnailPath.IsNotNullOrEmpty())
+                                            {
+                                                <div class="pop-over-content"><img src='@resource.UploadedThumbnailPath' class='img-responsive' /></div>
+                                                <img src="@resource.UploadedThumbnailPath" class="thumb-nail" />
+                                            }
+                                            else
+                                            {
+                                                <span class="fa-stack fa-lg">
+                                                    <i class="fa fa-camera fa-stack-1x"></i>
+                                                    <i class="fa fa-ban fa-stack-2x text-danger"></i>
+                                                </span>
+                                            }
+                                        </td>
+                                        <td>@resource.Title</td>
+                                        <td>@resource.Description</td>
+                                        <td style="width:100px;"><a href="@resource.Url">@resource.Url</a></td>
+                                        <td>@resource.CreatedDate.ToString()</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="5">No resources saved.</td></tr>
+                            }
+                        </table>
+                    </div>
+                }
+
+                <div data-role="noresults" class="text-center @((Model.ResourceCategories.Count() > 0) ? "hidden" : "")">No results found</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts
+{
+    <script>
+        require(["jquery"], function ($) {
+
+            // Settings
+            var context = "#view-resourcelist",
+                $context = $(context);
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $('[data-role="search"]').on("keyup", function (event) {
+                    if (event.which == 13) { event.preventDefault(); }
+
+                    actions.filterResources($(this).val());
+                });
+            }
+
+
+            // Actions
+            var actions = {
+                filterResources: function (query) {
+                    $('[data-role="resource"]').each(function () {
+                        var $this = $(this);
+                        if ($this.data('content').toLowerCase().indexOf(query.toLowerCase()) != -1) {
+                            $this.removeClass("hidden");
+                        }
+                        else {
+                            $this.addClass("hidden");
+                        }
+                    });
+
+                    // Hide the resource table if it doesn't have any visible children
+                    $('[data-role="resourcesection"]').each(function () {
+                        var $this = $(this);
+                        if ($this.find('[data-role="resource"]:not(.hidden)').length == 0) {
+                            $this.addClass('hidden');
+                        }
+                        else {
+                            $this.removeClass('hidden');
+                        }
+                    });
+
+                    if ($('[data-role="resourcesection"]:not(.hidden)').length == 0)
+                    {
+                        $('[data-role="noresults"]').removeClass('hidden');
+                    }
+                    else {
+                        $('[data-role="noresults"]').addClass('hidden');
+                    }
+                }
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+
+        });
+    </script>
+}

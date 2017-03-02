@@ -1,0 +1,619 @@
+﻿@model AccountRegistrationViewModel
+@{
+    var isSmartShopperFlow = Request.Url.AbsoluteUri.Contains("smartshopper");
+    ViewBag.Title = isSmartShopperFlow ? "Create your Smart Shopper Account" : "Create your Customer Account";
+    var error = ViewBag.Error != null ? ViewBag.Error : "";
+    var submitButtonText = (isSmartShopperFlow) ? "Continue" : "Submit Registration";
+    //var hideFirstOrderPack = GlobalSettings.HideForLive;
+    var hideFirstOrderPack = true;
+}
+
+<div class="space-10"></div>
+<div id="view-account-registration" class="container registration">
+    @if (error != null && error != "")
+    {
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Error</strong> @error
+        </div>
+    }
+    <div id="account-registration-form">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1 class="raleway-font">@ViewBag.Title</h1>
+                <div id="register-form-container">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.HiddenFor(c => c.EnrollerID)
+                        @Html.AntiForgeryToken()
+
+
+                        <div id="smart-shopper-option-container">
+                            @* Smart Shopper Register Route Panel *@
+                            <h3 class="raleway-font">Two ways to become a Smart Shopper</h3>
+
+                            <div class="space-20"></div>
+                            <div class="text-center">
+                            <h4>Please select an option below to continue with your registration.</h4>
+                            </div>
+
+                            <input type="hidden" name="@Html.NameFor(c=> c.SmartShopperOption)" value="" />
+
+                            <div class="space-20"></div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="panel panel-default choice-panel" data-choice="@((int)SmartShopperOption.PurchaseSubscription)">
+                                        <div class="panel-heading">
+                                            <h4>Purchase the  Smart Shopper Membership</h4>
+                                            <i class="pull-right fa-check" data-role="check"></i>
+                                        </div>
+                                        <div class="panel-body">
+                                            Select this option to purchase a Smart Shopper Membership for only @Model.SmartShopperSubscriptionItem.Price.ToString("C") per year, which will allow you to get the Smart Shopper pricing for all future Orders.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="panel panel-default choice-panel" data-choice="@((int)SmartShopperOption.CreateReplenishment)">
+                                        <div class="panel-heading">
+                                            <h4>What if I don't want to pay $19.95?</h4>
+                                            <i class="pull-right fa-check" data-role="check"></i>
+                                        </div>
+                                        <div class="panel-body">
+                                            <strong>Set up and process Replenish profile and we will waive $19.95</strong>
+                                            <div class="space-20"></div>
+                                            <strong>Follow these simple steps:</strong>
+                                            <ol>
+                                                <li>Create an account</li>
+                                                <li>Click on Replenish</li>
+                                                <li>Add at least one product to Replenish profile</li>
+                                                <li>Process successfully and you are Smart Shopper!</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @* End Smart Shopper Register Route Panel *@
+                            <div id="smart-shopper-payment-container" style="display:none;">
+
+                                <input type="hidden" name="SmartShopperItemCode" value="@Model.SmartShopperSubscriptionItem.ItemCode" />
+
+                                @*<h3 class="raleway-font">Now lets choose a Membership option.</h3>*@
+
+                                <div class="space-10"></div>
+                                <div class="pack-list row order" id="kit-container">
+                                    @* Smart Shopper Membership Panel *@
+
+                                    @{
+                        var ssMemberShipPanelColClass = hideFirstOrderPack ? "col-sm-12" : "col-sm-6";
+                                    }
+                                    <div class="@ssMemberShipPanelColClass">
+                                        <div class="panel panel-default choice-panel panel-lime" data-itemcode="@Model.SmartShopperSubscriptionItem.ItemCode">
+                                            <div class="panel-heading">
+                                                <h4>Smart Shopper Membership</h4>
+                                                <i class="pull-right fa-check" data-role="check"></i>
+                                            </div>
+                                            <div class="panel-body">
+                                                <article>
+                                                    <div class="item-details">
+                                                        <h4>@Model.SmartShopperSubscriptionItem.Price.ToString("C")</h4>
+                                                        <img class="img-responsive" src="@Model.SmartShopperSubscriptionItem.SmallImageUrl" />
+                                                        @if (hideFirstOrderPack)
+                                                        {
+                                                            <div class="row">
+                                                                <div class="col-md-offset-4 col-md-6 col-sm-offset-3 col-sm-6 col-xs-12">
+                                                                    <div class="shortdescription" style="margin:auto;width:100%;">
+                                                                        <p>With your Smart Shopper Membership you will receive:</p>
+                                                                        <ul>
+                                                                            <li>Access to the Bonvera website shopping experience</li>
+                                                                            <li>Access to Bonvera Private Brand products</li>
+                                                                            <li>Discounted pricing on all Tier 2 and Tier 3 products, services and stores</li>
+                                                                            <li>Up to 20% discount on Bonvera Private Brand products</li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="shortdescription">
+                                                                <p>With your Smart Shopper Membership you will receive:</p>
+                                                                <ul>
+                                                                    <li>Access to the Bonvera website shopping experience</li>
+                                                                    <li>Access to Bonvera Private Brand products</li>
+                                                                    <li>Discounted pricing on all Tier 2 and Tier 3 products, services and stores</li>
+                                                                    <li>Up to 20% discount on Bonvera Private Brand products</li>
+                                                                </ul>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </article>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if (!hideFirstOrderPack)
+                                    {
+                                        @* First Order Pack Panel *@
+                                        <div class="col-sm-6">
+                                            <div class="panel panel-default choice-panel panel-lime" data-itemcode="@Model.FirstOrderPack.ItemCode">
+                                                <div class="panel-heading">
+                                                    <h4>First Order Pack</h4>
+                                                    <i class="pull-right fa-check" data-role="check"></i>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <article>
+                                                        <div class="item-details">
+                                                            <h4>@Model.FirstOrderPack.Price.ToString("C")</h4>
+                                                            <img class="img-responsive" src="@Model.FirstOrderPack.SmallImageUrl" />
+                                                            <div class="shortdescription">
+                                                                @Model.FirstOrderPack.ShortDetail1
+                                                            </div>
+                                                        </div>
+                                                        <div class="space-20"></div>
+                                                        <div class="details">
+                                                            With your First Order Pack purchase, your Smart Shopper Membership fee of @Model.SmartShopperSubscriptionItem.Price.ToString("C") will be waived.
+                                                        </div>
+                                                    </article>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                                @* Enroller Search Panel *@
+                                @if (Identity.Owner.IsOrphan)
+                                {
+                                    <h3 class="raleway-font">Validate Referrer</h3>
+                                    @Html.Partial("Partials/_EnrollerSearchPanel")
+                                }
+                                @* End Enroller Search Panel *@
+
+                                <h3 class="raleway-font margin-top-20 margin-bottom-30">Finally, enter the information below to complete your Registration.</h3>
+
+                                @* Personal Info Panel *@
+                                @Html.EditorForModel("PersonalInfoPanel")
+                                @* End Personal Info Panel *@
+
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4>Credit Card</h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="padding-20" id="billing-address-container">
+                                            @{ var CreditCard = new CreditCard(); }
+                                            @Html.EditorFor(c => CreditCard)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-20"></div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4>Shipping Address</h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="padding-20" id="shipping-address-container">
+                                            <div class="checkbox">
+                                                <label for="chkCopyBillingAddress">
+                                                    <input type="checkbox" id="chkCopyBillingAddress" value="true" data-role="copy-address" data-destination="#shipping-address-container" data-for="#billing-address-container" />
+                                                    Use Billing Address
+                                                </label>
+                                            </div>
+                                            @*This needs to be here so that we can have our modal update the value which is submitted with the form post. The Ship Method drop down is located in the modal. - Mike M.*@
+                                            <input type="hidden" name="ShipMethodID" value="0" id="hdnShipMethodID" />
+                                            @{ var ShippingAddress = new ShippingAddress(); }
+                                            @Html.EditorFor(c => ShippingAddress)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group pull-right" data-toggle="continue">
+                            <button data-role="submit-form" id="btnConfirmRegistration" class="btn btn-success">@submitButtonText</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirm-modal-container">
+        <div class="modal fade" id="confirm-modal" tabindex="-1" role="dialog">
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        require(["jquery", "ajax", "toastr", "pubsub"], function ($, ajax, toastr) {
+
+            // Settings
+            var context = "#view-account-registration",
+                $context = $(context),
+                isSmartShopperRegistration = @isSmartShopperFlow.ToString().ToLower(),
+                smartShopperOptionSelector = "[name='@Html.NameFor(c=> c.SmartShopperOption)']",
+                smartShopperItemCodeSelector = "[name='SmartShopperItemCode']",
+                autoorderOption = parseInt('@((int)SmartShopperOption.CreateReplenishment)'),
+                paynowOption = parseInt('@((int)SmartShopperOption.PurchaseSubscription)'),
+                hasAutoOrderItems = @Model.HasAutoOrderItems.ToString().ToLower(),
+                isenrollerValidUrl = "@Url.Action("IsEnrollerValid", "app")",
+                getConfirmModalUrl = "@Url.Action("getsmartshopperconfirmmodal")",
+                itemListUrl = "@Url.Action("itemlist","shopping")",
+                checkoutUrl = "@Url.Action("checkout", "shopping")",
+                retailRegisterUrl = "@Url.Action("register", "account")",
+                flagAsSmartShopperUrl = "@Url.Action("flagassmartshoppercheckout", "shopping")",
+                completeUrl = "@Url.Action("registrationcomplete", "account", new { token = "tempToken" })";
+            defaultEnrollerID = @Identity.Owner.CustomerID,
+            enrollerIDSelector = "[name='@Html.NameFor(c => c.EnrollerID)']",
+            isPerformingSearch = false,
+            isSubmitting = false,
+            loadingImage = '<img src="@Url.Content("~/content/images/loading/bar-sm.gif")" class="img-responsive" />';
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $("#btnConfirmRegistration").on("click", function(e) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+
+                    var choice = helpers.getSelectedRegisterOption();
+
+                    if (choice == paynowOption) {
+                        var isvalid = actions.validateForm();
+
+                        if (isvalid) {
+                            actions.getConfirmModal();
+                        }
+                    } else {
+                        // Make a call to update the Shopping Cart Property Bag with a flag to determine the user wants to checkout as a Smart Shopper
+                        actions.flagAsSmartShopperAndCheckout();
+                    }
+                });
+
+                // Choice bindings for Smart Shopper options
+                $("[data-choice]").on("click", function () {
+                    actions.performChoiceActions($(this));
+                });
+
+                // Choice bindings for Smart Shopper pack type
+                $("#kit-container [data-itemcode]").on("click", function() {
+                    actions.setSelectedSmartShopperPack($(this));
+                });
+
+                // Enroller validate methods
+                $("#enrollervalidate-search").on("click", function() {
+                    var $control = $('[data-role="enrollervalidate"]'),
+                        _val = $control.val();
+
+                    actions.enrollerValidate(_val);
+                });
+                $('[data-role="enrollervalidate"]').on("blur", function() {
+                    var $this = $(this),
+                        _val = $this.val();
+
+                    actions.enrollerValidate(_val);
+                });
+
+                // Confirm modal logic
+                $("#confirm-modal-container").on("click", "#btnSubmitRegistration", function() {
+                    actions.submitForm();
+                });
+
+                $("[data-role='copy-address']").on("change", function() {
+                    var $this = $(this),
+                        isChecked = $this.is(":checked"),
+                        $addressFields = $($this.data("for") + " [data-role]"),
+                        $destination = $($this.data("destination"));
+
+                    if (isChecked) {
+
+                        $addressFields.push($("#txtFirstName"));
+                        $addressFields.push($("#txtLastName"));
+
+                        helpers.copyAddress($addressFields, $destination);
+                    }
+                });
+
+                // Ship Method Logic
+                $context.on("change", "#ship-method-container input:radio", function() {
+                    if($(this).is(":checked")) {
+                        $("#hdnShipMethodID").val($(this).val());
+                        actions.getConfirmModal($(this).val());
+                    }
+                });
+            }
+
+            // Actions
+            var actions = {
+                performChoiceActions: function ($this) {
+                    var choice = $this.data("choice");
+
+                    $("[data-choice]").each(function () {
+                        $(this).removeClass("active");
+                        $(this).find("[data-role='check']").hide();
+                    });
+
+                    $this.addClass("active");
+                    $this.find("[data-role='check']").show();
+
+                    if (choice == paynowOption) {
+                        $("#smart-shopper-checkout-container").slideUp();
+                        $("#smart-shopper-payment-container").slideDown();
+
+                        $("[data-itemcode]").first().trigger("click");
+                    } else {
+                        $("#smart-shopper-payment-container").slideUp();
+                        $("#smart-shopper-checkout-container").slideDown();
+                    }
+                    
+                    $('[data-toggle="continue"]').show();
+
+                    $(smartShopperOptionSelector).val(choice);
+                },
+                setSelectedSmartShopperPack: function ($this) {
+                    var itemCode = $this.data("itemcode");
+
+                    $("[data-itemcode]").each(function () {
+                        $(this).removeClass("active");
+                        $(this).find("[data-role='check']").hide();
+                    });
+
+                    $this.addClass("active");
+                    $this.find("[data-role='check']").show();
+
+                    $(smartShopperItemCodeSelector).val(itemCode);
+                },
+                enrollerValidate: function (val) {
+
+                    if (isPerformingSearch == false && val != undefined && val.length > 0) {
+                        isPerformingSearch = true;
+                        actions.clearResult();
+
+                        ajax.json({
+                            url: isenrollerValidUrl,
+                            data: { filter: val },
+                            success: function (response) {
+                                if(response.success) {
+                                    $("#enroller-validate-result").html(response.resultHtml);
+                                    actions.updateEnrollerField(response.enrollerID)
+                                } else {
+                                    toastr.error(response.message);
+                                    $('[data-role="enrollervalidate"]').focus().val("");
+                                    actions.clearResult();
+                                    actions.updateEnrollerField(defaultEnrollerID);
+                                }
+                            },
+                            complete: function () {
+                                isPerformingSearch = false;
+                            }
+                        });
+                    }
+                },
+                clearResult: function() {
+                    $("#enroller-validate-result").html("");
+                },
+                updateEnrollerField: function (id) {
+                    $(enrollerIDSelector).val(id);
+                },
+                validateForm: function() {
+                    return $("#register-form-container form").valid();
+                },
+                getConfirmModal: function(shipmethodID) {
+                    var model = $("#register-form-container form").serializeObject(),
+                        noShipMethod = shipmethodID == undefined;
+
+                    if (noShipMethod) {
+                        model.ShipMethodID = 0;
+                    } else {
+                        model.ShipMethodID = shipmethodID;
+                        $("#confirm-modal .modal-body").html(loadingImage);
+                    }
+
+
+                    ajax.json({
+                        url: getConfirmModalUrl,
+                        data: { model: model },
+                        success: function (response) {
+                            if (response.success) {
+                                if (shipmethodID != undefined) {
+                                    $("#confirm-modal").html(response.html);
+                                } else {
+                                    $("#confirm-modal").html(response.html);
+                                    $("#confirm-modal").modal("show");
+                                }
+                            } else {
+                                toastr.error(response.message);
+                                console.log("get confirm modal failed", response);
+                            }
+                        },
+                        error: function (xhr) {
+                            console.log("getconfirmmodal failed", xhr);
+                        }
+                    });
+                },
+                submitForm: function () {
+                    $("[data-role='submit-form']").button("loading");
+
+                    if (!isSubmitting) {
+                        isSubmitting = true;
+                        if (actions.validateForm() == false) {
+                            $("[data-role='submit-form']").button("reset");
+                            isSubmitting = false;
+                            return false;
+                        }
+                        var model = helpers.getModel();
+
+                        var formdata = {};
+                        (function recurse(obj, current) {
+                            for (var key in obj) {
+                                var value = obj[key];
+                                var newKey = (current ? current + "." + key : key);  // joined key with dot
+                                if (value && typeof value === "object") {
+                                    recurse(value, newKey);  // it's a nested object, so do it again
+                                } else {
+                                    formdata[newKey] = value;  // it's not an object, so set the property
+                                }
+                            }
+                        })(model);
+
+                        var data = formdata;
+
+                        ajax.post({
+                            url: window.location,
+                            data: data,
+                            success: function (response) {
+
+                                if (response.success) {
+
+                                    if(response.action == "checkout"){
+                                        window.location = checkoutUrl;
+                                    }
+                                    else if(response.action == "itemlist"){
+                                        window.location = itemListUrl;
+                                    }
+                                    else if(response.action == "complete"){
+                                        var url = completeUrl.replace("tempToken", response.token);
+                                        window.location = url;
+                                    }
+                                    else{
+                                        window.location = response.action;
+                                    }
+                                }
+                                else {
+                                    isSubmitting = false;
+                                    toastr.error(response.message);
+                                }
+                            },
+                            error: function (xhr, error, status) {
+                                $("[data-role='submit']").button("reset");
+                                console.log("Error: ", xhr);
+                                isSubmitting = false;
+                            }
+                        });
+                    }
+                },
+                flagAsSmartShopperAndCheckout: function() {
+
+                    ajax.json({
+                        url: flagAsSmartShopperUrl,
+                        success: function(response) {
+                            if (response.success) {
+                                window.location = retailRegisterUrl;
+                            } else {
+                                console.log("flag as smart shopper failed", response);
+                            }
+                        }
+                    });
+                }
+            };
+
+            // Helpers
+            var helpers = {
+                getSelectedRegisterOption: function () {
+                    var $activeChoice = $(".choice-panel[data-choice].active"),
+                        choice = $activeChoice.data("choice");
+
+                    return choice;
+                },
+                getModel: function (selector) {
+                    // Serialize the form
+                    selector = selector || 'form';
+                    var $form = $(selector, $context);
+                    var o = {};
+                    var a = $form.find(':input').serializeArray();
+                    $.each(a, function () {
+                        if (o[this.name] !== undefined) {
+                            o[this.name] = o[this.name] || '';
+                        } else {
+                            o[this.name] = this.value || '';
+                        }
+                    });
+
+
+                    // Deeply convert it into our model.
+                    var model = {}, j, d;
+                    for (var m in o) {
+                        d = m.split(".");
+                        var startOfObj = model;
+                        for (j = 0; j < d.length  ; j += 1) {
+
+                            if (j == d.length - 1) {
+                                startOfObj[d[j]] = o[m];
+                            }
+                            else {
+                                startOfObj[d[j]] = startOfObj[d[j]] || {};
+                                startOfObj = startOfObj[d[j]];
+                            }
+                        }
+                    }
+
+
+                    return model;
+                },
+                // Copy an Address object (address) into a destination form. Address is cleaned before it is copied (copied to $destination)
+                copyAddress: function(rawAddress, $destination) {
+                    var address = {};
+
+                    rawAddress.each(function () {
+                        var $this = $(this),
+                            role = $this.data("role");
+
+                        switch (role) {
+                            case "FirstName":
+                                address.FirstName = $this.val();
+                                break;
+                            case "LastName":
+                                address.LastName = $this.val();
+                                break;
+                            case "Address1":
+                                address.Address1 = $this.val();
+                                break;
+                            case "Address2":
+                                address.Address2 = $this.val();
+                                break;
+                            case "City":
+                                address.City = $this.val();
+                                break;
+                            case "State":
+                                address.State = $this.val();
+                                break;
+                            case "Zip":
+                                address.Zip = $this.val();
+                                break;
+                            case "Country":
+                                address.Country = $this.val();
+                                break;
+                        }
+                    });
+
+                    $destination.find("[data-role='FirstName']").val(address.FirstName);
+                    $destination.find("[data-role='LastName']").val(address.LastName);
+                    $destination.find("[data-role='Address1']").val(address.Address1);
+                    $destination.find("[data-role='Address2']").val(address.Address2);
+                    $destination.find("[data-role='City']").val(address.City);
+                    $destination.find("[data-role='State']").val(address.State);
+                    $destination.find("[data-role='Zip']").val(address.Zip);
+                    $destination.find("[data-role='Country']").val(address.Country);
+                }
+            };
+
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+
+                // If this is a Smart Shopper registration, we need to handle setting the defaults
+                //$("[data-choice]").first().trigger("click");
+                //$("[data-itemcode]").first().trigger("click");
+                $('[data-toggle="continue"]').hide();
+            }
+            init();
+
+        });
+    </script>
+}

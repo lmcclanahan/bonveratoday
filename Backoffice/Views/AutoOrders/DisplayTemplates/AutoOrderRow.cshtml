@@ -1,0 +1,276 @@
+﻿@model AutoOrder
+
+@{
+    var paymentTypeDescription = "";
+
+    if (Model.PaymentMethod.CanBeParsedAs<CreditCard>())
+    {
+        var card = Model.PaymentMethod.As<CreditCard>();
+
+        paymentTypeDescription = "Credit Card ...{0}".FormatWith(card.CardNumber.Replace("*", ""));
+    }
+    else
+    {
+        paymentTypeDescription = "";
+    }
+
+    string aoStatusDescription = "";
+    if (Model.IsActive)
+    {
+        aoStatusDescription = "active";
+    }
+    else if (Model.IsInactive)
+    {
+        aoStatusDescription = "inactive";
+    }
+}
+  
+
+<div class="auto-item" data-autoorder-id="@Model.AutoOrderID">
+
+
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default auto-order-panel">
+
+            <div class="panel-heading @aoStatusDescription" data-aoid="@(Model.AutoOrderID)" role="tab" id="headingOne">
+                <a data-toggle="collapse" data-parent="#accordion" href="#autoOrderPanel@(Model.AutoOrderID)" aria-expanded="true" aria-controls="autoOrderPanel@(Model.AutoOrderID)">
+                    <div class="auto-top">
+                        <div class="row">
+                            <div class="col-lg-2 col-xs-2 text-center pull-left first-col"><span class="auto-title text-uppercase text-muted ">@Resources.Common.Processing</span><br /><span class="textHighlighted ">@Convert.ToDateTime(Model.NextRunDate).ToShortDateString()</span></div>
+                            <div class="col-lg-2 col-xs-2 text-center hidden-xs"><span class="auto-title text-uppercase text-muted">@Resources.Common.ShipTo</span><br /><span class="textHighlighted">@Model.Recipient.FullName</span></div>
+                            <div class="col-lg-2 col-xs-2 text-center hidden-xs"><span class="auto-title text-uppercase text-muted">@Resources.Common.PaidWith</span><br /><span class="textHighlighted">@paymentTypeDescription</span></div>
+                            <div class="col-lg-2 col-xs-2 text-center hidden-xs"><span class="auto-title text-uppercase text-muted">@Resources.Common.TotalBV</span><br /><span class="textHighlighted">@Model.BVTotal.ToString("N0")</span></div>
+                            <div class="col-lg-2 col-xs-2 text-center hidden-xs"><span class="auto-title text-uppercase text-muted">@Resources.Common.Total</span><br /><span class="textHighlighted">@Model.Total.ToString("C")</span></div>
+                            <div class="col-lg-2 col-xs-2 text-center pull-right last-col"><span class="auto-title text-uppercase text-muted ">Replenish Profile</span><br /><span class="textHighlighted ">#@Model.AutoOrderID</span></div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            @if (!aoStatusDescription.IsNullOrEmpty())
+            {
+                <div class="auto-status @aoStatusDescription">@aoStatusDescription</div>
+            }
+
+            <div id="autoOrderPanel@(Model.AutoOrderID)" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                <div class="panel-body" style="padding:0;">
+                    <div class="row">
+                        <div class="col-sm-7 products">
+                            <div class="auto-heading item-control-heading container-fluid">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <h6 class="auto-title text-muted">Items (@Model.Details.Count())</h6>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="btn-group">
+                                            <a data-role="cart" class="btn btn-sm btn-info modify-order" data-autoorderid="@Model.AutoOrderID">Edit Items</a>
+                                            <a data-orderid="@Model.AutoOrderID" data-toggle="modal" data-target="#@(Model.AutoOrderID)modal-delete" class="btn btn-sm btn-primary btn-cancel modify-order">@Resources.Common.DeleteReplenish</a>
+                                            @if (Model.AutoOrderStatusID == 0)
+                                            {
+                                                <a data-orderid="@Model.AutoOrderID" data-toggle="modal" data-target="#@(Model.AutoOrderID)modal-pause" class="btn btn-sm btn-primary btn-pause modify-order">@Resources.Common.PauseReplenish</a>
+                                            }
+                                            else if (Model.AutoOrderStatusID == 1)
+                                            {
+                                                <a data-orderid="@Model.AutoOrderID" data-toggle="modal" data-target="#@(Model.AutoOrderID)modal-activate" class="btn btn-sm btn-primary btn-activate modify-order">@Resources.Common.ActivateReplenish</a>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3 text-center">
+                                    </div>
+                                    <div class="col-xs-3 text-right">
+                                    </div>
+                                </div>
+                                <div class="space-10"></div>
+                            </div>
+                            <div class="auto-heading">
+                                <div class="row">
+                                    <div class="col-xs-5">Product</div>
+                                    <div class="col-xs-3">Unit Price</div>
+                                    <div class="col-xs-2">Unit BV</div>
+                                    <div class="col-xs-2">Qty</div>
+                                </div>
+                            </div>
+                            <div class="item-list">
+                                <ul class="list-unstyled">
+                                    @foreach (var item in Model.Details)
+                                    {
+                                        <li>
+                                            <div class="row">
+                                                <div class="col-xs-5">
+                                                    <div class="row">
+                                                        <div class="col-sm-3 hidden-xs hidden-sm">
+                                                            <div class="image">
+                                                                <img src="@item.ImageUrl" class="img-responsive" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-9 itemdescription-container">
+                                                            <div class="itemdescription">
+                                                                @item.ItemDescription
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-3">@item.PriceEach.ToString("C")</div>
+                                                <div class="col-xs-2">
+                                                    <div class="form-group">
+                                                        <label class="sr-only" for="unitBV">Unit BV</label>
+                                                        @item.BV.ToString("N0")
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-2">
+                                                    <div class="form-group">
+                                                        <label class="sr-only" for="productammount">Quantity</label>
+                                                        @Convert.ToInt32(item.Quantity)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-5 orderinfo">
+                            <div class="panel-group" id="@Model.AutoOrderID-accordion" role="tablist" data-autoorder-id="@Model.AutoOrderID">
+
+                                @*Payment*@
+                                <div class="panel panel-default">
+                                    <a data-toggle="collapse" data-parent="#@Model.AutoOrderID-accordion" href="#@Model.AutoOrderID-collapse" data-module="payment" class="collapsed pull-right btn btn-sm auto-order-module-btn">
+                                        <span>Edit</span>
+                                    </a>
+                                    <div class="pull-left">
+                                        <h4 class="panel-title">
+                                            Payment
+                                        </h4>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div id="@Model.AutoOrderID-collapse" class="panel-collapse collapse">
+                                        @*Content*@
+                                        <div class="auto-order-payment auto-order-module">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @*Processing*@
+                                <div class="panel panel-default">
+                                    <a data-toggle="collapse" data-parent="#@Model.AutoOrderID-accordion" href="#@Model.AutoOrderID-collapse2" data-module="date" class="pull-right btn btn-sm auto-order-module-btn">
+                                        <span>Edit</span>
+                                    </a>
+                                    <div class="pull-left">
+                                        <h4 class="panel-title">
+                                            Processing
+                                        </h4>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div id="@Model.AutoOrderID-collapse2" class="panel-collapse collapse">
+                                        @*Content*@
+                                        <div class="auto-order-date auto-order-module"></div>
+                                    </div>
+                                </div>
+
+                                @*Shipping Address*@
+                                <div class="panel panel-default">
+                                    <a data-toggle="collapse" data-parent="#@Model.AutoOrderID-accordion" href="#@Model.AutoOrderID-collapse3" data-module="shipping" class="pull-right btn btn-sm auto-order-module-btn">
+                                        <span>Edit</span>
+                                    </a>
+                                    <div class="pull-left">
+                                        <h4 class="panel-title">
+                                            Shipping Address
+                                        </h4>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div id="@Model.AutoOrderID-collapse3" class="panel-collapse collapse">
+                                        @*Content*@
+                                        <div class="auto-order-shipping auto-order-module"></div>
+                                    </div>
+                                </div>
+                                @*Ship Method*@
+                                <div class="panel panel-default">
+                                    <a data-toggle="collapse" data-parent="#@Model.AutoOrderID-accordion" href="#@Model.AutoOrderID-collapse4" data-module="shipmethod" class="pull-right btn btn-sm auto-order-module-btn">
+                                        <span>Edit</span>
+                                    </a>
+                                    <div class="pull-left">
+                                        <h4 class="panel-title">
+                                            Ship Method
+                                        </h4>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div id="@Model.AutoOrderID-collapse4" class="panel-collapse collapse">
+                                        @*Content*@
+                                        <div class="auto-order-shipmethod auto-order-module"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="@(Model.AutoOrderID)modal-delete" data-backdrop="true" data-remote="false" tabindex="-1" role="dialog" aria-labelledby="@(Model.AutoOrderID)modalLabel" aria-describedby="Heading" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="@(Model.AutoOrderID)modalLabel">@(Resources.Common.StopReplenish)?</h4>
+            </div>
+            <div class="modal-body">
+                @Resources.Common.AreYouSureYouWouldLike
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-primary" data-role="modify-autoorder" data-action="delete" data-autoorderid="@Model.AutoOrderID">@Resources.Common.StopReplenish</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="@(Model.AutoOrderID)modal-pause" data-backdrop="true" data-remote="false" tabindex="-1" role="dialog" aria-labelledby="@(Model.AutoOrderID)modalPauseLabel" aria-describedby="Heading" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="@(Model.AutoOrderID)modalPauseLabel">@(Resources.Common.PauseReplenish)?</h4>
+            </div>
+            <div class="modal-body">
+                @Resources.Common.PauseAreYouSure
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-primary" data-role="modify-autoorder" data-action="pause" data-autoorderid="@Model.AutoOrderID">@Resources.Common.PauseReplenish</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="@(Model.AutoOrderID)modal-activate" data-backdrop="true" data-remote="false" tabindex="-1" role="dialog" aria-labelledby="@(Model.AutoOrderID)modalActivateLabel" aria-describedby="Heading" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="@(Model.AutoOrderID)modalActivateLabel">@(Resources.Common.ActivateReplenish)?</h4>
+            </div>
+            <div class="modal-body">
+                @Resources.Common.ActivateAreYouSure
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-primary" data-role="modify-autoorder" data-action="activate" data-autoorderid="@Model.AutoOrderID">@Resources.Common.ActivateReplenish</button>
+            </div>
+        </div>
+    </div>
+</div>

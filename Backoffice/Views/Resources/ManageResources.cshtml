@@ -1,0 +1,678 @@
+﻿@model ResourceListViewModel
+@{
+    ViewBag.Title = "Manage Resources";
+}
+
+<div id="resourceManager">
+    <h2>
+        @ViewBag.Title
+        <span class="pull-right">
+            <a class="btn btn-default" data-toggle="modal" data-target="#createResource">Create New Resource</a>
+        </span>
+        <span class="clearfix"></span>
+    </h2>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="well well-sm hidden-xs">
+                <h5>@Resources.Labels.ResourceCategories</h5>
+                <div class="space-10"></div>
+                <ul class="list-group">
+                    @foreach (var r in Model.ResourceCategories)
+                    {
+                        <li class="list-group-item draggableCategory" data-id="@r.ResourceCategoryID">
+                            <span class="pull-left"><a href="@Url.Action("ManageResources", "Resources", new { categoryID = r.ResourceCategoryID })">@r.ResourceCategoryDescription</a></span>
+                            <span class="pull-right"><a href="@Url.Action("DeleteCategory", "Resources", new { categoryID = r.ResourceCategoryID })"><img src="~/Content/images/Close-icon.png" /></a></span>
+                            <span class="pull-right"><a data-id="@r.ResourceCategoryID" class="fa-arrow-down categoryDownLink"></a></span>
+                            <span class="pull-right"><a data-id="@r.ResourceCategoryID" class="fa-arrow-up categoryUpLink"></a></span>
+                            <span class="clearfix"></span>
+                        </li>
+                    }
+                </ul>
+                <div id="createnewcategory">
+                    @using (Html.BeginForm("CreateCategory", "resources"))
+                    {
+                        <h5>@Resources.Labels.CreateNewCategory</h5>
+                        <div class="space-10"></div>
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.CategoryDescription, new { @class = "form-control" })
+                            <span class="input-group-addon"><button type="submit">@Resources.Common.Save</button></span>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="panel panel-info hidden-xs">
+                <div class="panel-heading">@Resources.Common.ToolTips</div>
+                <ul class="list-group">
+                    <li class="list-group-item"><small>@Resources.Labels.ClickingOnThe<img src="~/Content/images/Close-icon.png" /> @Resources.Labels.WillPerDelete </small></li>
+                    <li class="list-group-item"><small>@Resources.Labels.IfYouDelete</small></li>
+                    <li class="list-group-item"><small>@Resources.Labels.WhenCreatingEditing</small></li>
+                    <li class="list-group-item"><small>@Resources.Labels.IfAResource</small></li>
+                    <li class="list-group-item"><small>@Resources.Labels.DragAndDropResources </small></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="col-lg-9">
+            @foreach (var category in Model.ResourceCategories)
+            {
+                <div class="panel panel-default categoryDetail" data-id="@category.ResourceCategoryID">
+                    <div class="panel-heading">@category.ResourceCategoryDescription</div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered">
+                            <tr class="active">
+                                <th class="thumb-nail">Thumbnail</th>
+                                <th class="typeHeader">Type</th>
+                                <th class="descriptionHeader">Description</th>
+                                <th class="sourceURLHeader">Src Url</th>
+                                <th class="dateHeader">Date</th>
+                                <th class="actionsHeader">Actions</th>
+                            </tr>
+                            @if (Model.ResourceList.Where(r => r.ResourceCategoryID == category.ResourceCategoryID).Count() > 0)
+                            {
+                                foreach (var resource in Model.ResourceList.Where(r => r.ResourceCategoryID == category.ResourceCategoryID))
+                                {
+                                    <tr class="draggableResource" data-id="@resource.ResourceID">
+                                        <td class="thumb-nail pop-over">
+                                            @if (@resource.UploadedThumbnailPath.IsNotNullOrEmpty())
+                                            {
+                                            <div class="pop-over-content"><img src='@resource.UploadedThumbnailPath' class='img-responsive' /></div>
+                                            <img src="@resource.UploadedThumbnailPath" class="thumb-nail" />
+                                            }
+                                            else
+                                            {
+                                            <span class="fa-stack fa-lg">
+                                                <i class="fa fa-camera fa-stack-1x"></i>
+                                                <i class="fa fa-ban fa-stack-2x text-danger"></i>
+                                            </span>
+                                            }
+                                        </td>
+                                        <td>@resource.Title</td>
+                                        <td>@resource.Description</td>
+                                        <td class="visible-xs"><a href="@resource.Url">@GlobalUtilities.DescriptionFormatter(resource.Url, 20)</a></td>
+                                        <td class="hidden-xs"><a href="@resource.Url">@resource.Url</a></td>
+                                        <td>@resource.CreatedDate.ToString()</td>
+                                        <td>
+                                            <a class="bigger-icon resourceUpLink" data-id="@resource.ResourceID" title="@Resources.Labels.MoveUp"><i class="fa-arrow-up"></i></a>
+                                            <a class="bigger-icon resourceDownLink" data-id="@resource.ResourceID" title="@Resources.Labels.MoveDown"><i class="fa-arrow-down"></i></a>
+                                            <a class="bigger-icon editResource" data-id="@resource.ResourceID" title="@Resources.Common.Edit"><i class="fa-pencil-square"></i></a>
+                                            &nbsp;<a class="bigger-icon deleteResource" data-id="@resource.ResourceID" title="@Resources.Common.Delete"><i class="fa-times-circle"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="6">No resources saved.</td></tr>
+                            }
+                        </table>
+                    </div>
+                    </div>
+            }
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Other Resources</div>
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <tr class="active">
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Src Url</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        @if (Model.ResourceList.Where(r => r.ResourceCategoryID == 0).Count() > 0)
+                        {
+                            foreach (var resource in Model.ResourceList.Where(r => r.ResourceCategoryID == 0))
+                            {
+                                <tr>
+                                    <td>@resource.Title</td>
+                                    <td>@resource.Description</td>
+                                    <td style="width:100px;"><a href="@resource.Url">@resource.Url</a></td>
+                                    <td>@resource.CreatedDate.ToString()</td>
+                                    <td>
+                                        <a class="resourceUpLink" data-id="@resource.ResourceID" title="@Resources.Labels.MoveUp"><i class="fa-arrow-up"></i></a>
+                                        <a class="resourceDownLink" data-id="@resource.ResourceID" title="@Resources.Labels.MoveDown"><i class="fa-arrow-down"></i></a>
+                                        <a class="editResource" data-id="@resource.ResourceID"><i class="fa-pencil-square"></i></a>
+                                        &nbsp;<a class="deleteResource" data-id="@resource.ResourceID"><i class="fa-times-circle"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr><td colspan="8">No resources saved.</td></tr>
+                        }
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Create Modal -->
+    <div class="modal fade" id="createResource" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Create New Resource</h4>
+                </div>
+
+                @using (Html.BeginForm("CreateResource", "resources", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-body">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Resource Category</th>
+                                <th>
+                                    @Html.DropDownListFor(model => Model.SelectedCategoryID, new SelectList(Model.ResourceCategories, "ResourceCategoryID", "ResourceCategoryDescription"), new { @class = "form-control" })
+                                    <div class="space-10"></div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>File Type:</th>
+                                <th>
+                                    @Html.DropDownListFor(model => model.ResourceTypeID, new SelectList(Model.ResourceTypes, "ResourceTypeID", "ResourceTypeDescription"), new { @class = "form-control" })
+                                    <div class="space-10"></div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>Description:</th>
+                                <th>
+                                    @Html.TextBoxFor(model => model.Description, new { @class = "form-control" })
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>@Resources.Labels.Source:</th>
+                                <th class="src">
+                                    <p class="pitalic">@Resources.Labels.PasteLink</p>
+                                    <div id="hyperlinkCreate">@Html.TextBoxFor(model => model.Url, new { @class = "form-control" })</div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>Thumbnail:</th>
+                                <th class="src">
+                                    <p class="pitalic">@Resources.Labels.PasteLink</p>
+                                    <div id="hyperlinkCreate">@Html.TextBoxFor(model => model.UploadedThumbnailPath, new { @class = "form-control" })</div>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-info">Create</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editResource" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Resource</h4>
+                </div>
+                @using (Html.BeginForm("EditResource", "resources", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="modal-body">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Resource Category</th>
+                                <th>
+                                    @Html.DropDownListFor(model => Model.SelectedCategoryID, new SelectList(Model.ResourceCategories, "ResourceCategoryID", "ResourceCategoryDescription"), new { @class = "form-control", @id = "editcategory" })
+                                    <div class="space-10"></div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>File Type:</th>
+                                <th>
+                                    @Html.DropDownListFor(model => model.ResourceTypeID, new SelectList(Model.ResourceTypes, "ResourceTypeID", "ResourceTypeDescription"), new { @class = "form-control", @id = "edittitle" })
+                                    <div class="space-10"></div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>Description:</th>
+                                <th>
+                                    @Html.TextBoxFor(model => model.Description, new { @class = "form-control", @id = "editdescription" })
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>@Resources.Labels.Source:</th>
+                                <th class="src">
+                                    <p class="pitalic">@Resources.Labels.PasteLink</p>
+                                    <div id="hyperlinkEdit">@Html.TextBoxFor(model => model.Url, new { @class = "form-control", @id = "editurl" })</div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>Thumbnail:</th>
+                                <th class="src">
+                                    <p class="pitalic">@Resources.Labels.PasteLink</p>
+                                    <div id="hyperlinkCreate">@Html.TextBoxFor(model => model.UploadedThumbnailPath, new { @class = "form-control", @id = "editthumbnailurl" })</div>
+                                </th>
+                            </tr>
+                        </table>
+                        <!-- hidden value -->
+                        @Html.HiddenFor(model => model.EditCategoryID, new { @id = "edithiddenid" })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-info">Save</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteResource" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Delete Resource</h4>
+                </div>
+                @using (Html.BeginForm("DeleteResource", "resources"))
+                {
+                    <div class="modal-body">
+                        Are you sure you want to delete the resource?
+                    </div>
+                <!-- hidden value -->
+                    @Html.HiddenFor(model => model.EditCategoryID, new { @id = "deletehiddenid" })
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                        <button type="submit" class="btn btn-info">Yes</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <!-- script -->
+</div>
+<script>
+    $(function () {
+
+        var actions = {
+            deleteResource: function (value) {
+                //set hidden field
+                $("#deletehiddenid").val(value);
+                //show modal
+                $('#deleteResource').modal("show");
+            },
+            toggleHelper: function (hideDiv, showDiv) {
+                //hide
+                $(hideDiv).hide();
+                //show
+                $(showDiv).show();
+            },
+            modalHelper: function (value, tagID1, tagID2) {
+                if (value == "PDF" || value == "Word") {
+                    actions.toggleHelper(tagID1, tagID2);
+                }
+                else {
+                    actions.toggleHelper(tagID2, tagID1);
+                }
+            },
+            fetchResourceData: function (value) {
+                $.ajax({
+                    url: '@Url.Action("FetchResourceData", "resources")',
+                    type: 'POST',
+                    data: { editResourceID: value },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        $("#editcategory").val(data.model.ResourceCategoryID);
+                        $("#editurl").val(data.model.Url);
+                        $("#editthumbnailurl").val(data.model.UploadedThumbnailPath);
+                        $("#editdescription").val(data.model.Description);
+                        $("#edithiddenid").val(data.model.EditCategoryID);
+                        $("#edittitle").val(data.model.ResourceTypeID);
+
+                        $('#editResource').modal("show");
+
+                    }
+                });
+            }
+        }
+
+        /*edit resource - fetch the data for the resource and populate
+        //to the fields in the modal with current resource data*/
+        $(".editResource").on("click", function () {
+            actions.fetchResourceData($(this).data("id"));
+        });
+
+        //delete resource
+        $(".deleteResource").on("click", function () {
+            actions.deleteResource($(this).data("id"));
+        });
+
+    });
+
+
+    require(["ajax"], function (ajax) {
+        var currentElement = null;
+        var currentElementOriginalZIndex = 0;
+
+        function MoveCategory(categoryID, direction) {
+            @**@
+            //alert("CategoryID:" + categoryID + ", Direction:" + direction);
+            ajax.json({
+                url: '@Url.Action("changeCategoryOrder", "resources")',
+                data:
+                {
+                    categoryID: categoryID,
+                    direction: direction
+                },
+                success: function (response) {
+
+                    if (!response.success) {
+                        currentElement = null;
+                        console.log(response.message);
+                        return;
+                    }
+
+                    if (!response.moved) {
+                        currentElement = null;
+                        return;
+                    }
+                    var Item = $(currentElement).parent().parent();
+
+                    var categoryDetailItem = $("div.categoryDetail[data-id=" + categoryID + "]");
+
+                    if (direction == -1)//up
+                    {
+                        var PrevItem = Item.prev();
+                        Item.insertBefore(PrevItem);
+
+                        var PrevcategoryDetailItem = categoryDetailItem.prev();
+                        categoryDetailItem.insertBefore(PrevcategoryDetailItem);
+
+                    }
+                    else {
+                        //down
+                        var NextItem = Item.next();
+                        Item.insertAfter(NextItem);
+
+                        var NextcategoryDetailItem = categoryDetailItem.next();
+                        categoryDetailItem.insertAfter(NextcategoryDetailItem);
+                    }
+                    currentElement = null;
+                },
+                error: function (response) {
+                    currentElement = null;
+                    console.log(response.message, "Error");
+                }
+            });
+        }
+
+        function SwapCategories(targetCategoryID, draggedCategoryID) {
+
+            ajax.json({
+                url: '@Url.Action("SwapCategories", "resources")',
+                data:
+                {
+                    targetCategoryID: targetCategoryID,
+                    draggedCategoryID: draggedCategoryID
+                },
+                success: function (response) {
+                    if (!response.success) {
+                        console.log(response.message);
+                        return;
+                    }
+
+                    if (!response.moved) {
+                        return;
+                    }
+
+                    var targetElement = $("li.draggableCategory[data-id=" + targetCategoryID + "]");
+                    var draggableElement = $("li.draggableCategory[data-id=" + draggedCategoryID + "]");
+                    if (response.movedBefore)
+                        draggableElement.insertBefore(targetElement);
+                    else
+                        draggableElement.insertAfter(targetElement);
+
+
+                    var targetCategoryDetailItem = $("div.categoryDetail[data-id=" + targetCategoryID + "]");
+                    var draggedCategoryDetailItem = $("div.categoryDetail[data-id=" + draggedCategoryID + "]");
+
+                    if (response.movedBefore)
+                        draggedCategoryDetailItem.insertBefore(targetCategoryDetailItem);
+                    else
+                        draggedCategoryDetailItem.insertAfter(targetCategoryDetailItem);
+
+                },
+                error: function (response) {
+                    console.log(response.message, "Error");
+                }
+            });
+        }
+
+        function MoveResource(resourceID, direction) {
+            //alert("CategoryID:" + categoryID + ", Direction:" + direction);
+            ajax.json({
+                url: '@Url.Action("changeResourceOrder", "resources")',
+                data:
+                {
+                    resourceID: resourceID,
+                    direction: direction
+                },
+                success: function (response) {
+
+                    if (!response.success) {
+                        currentElement = null;
+                        console.log(response.message);
+                        return;
+                    }
+                    if (!response.moved) {
+                        currentElement = null;
+                        return;
+                    }
+                    var Item = $(currentElement).parent().parent();
+                    if (direction == -1)//up
+                    {
+                        var PrevItem = Item.prev();
+                        Item.insertBefore(PrevItem);
+                    }
+                    else {
+                        //down
+                        var NextItem = Item.next();
+                        Item.insertAfter(NextItem);
+                    }
+                    currentElement = null;
+                },
+                error: function (response) {
+                    currentElement = null;
+                    console.log(response.message, "Error");
+                }
+            });
+        }
+
+        function SwapResources(targetResourceID, draggedResourceID) {
+
+            ajax.json({
+                url: '@Url.Action("SwapResources", "resources")',
+                data:
+                {
+                    targetResourceID: targetResourceID,
+                    draggedResourceID: draggedResourceID
+                },
+                success: function (response) {
+                    if (!response.success) {
+                        console.log(response.message);
+                        return;
+                    }
+
+                    if (!response.moved) {
+                        return;
+                    }
+
+                    var targetElement = $("tr.draggableResource[data-id=" + targetResourceID + "]");
+                    var draggableElement = $("tr.draggableResource[data-id=" + draggedResourceID + "]");
+
+                    if (response.movedBefore)
+                        draggableElement.insertBefore(targetElement);
+                    else
+                        draggableElement.insertAfter(targetElement);
+                },
+                error: function (response) {
+                    console.log(response.message, "Error");
+                }
+            });
+        }
+
+        @*Move up the order of the category*@
+        $(".categoryUpLink").on("click", function (e) {
+            e.preventDefault();
+            if (currentElement != null)
+                return;
+            //alert($(this).data("id"));
+            MoveCategory($(this).data("id"), -1);
+            currentElement = this;
+
+        });
+
+        @*Move up the order of the category*@
+        $(".categoryDownLink").on("click", function (e) {
+            e.preventDefault();
+            if (currentElement != null)
+                return;
+
+            //alert($(this).data("id"));
+            MoveCategory($(this).data("id"), 1);
+            currentElement = this;
+
+        });
+
+        @*Move up the order of the category*@
+        $(".resourceUpLink").on("click", function (e) {
+            e.preventDefault();
+            if (currentElement != null)
+                return;
+
+            //alert($(this).data("id"));
+            MoveResource($(this).data("id"), -1);
+            currentElement = this;
+        });
+
+        @*Move up the order of the category*@
+        $(".resourceDownLink").on("click", function (e) {
+            e.preventDefault();
+            if (currentElement != null)
+                return;
+            //alert($(this).data("id"));
+            MoveResource($(this).data("id"), 1);
+            currentElement = this;
+        });
+
+
+        function handleDropEventCategory(event, ui) {
+            var draggable = ui.draggable;
+            var draggableID = draggable.data("id");
+            var targetElement = event.target;
+            var targetElementID = targetElement.attributes["data-id"].value;
+
+            SwapCategories(targetElementID, draggableID);
+
+        }
+
+
+        function handleDragEventCategory(event, ui) {
+            //var element = event.target;
+            //var elementID = element.attributes["data-id"].value;
+            event.target.style["z-index"] = 100;
+
+        }
+
+        function handleStartDraggingEventCategory(event, ui) {
+            //var element = event.target;
+            //var elementID = element.attributes["data-id"].value;
+            currentElementOriginalZIndex = event.target.style["z-index"];
+        }
+
+        function handleStopDraggingEventCategory(event, ui) {
+            //var element = event.target;
+            //var elementID = element.attributes["data-id"].value;
+            //alert("Current Z-Index=" + event.target.style["z-index"]);
+            event.target.style["z-index"] = currentElementOriginalZIndex;
+        }
+
+
+        function handleDropEventResource(event, ui) {
+            var draggable = ui.draggable;
+            var draggableID = draggable.data("id");
+            var targetElement = event.target;
+            var targetElementID = targetElement.attributes["data-id"].value;
+
+            SwapResources(targetElementID, draggableID);
+
+        }
+
+
+        function handleDragEventResource(event, ui) {
+            //var element = event.target;
+            //var elementID = element.attributes["data-id"].value;
+            event.target.style["z-index"] = 100;
+
+        }
+
+        function handleStartDraggingEventResource(event, ui) {
+            //var element = event.target;
+            //var elementID = element.attributes["data-id"].value;
+            currentElementOriginalZIndex = event.target.style["z-index"];
+        }
+
+        function handleStopDraggingEventResource(event, ui) {
+            //var element = event.target;
+            //var elementID = element.attributes["data-id"].value;
+            //alert("Current Z-Index=" + event.target.style["z-index"]);
+            event.target.style["z-index"] = currentElementOriginalZIndex;
+        }
+
+        function init() {
+            $(".draggableCategory").each(function () {
+                var DraggableListElement = $(this);
+                DraggableListElement.draggable(
+                    {
+                        containment: 'parent',
+                        cursor: 'move',
+                        helper: 'clone',
+                        drag: handleDragEventCategory,
+                        start: handleStartDraggingEventCategory,
+                        stop: handleStopDraggingEventCategory
+                    });
+                DraggableListElement.droppable(
+                    {
+                        drop: handleDropEventCategory
+                    });
+
+            }
+            );
+
+
+            $(".draggableResource").each(function () {
+                var DraggableListElement = $(this);
+                DraggableListElement.draggable(
+                    {
+                        containment: 'parent',
+                        cursor: 'move',
+                        helper: 'clone',
+                        drag: handleDragEventResource,
+                        start: handleStartDraggingEventResource,
+                        stop: handleStopDraggingEventResource
+                    });
+                DraggableListElement.droppable(
+                    {
+                        drop: handleDropEventResource
+                    });
+
+            }
+            );
+        }
+
+        $(init);@*Methd called when the form is called*@
+    });
+</script>

@@ -1,0 +1,255 @@
+﻿<script>
+    require(["jquery", "cookies", "ajax", "toastr", "app", "pubsub", "bootstrap", "extensions"], function ($, cookies, ajax, toastr) {
+
+        var
+            additemUrl = "@Url.Action("additemtocart", "shopping")",
+            quickshopUrl = "@Url.Action("quickshopmodal", "shopping")",
+            messageUsURL = "@Url.Action("messageus", "app")",
+            getcartpreviewUrl = "@Url.Action("fetchcartpreview", "shopping")",
+            getautoordermodalUrl = "@Url.Action("getautoordermodal", "shopping")",
+            orderItemType = "@ShoppingCartItemType.Order",
+            autoOrderItemType = "@ShoppingCartItemType.AutoOrder";
+
+        var resources = {
+            order: "@Resources.Common.Order",
+            autoorder: "@Resources.Common.AutoOrder",
+            itemAddedText: "@Resources.Common.HasBeenAddedToYour",
+            autoOrderItemAddedText: "@Resources.Common.HasBeenAddedToYourAutoOrder"
+        };
+
+        var state = {
+            modalActive: false
+        };
+        // Event Handlers
+        function registerEventHandlers() {
+
+            // Set defaults for toastr
+            toastr.options.timeOut = 10000;
+
+            // message us modal
+            $('#message-us').on("click", function () {
+                $('#message-us-modal').modal();
+            });
+
+            // message us submit
+            $('#submit-message').on("click", function () {
+                var form = $('#message-us-form').serializeObject(),
+                    email = form.fromEmail,
+                    subject = form.subject,
+                    body = form.body,
+                    emailNotEmpty = (/\S/.test(email)),
+                    subjectNotEmpty = (/\S/.test(subject)),
+                    bodyNotEmpty = (/\S/.test(body));
+
+                // ensure the form is filled out completely before submitting
+                if (emailNotEmpty == false || subjectNotEmpty == false || bodyNotEmpty == false) {
+                    toastr.error("Please ensure all fields are filled out before submitting");
+                    return;
+                }
+
+                ajax.json({
+                    url: messageUsURL,
+                    data: {
+                        fromemail: email,
+                        subject: subject,
+                        body: body
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            $('#message-us-modal').modal("hide");
+                            toastr.success("Your message has been sent!");
+                        }
+                        else {
+                            toastr.error(response.message);
+                        }
+                    }
+                });
+            });
+
+            $('[data-language]').on("click", function () {
+
+                cookies.set('@GlobalSettings.Globalization.LanguageCookieName', $(this).data("language"), {
+                    expires: new Date('@DateTime.Now.AddYears(1).ToShortDateString()'),
+                    path: '/'
+                });
+
+                window.location = window.location;
+            });
+
+            // Auto Order Modal Logic
+            window.on("cart.showautoordermodal", function (html) {
+
+                // If we are passing in the cart html already, we do not need to get it from the server
+                //L.G 8-2-2016 #78978: Added logic to prevent modal from appearing multiple times after the order is added to the cart
+                if (html != null && html.length > 0) {
+                    $("#addtocart-modalcontainer .modal-body").html("");
+                    $("#addtocart-modalcontainer .modal-body").html(html);
+                    $("#addtocart-modalcontainer .modal").modal("show");
+                }
+                else if (html == undefined) {
+                    return false;
+                }
+                else {
+                    actions.getAutoOrderModal();
+                }
+            });
+
+            // Auto Order Modal Logic for Auto Order Manager
+            window.on("autoordermanager.showautoordermodal", function (autoshipID) {
+                actions.getAutoOrderModal(autoshipID);
+            });
+
+            $("body").on("click", "[data-quick-shop]", function () {
+
+                if (state.modalActive == false) {
+                    state.modalActive = true;
+
+                    var itemcode = $(this).data("quick-shop");
+
+                    ajax.json({
+                        url: quickshopUrl,
+                        data: { itemcode: itemcode },
+                        success: function (response) {
+                            if (response.success) {
+                                $("#addtocart-modalcontainer .modal-body").html("");
+                                $("#addtocart-modalcontainer .modal-body").html(response.html);
+                                $("#addtocart-modalcontainer .modal").modal();
+                            } else {
+                                console.log("error fetching quick shop modal", response.message);
+                            }
+                        },
+                        complete: function () {
+                            $("#addtocart-modalcontainer .modal").on("hide.bs.modal", function () {
+                                state.modalActive = false;
+                            });
+                        }
+                    });
+                }
+            });
+            $("body").on("click", "a[data-role='item.addtoorder']", function () {
+                var $this = $(this),
+                item = $this.parents(".item-fields").serializeObject();
+                item.Type = $this.data("type");
+
+                // Trigger the loading button
+                $this.button('Adding');
+
+                actions.addToCart(item);
+            });
+        }
+
+        var actions = {
+            addToCart: function (item) {
+
+                ajax.json({
+                    url: additemUrl,
+                    data: {
+                        item: item
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            var itemType = (item.Type == orderItemType) ? resources.order : resources.autoorder;
+
+                            // Need a custom message for auto order items
+                            if (item.Type == autoOrderItemType) {
+                                toastr.success(resources.autoOrderItemAddedText.format(item.description));
+                            } else {
+                                toastr.success(resources.itemAddedText.format(item.description, itemType));
+
+                            }
+
+                            // Logic for First Order Pack shopping
+                            if (response.isFirstOrderPack) {
+                                $(".first-order-pack-container").hide();
+                                $(".first-order-pack-added-message").show();
+                                $(".modal").modal("hide");
+                            }
+
+                            //refresh the cart counter
+                            actions.getCartPreview();
+
+                            // Trigger the auto order modal if applicable
+                            if (response.carttype == "autoorder") {
+                                window.trigger("cart.showautoordermodal", response.html);
+
+                            }
+                        }
+                    },
+                    error: function (xhr) {
+                        console.log("Add to cart failed", xhr);
+                    },
+                    complete: function () {
+                        $("[data-role='item.addtoorder'][data-type='{0}'][data-itemcode='{1}']".format(item.Type, item.ItemCode)).button('reset');
+
+                    }
+                });
+            },
+            getAutoOrderModal: function (autoshipID) {
+                ajax.json({
+                    url: getautoordermodalUrl,
+                    data: { autoshipID: autoshipID },
+                    success: function (response) {
+                        if (response.success) {
+                            $("#addtocart-modalcontainer .modal-body").html("");
+                            $("#addtocart-modalcontainer .modal-body").html(response.html);
+                            $("#addtocart-modalcontainer .modal").modal();
+                        } else {
+                            console.log("showautoordermodal failed: ", response);
+                        }
+                    },
+                    error: function (xhr, error, status) {
+                        console.log("showautoordermodal failed: ", xhr);
+                    }
+                });
+            },
+            updateItemQuantity: function (item) {
+                var $this = $(item),
+                    quantity = $this.val(),
+                    $parentContainer = $this.parents("[data-itemcode]").first(),
+                    itemcode = $parentContainer.data("itemcode"),
+                    priceEach = $this.data("price-each"),
+                    $priceDisplayContainer = $parentContainer.find("[data-price-display]");
+
+                if (quantity < 0) {
+                    $this.val("0");
+                    return;
+                }
+
+                // Set the price display of the items updated
+                var price = priceEach * quantity;
+                $priceDisplayContainer.html("$" + price.toFixed(2));
+            },
+            getCartPreview: function (total) {
+                var $myCart = $("#my-cart");
+
+                if (total != undefined) {
+                    $("#my-cart").html(total);
+                } else {
+                    // Make sure that we have a cart module to show, else we dont fire this call for no reason
+                    if ($myCart.length > 0) {
+                        ajax.json({
+                            url: "@Url.Action("GetCartItemQuantity", "Shopping")",
+                            success: function (response) {
+                                if (response.success) {
+                                    $("#my-cart").html(response.count);
+                                } else {
+                                    console.log("error fetching quick shop modal", response.message);
+                                }
+                            }
+                        });
+                    }
+                }
+            },
+        };
+        // Initialization
+        function init() {
+            registerEventHandlers();
+
+            actions.getCartPreview();
+
+            $('[data-toggle="popover"]').popover();
+        }
+
+        init();
+    });
+</script>

@@ -1,0 +1,29 @@
+﻿@model IShoppingListViewModel
+@{
+    var selectedCategoryID = 0;
+    var featuredCategoryID = GlobalUtilities.GetCurrentMarketConfiguration().Orders.FeaturedCategoryID;
+    if (Model.CurrentCategory != null)
+    {
+        selectedCategoryID = Model.CurrentCategory.ItemCategoryID;
+    }
+}
+
+<div class="container">
+    <a>@Resources.Common.Shop</a> > <a href="@Url.Action("itemlist", "shopping", new { parentCategoryKey = UrlParameter.Optional, subCategoryKey = UrlParameter.Optional })">@Resources.Common.Products</a>
+
+    @if (Model.CurrentCategory != null && selectedCategoryID != featuredCategoryID)
+    {
+        if (!Model.CurrentCategory.ParentItemCategoryDescription.IsEmpty())
+        {
+            @: > <a href="@Url.Action("itemlist", "shopping", new { parentCategoryKey = Model.CurrentCategory.ParentItemCategoryViewName, subCategoryKey = UrlParameter.Optional })">@Model.CurrentCategory.ParentItemCategoryDescription</a>
+
+            @: > <a href="@Url.Action("itemlist", "shopping", new { parentCategoryKey = Model.CurrentCategory.ParentItemCategoryViewName, subCategoryKey = Model.CurrentCategory.ItemCategoryViewName })">@Model.CurrentCategory.ItemCategoryDescription</a>
+        }
+        else
+        {
+            @: > <a href="@Url.Action("itemlist", "shopping", new { parentCategoryKey = Model.CurrentCategory.ItemCategoryViewName, subCategoryKey = UrlParameter.Optional })">@Model.CurrentCategory.ItemCategoryDescription</a>
+        }
+    }
+</div>
+<div class="space-20"></div>
+

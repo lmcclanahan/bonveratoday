@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = Resources.Common.DownlineAutoOrders;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-sm-3">
+        @Html.Navigation()
+    </div>
+
+    <div class="col-sm-9">
+
+        <div id="grid"></div>
+
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script>
+        require(["kendogrids"], function (kendoGrid) {
+
+            var cultureCode = "@Identity.Current.Market.CultureCode";
+            kendo.culture(cultureCode);
+
+
+            kendoGrid.create("#grid", {
+                columns: [
+                      { field: "cte_CustomerID", title: Resources.Common.Customer, type: "number", width: 200, template: kendoGrid.templates.customer("cte_CustomerID", "cte_FirstName", "cte_LastName", "CustomerIDToken") },
+                       
+                        { field: "Total", title: Resources.Common.Total, type: "number", format: "{0:C}", attributes: { "class": "text-right" } },
+                        { field: "BusinessVolumeTotal", type: "number", title: Resources.Common.BV, template: "#:BusinessVolumeTotal# " + Resources.Common.BV, attributes: { "class": "text-right" } },
+                        { field: "NextRunDate", title: Resources.Common.NextProcessDate, type: "date", format: "{0:d}", attributes: { "class": "text-right" } },
+                { field: "Team", title: "Team", type: "number", attributes: { "class": "text-right" } }
+                 
+                ]
+            });
+        });
+    </script>
+}

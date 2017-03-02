@@ -1,0 +1,26 @@
+﻿@model String
+@{
+    Layout = "~/Views/Shared/EditorTemplates/_FormField.cshtml";
+
+    var htmlAttributes = Html.GetEditorHtmlAttributes(new
+    {
+        @class = "form-control",
+        role = "textbox",
+        data_restrict_input = "taxid"
+    });
+}
+
+<div class="input-group">
+    <span class="input-group-addon">
+        <i class="fa-question-circle" data-toggle="popover" data-container="body" data-title="Why do we need this?" data-trigger="hover" data-placement="top" data-content="In order to be paid commissions, you must provide your SSN/Tax ID."></i>
+    </span>
+
+    @Html.TextBoxFor(c => c, htmlAttributes)
+</div>
+
+
+<script>
+    require(["jquery", "bootstrap"], function($) {
+        $("#@(Html.IdFor(c => c))").popover();
+    });
+</script>

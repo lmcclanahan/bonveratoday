@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "Thank You";
+
+    var isWillCall =  ViewBag.IsWillCall != null &&  ViewBag.IsWillCall == true;
+}
+<div class="container cart complete shop">
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>You are now registered with Bonvera!</h2>
+            @if (isWillCall)
+            {
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>
+                        You chose the Will Call option. Our Warehouse address is 1815 E. Central, Wichita, KS 67214.
+                        Business hours for pick up are between 9am-4pm CT Monday-Friday.
+                        Please print this order confirmation and bring it with you to pick up your order.
+                        You can call us at 316 260 2225 during business hours if you have any questions.
+                    </strong>
+                </div>
+
+
+            }
+            @if (Identity.Customer.CustomerTypeID == (int)CustomerTypes.SmartShopper)
+            {
+
+                
+                <p>As a Smart Shopper, you will receive special pricing for all future orders.</p>
+            }
+
+            @if (Identity.Customer != null)
+            {
+                <p>Click <a class="btn btn-link no-padding" href="@Url.Action("itemlist", "shopping")">here</a> to shop Bonvera.</p>
+            }
+        </div>
+    </div>
+</div>
+

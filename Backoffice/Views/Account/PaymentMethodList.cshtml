@@ -1,0 +1,90 @@
+﻿@model IEnumerable<IPaymentMethod>
+@{
+    ViewBag.Title = Resources.Common.PaymentMethods;
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row" id="view-paymentmethodslist">
+    <div class="col-sm-3">
+        @Html.Navigation()
+    </div>
+
+    <div class="col-sm-9">
+
+        <h3 class="page-header">@Resources.Common.YourCreditCards</h3>
+        <div class="row">
+
+            @foreach (var method in Model.Where(c => c is CreditCard))
+            {
+                var card = method as CreditCard;
+
+                <div class="col-sm-4">
+
+                    @if (card.Type == CreditCardType.Primary)
+                    {
+                        <strong>@Resources.Common.Primary</strong>
+                        if (card.IsUsedInAutoOrders)
+                        {
+                            <strong> / @Resources.Common.AutoOrderCreditCard</strong>
+                            <a data-toggle="popover"
+                               data-title="@Resources.Common.AutoOrderCreditCard"
+                               data-content="@Resources.Common.CreditCardUsedAsAutoOrderPaymentMethod.FormatWith(card.AutoOrderIDs.Count())"
+                               data-trigger="hover"><i class="fa-question-circle"></i></a><br />
+                        }
+                    }
+                    else
+                    {
+                        <strong>@Resources.Common.Secondary</strong>
+                    }
+
+                    <p>
+                        @if (card.IsExpired)
+                        { <span class="label label-danger">@Resources.Common.Expired</span><br /> }
+                        @card.NameOnCard<br />
+                        @Resources.Common.CardEndingIn @card.CardNumber<br />
+                        @Resources.Common.Expires: @card.ExpirationDate.ToString("M/yyyy")<br />
+                    </p>
+
+                    <div class="btn-group">
+
+                        <a href="@Url.Action("ManageCreditCard", new { type = card.Type })" class="btn btn-default"><i class="fa-pencil"></i></a>
+
+                        @if (card.IsUsedInAutoOrders)
+                        {
+                            <a class="btn btn-default"
+                               data-toggle="popover"
+                               data-title="@Resources.Common.UnableToDelete"
+                               data-content="@Resources.Common.AutoOrderCreditCardCannotBeDeleted"
+                               data-trigger="hover"><i class="fa-trash-o"></i></a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("DeleteCreditCard", new { type = card.Type })" class="btn btn-default"><i class="fa-trash-o"></i></a>
+                        }
+
+                    </div>
+                </div>
+            }
+            @if (Model.Where(c => c is CreditCard).Count() < 2)
+            {
+                <div class="col-sm-4">
+                    <div class="text-center">
+                        <a href="@Url.Action("AddCreditCard")" class="text-muted">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <i class="fa-plus" style="font-size: 48px;"></i><br />
+                                    @Resources.Common.AddNewCreditCard
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+        <div class="space-100"></div>
+    </div>
+</div>

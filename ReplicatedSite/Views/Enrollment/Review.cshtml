@@ -1,0 +1,481 @@
+﻿@model EnrollmentReviewViewModel
+@{
+    ViewBag.Title = "Review your information";
+
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+    var orderItems = Model.Items.Where(c => c.Type == ShoppingCartItemType.Order || c.Type == ShoppingCartItemType.EnrollmentPack);
+    var autoOrderItems = Model.Items.Where(c => c.Type == ShoppingCartItemType.AutoOrder || c.Type == ShoppingCartItemType.EnrollmentAutoOrderPack);
+    var hasItems = (Model.Items != null && Model.Items.Count() > 0);
+    var hasOrderItems = (orderItems != null && orderItems.Count() > 0);
+    var hasAutoOrderItems = (autoOrderItems != null && autoOrderItems.Count() > 0);
+    var errorMessage = Request.QueryString["error"];
+    var modelError = (Model.Errors != null && Model.Errors.Count() > 0) ? Model.Errors.First() : null;
+
+    var hasError = (!errorMessage.IsNullOrEmpty() || !modelError.IsNullOrEmpty());
+
+    var hasDiscount = Model.Discount != 0;
+    var orderSubTotal = (hasDiscount) ? Model.Totals.Subtotal + (Model.Discount * -1) : Model.Totals.Subtotal;
+
+    // Will Call Logic
+    var willCallShipMethodID = Model.WillCallShipMethodID;
+    var hasWillCallAvailable = (ViewBag.HasWillCallAvailable != null) ? ViewBag.HasWillCallAvailable : false;
+    var userSelctedWillCall = ViewBag.UserSelectedWillCall;
+
+    // Back Office Enrollment check
+    var isBackOfficeUser = Model.PropertyBag.IsBackofficeEnrollment;
+}
+
+<div class="container" id="view-enrollment">
+
+    @if (!errorMessage.IsNullOrEmpty())
+    {
+        <div class="space-20"></div>
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Unable to place order:</strong> @errorMessage
+        </div>
+    }
+    @if (!modelError.IsNullOrEmpty())
+    {
+        <div class="space-20"></div>
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <strong>Unable to place order:</strong> @modelError
+        </div>
+    }
+    <div id="view-orderreview">
+        <h3>Review your order</h3>
+        <div class="row margin-15">
+            <div class="col-md-8">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <h5>Shipping Address</h5>
+                                @Html.DisplayFor(c => c.PropertyBag.ShippingAddress)
+
+                                <div class="space-10"></div>
+                                <a href="@Url.Action("enrolleeinfo")"><i class="fa-edit"></i>Change</a>
+                            </div>
+                            <div class="col-sm-4">
+                                <h5>Payment Method</h5>
+                                @Html.DisplayFor(c => c.PropertyBag.PaymentMethod, "PaymentMethod")
+
+                                <div class="space-10"></div>
+                                <a href="@Url.Action("enrolleeinfo")"><i class="fa-edit"></i>Change</a>
+                            </div>
+                            <div class="col-sm-4">
+                                @if (hasItems)
+                                {
+                                    if (Model.ShipMethods != null && Model.ShipMethods.Count() > 0)
+                                    {
+                                        <h5>Choose a shipping speed:</h5>
+                                        <div id="shipmethods">
+
+                                            @using (Html.BeginForm("setshipmethodid", controller))
+                                            {
+                                                foreach (var shipMethod in Model.ShipMethods.OrderBy(c => c.Price))
+                                                {
+                                                    <div class="radio">
+                                                        <label>
+                                                            @Html.RadioButton("ShipMethodID", shipMethod.ShipMethodID, shipMethod.Selected)
+                                                            @shipMethod.ShipMethodDescription <small class="text-muted">@shipMethod.Price.ToString("C")</small>
+                                                        </label>
+                                                    </div>
+                                                }
+                                                @Html.AntiForgeryToken()
+                                            }
+
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                @if (!hasItems)
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <p>You don't have any items in your cart yet.</p>
+                            <div class="space-10"></div>
+                            <a class="btn btn-primary btn-sm" href="@Url.Action("checkout", "enrollment")">Continue Shopping</a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    if (hasOrderItems)
+                    {
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">You are purchasing:</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row margin-10 text-uppercase text-muted text-xs">
+                                    <div class="col-xs-9">Items</div>
+                                    <div class="col-xs-2">Price</div>
+                                    <div class="col-xs-1">Quantity</div>
+                                </div>
+                                <div class="space-10"></div>
+
+                                @foreach (var item in orderItems)
+                                {
+                                    <div class="row margin-10">
+                                        <div class="col-xs-9">
+                                            <div class="row">
+                                                <div class="col-sm-2">
+                                                    <div class="image">
+                                                        <img src="@item.SmallImageUrl" class="img-responsive" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-10">
+                                                    <div class="itemdescription">@item.ItemDescription</div>
+                                                    <small class="text-muted">SKU: @item.ItemCode</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-2">
+                                            @item.Price.ToString("C")
+                                        </div>
+                                        <div class="col-xs-1 text-center">
+                                            <div data-itemcode="@item.ItemCode" data-type="@item.Type">
+                                                <input type="hidden" name="ItemCode" value="@item.ItemCode" />
+                                                <input type="hidden" name="Type" value="@item.Type" />
+
+                                                <span>
+                                                    @item.Quantity.ToString("0")
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="space-10"></div>
+                                }
+                            </div>
+                            <div class="panel-footer">
+                                <div class="text-right">Subtotal (@orderItems.Sum(c => c.Quantity).ToString("N0") items): <strong>@orderSubTotal.ToString("C")</strong></div>
+                            </div>
+                        </div>
+                    }
+                    if (hasAutoOrderItems)
+                    {
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">@(Resources.Common.YourFutureReplenish):</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row margin-10 text-uppercase text-muted text-xs">
+                                    <div class="col-xs-9">Items</div>
+                                    <div class="col-xs-2 ">Price</div>
+                                    <div class="col-xs-1">Quantity</div>
+                                </div>
+                                <div class="space-10"></div>
+
+                                @foreach (var item in autoOrderItems)
+                                {
+                                    <div class="row margin-10">
+                                        <div class="col-xs-9">
+                                            <div class="row">
+                                                <div class="col-sm-2">
+                                                    <div class="image">
+                                                        <img src="@item.SmallImageUrl" class="img-responsive" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-10">
+                                                    <div class="itemdescription">@item.ItemDescription</div>
+                                                    <small class="text-muted">SKU: @item.ItemCode</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-2">
+                                            @item.Price.ToString("C")
+                                        </div>
+                                        <div class="col-xs-1 text-center">
+                                            <div class="item-container" data-itemcode="@item.ItemCode" data-type="@item.Type">
+                                                <input type="hidden" name="ItemCode" value="@item.ItemCode" />
+                                                <input type="hidden" name="Type" value="@item.Type" />
+                                                <span>
+                                                    @item.Quantity.ToString("0")
+                                                </span>
+                                                @*@if (item.Type == ShoppingCartItemType.AutoOrder)
+                                                {
+                                                    @Html.TextBoxFor(c => item.Quantity, "{0:N0}", htmlAttributes: new
+                                                    {
+                                                        @class = "form-control input-sm text-center quantity-box",
+                                                        data_role = "cart.updateitemquantity",
+                                                        data_id = item.ID,
+                                                        data_type = item.Type,
+                                                        data_itemcode = item.ItemCode
+                                                    })
+                                                }
+                                                else
+                                                {
+                                                    @Html.TextBoxFor(c => item.Quantity, "{0:N0}", htmlAttributes: new
+                                                    {
+                                                        @class = "form-control input-sm text-center quantity-box",
+                                                        disabled = true,
+                                                        style = "cursor: default"
+                                                    })
+                                                }*@
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="space-10"></div>
+                                }
+                            </div>
+                            <div class="panel-footer">
+                                <div class="text-right">Subtotal (@autoOrderItems.Sum(c => c.Quantity).ToString("N0") items): <strong>@autoOrderItems.Sum(c => c.Price * c.Quantity).ToString("C")</strong></div>
+                            </div>
+                        </div>
+                    }
+                    if (!GlobalSettings.Globalization.HideForLive)
+                    {
+                        <a class="btn btn-primary btn-lg" href="@Url.Action("packs", "enrollment")">Change Your Items</a>
+                    }
+                }
+                <div class="space-30"></div>
+            </div>
+            <div class="col-md-4" id="submission-form-container">
+                    <div id="view-enrollmentsummary">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">
+                                    Your Enroller
+                                </h3>
+                            </div>
+                            <div class="panel-body">
+                                <div class="media">
+                                    <div class="pull-left">
+                                        <img class="media-object" src="@Url.Avatar(Model.Enroller.CustomerID)" style="max-width: 50px;" />
+                                    </div>
+                                    <div class="media-body">
+                                        <strong class="media-heading">@Model.Enroller.FullName</strong><br />
+                                        <a href="mailto:@Model.Enroller.Email" target="_blank">@Model.Enroller.Email</a><br />
+                                        @Model.Enroller.PrimaryPhone
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        @if (Model.Sponsor != null)
+                        {
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        Your Placement Sponsor
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="media">
+                                        <div class="pull-left">
+                                            <img class="media-object" src="@Url.Avatar(Model.Sponsor.CustomerID)" style="max-width: 50px;" />
+                                        </div>
+                                        <div class="media-body">
+                                            <strong class="media-heading">@Model.Sponsor.FullName</strong><br />
+                                            <a href="mailto:@Model.Sponsor.Email" target="_blank">@Model.Sponsor.Email</a><br />
+                                            @Model.Sponsor.PrimaryPhone
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                <div id="summary-container">
+                        <!-- Dynamically Injected -->
+                    </div>
+                    @using (Html.BeginForm("submitcheckout", controller))
+                    {
+                        <a class="btn btn-success btn-block btn-lg " style="display: block; margin: 0 auto;" data-loading-text="Loading..." id="btnCompleteEnrollment">Complete Enrollment</a>
+                        <div class="space-10"></div>
+                        <a class="btn btn-link btn-lg" style="display: block; margin: 0 auto;" href="@Url.Action("ResetEnrollment")">Cancel/Start Over Enrollment</a>
+
+                        @Html.AntiForgeryToken()
+                    }
+                </div>
+            </div>
+        </div>
+
+        @* Will Call confirm modal *@
+        <div class="modal fade" tabindex="-1" role="dialog" id="will-call-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Will Call</h4>
+                    </div>
+                    <div class="modal-body">
+                        @Resources.Common.WillCallConfirmMessage
+                    </div>
+                    @* 79669 09/02/2016 PM Changed button text from Close to No and from Submit Order to Yes, resourced text *@
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="modal-close-button">@Resources.Common.No</button>
+                        <button type="button" class="btn btn-primary" id="modal-submit-button" data-loading-text="Loading...">@Resources.Common.Yes</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        @Html.Raw(GlobalUtilities.DebuggerJSON(Model))
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        require(["jquery", "ajax", "app", "debug", "pubsub", "extensions"], function ($, ajax, app, debug) {
+
+            // Settings
+            var context = "#view-orderreview",
+                $context = $(context),
+                willCallShipMethodID = parseInt("@willCallShipMethodID"),
+                hasWillCallAvailable = @hasWillCallAvailable.ToString().ToLower(),
+                hasSelectedWillCall = @userSelctedWillCall.ToString().ToLower(),
+                removeItemsURL = '@Url.Action("deleteitemfromcart", "enrollment")',
+                updateItemSummaryURL = '@Url.Action("updateitemsummary", "enrollment")',
+                updateItemsURL = '@Url.Action("updateitemquantity", "enrollment")';
+
+            // Settings
+            var state = {
+                originalItemQuantity: 0,
+                submitting: false
+            };
+
+            // Event Handlers
+            function registerEventHandlers() {
+                // Prevent duplicate enrollments
+                $('#btnCompleteEnrollment').on("click", function () {
+                    var $this = $(this);
+                    if (!state.submitting) {
+                        state.submitting = true;
+                        $this.button("loading");
+
+                        if (hasSelectedWillCall) {
+                            $("#will-call-modal").modal("show");
+                        } else {
+                            $this.parents("form").first().submit();
+                        }
+                    }
+                });
+
+                $("#modal-submit-button").on("click", function () {
+                    $(this).button("loading");
+                    $('#btnCompleteEnrollment').button("loading");
+                    $("#submission-form-container form").submit();
+
+                    $(this).modal("hide");
+                });
+
+                @* 79669 09/02/2016 PM Sets ground to default after Will Call is cancelled *@
+                @* 79669 09/06/2016 PM Changed prop('checked', true) to click() *@
+                $("#modal-close-button").on("click", function() {
+                    $("input[name=ShipMethodID][value='2']").click();
+                });
+
+                $('[name="ShipMethodID"]', $context).on('change', function () {
+                    $("#btnCompleteEnrollment").button("loading");
+                    $(this).parents('form')[0].submit();
+                });
+            }
+
+            // Actions
+            var actions = {
+                updateItemSummary: function () {
+                    var $container = $('#summary-container');
+
+                    ajax.json({
+                        url: updateItemSummaryURL,
+                        beforeSend: function () {
+                            $container.html('<p class="text-center"><strong>Loading Summary...</strong></p>');
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                $container.html(response.html);
+                            }
+                            else {
+                                console.log("failed");
+                            }
+                        },
+                        error: function (xhr, error, status) {
+                            console.log("Error: ", xhr);
+                        }
+                    });
+                },
+                updateCart: function (itemcode, type, originalQuantity, newQuantity) {
+                    originalQuantity = parseInt(originalQuantity);
+                    newQuantity = parseInt(newQuantity);
+
+                    var $item = {
+                        ItemCode: itemcode,
+                        Type: type,
+                        Quantity: newQuantity
+                    };
+
+                    if (originalQuantity > 0 && newQuantity === 0) {
+                        actions.removeItem($item);
+                    }
+                    else if (originalQuantity > 0 && newQuantity > 0) {
+                        actions.updateItem($item);
+                    }
+                },
+                removeItem: function ($item) {
+                    ajax.json({
+                        url: removeItemsURL,
+                        data: {
+                            itemcode: $item.ItemCode,
+                            type: $item.Type
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                window.location = window.location;
+                            }
+                            else {
+                                console.log("failed");
+                            }
+                        },
+                        error: function (xhr, error, status) {
+                            console.log("Error: ", xhr);
+                        }
+                    });
+                },
+                updateItem: function ($item) {
+                    ajax.json({
+                        url: updateItemsURL,
+                        data: {
+                            itemcode: $item.ItemCode,
+                            type: $item.Type,
+                            quantity: $item.Quantity
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                console.log("item updated");
+                                actions.updateItemSummary();
+                            }
+                            else {
+                                console.log("failed");
+                            }
+                        },
+                        error: function (xhr, error, status) {
+                            console.log("Error: ", xhr);
+                        }
+                    });
+                }
+            };
+
+            // Helpers
+            var helpers = {
+            };
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+                actions.updateItemSummary();
+                debug.ControlPanelControls(context);
+            }
+            init();
+
+        });
+    </script>
+}

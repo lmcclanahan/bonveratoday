@@ -1,0 +1,135 @@
+﻿@model EnrollmentPropertyBag
+@{
+    var contextID = Guid.NewGuid().ToString();
+}
+
+
+
+<div id="view-logininformation-@contextID">
+    @if (!GlobalSettings.Globalization.HideForLive)
+    {
+        <div class="row margin-5">
+            <div id="webalias-preview-container" class="margin-10">
+                <strong>Your website:</strong>
+                <span>@GlobalSettings.Company.BaseReplicatedeUrl/</span>
+                <span id="webalias-preview"></span>
+            </div>
+        </div>
+    }
+    <div class="row margin-5">
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(c => c.Customer.LoginName, new { @class = "control-label" })
+                @Html.EditorFor(c => c.Customer.LoginName)
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="space-25"></div>
+            @if (!GlobalSettings.Globalization.HideForLive)
+            {
+                <span><i class="fa-question-circle" data-toggle="popover" data-container="body" data-title="Login Name Rules" data-trigger="hover" data-placement="top" data-content="@Resources.Common.WebAliasRules" id="loginNameHelp"></i> Need Help?</span>
+            }
+        </div>
+    </div>
+    <div class="space-5"></div>
+
+    <div class="row margin-5">
+        <div class="col-sm-6">
+            <div>@Html.LabelFor(c => c.Customer.Password, new { @class = "control-label" })</div>
+            <div class="form-group">
+
+                @Html.PasswordFor(c => c.Customer.Password, new
+                                                {
+                                                    @class = "form-control password",
+                                                    placeholder = "Password",
+                                                    required = "required"
+                                                })
+                @Html.ValidationMessageFor(c => c.Customer.Password)
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label class="control-label required" for="@Html.IdFor(c => c.Customer)_ConfirmPassword">Confirm Password</label>
+                <input class="form-control"
+                       data-val="true"
+                       data-val-equalto="'ConfirmPassword' and 'Password' do not match."
+                       data-val-equalto-other="@Html.NameFor(c => c.Customer.Password)"
+                       data-val-required="The ConfirmPassword field is required."
+                       id="@Html.IdFor(c => c.Customer)_ConfirmPassword"
+                       name="@(Html.NameFor(c => c.Customer)).ConfirmPassword"
+                       placeholder="Re-type your password"
+                       type="password"
+                       value="" />
+                <span class="field-validation-valid" data-valmsg-for="@(Html.NameFor(c => c.Customer)).ConfirmPassword" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+    </div>
+    <div class="space-5"></div>
+
+</div>
+
+@using (Html.BeginPartialScript())
+{
+    <script>
+
+        require(["jquery", "bootstrap"], function ($) {
+
+            // Settings
+            var context = "#view-logininformation-@contextID",
+                $context = $(context),
+                $webaliasPreview = $("#webalias-preview"),
+                loginnameRegex = "@GlobalSettings.RegularExpressions.LoginName",
+                $webaliasTextBox = $("#@Html.IdFor(c => c.Customer.LoginName)");
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $webaliasTextBox.on({
+                    keyup: function () {
+                        console.log("keyed up");
+                        actions.updateWebaliasPreview($(this).val());
+                    },
+                    keypress: function (e) {
+                        var regex = new RegExp(loginnameRegex);
+                        var key = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+
+                        if (!regex.test(key)) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    },
+                    blur: function (e) {
+                        setTimeout(function () {
+                            var value = $(e.target).val(),
+                                hasError = $(".field-validation-error[data-valmsg-for='Customer.LoginName']").length > 0;
+
+                            if (hasError == false && value.length > 0) {
+                                $(".field-validation-valid[data-valmsg-for='Customer.LoginName']").addClass("text-success").html($(e.target).val() + " is available!");
+                            } else {
+
+                            }
+                        }, 2000);
+                    }
+                });
+            }
+
+
+            // Actions
+            var actions = {
+                updateWebaliasPreview: function (webalias) {
+                    $webaliasPreview.html(webalias);
+                }
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+
+                $("#loginNameHelp").popover();
+            }
+            init();
+
+        });
+    </script>
+}

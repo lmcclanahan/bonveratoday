@@ -1,0 +1,125 @@
+﻿@model CommissionDetailViewModel
+@{
+    var contextID = Guid.NewGuid().ToString();
+    var commission = (HistoricalCommission)Model.Commissions.First();
+}
+
+<div id="view-commissiondetail-@contextID">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h4>@commission.Period.PeriodDescription @Resources.Common.Commissions</h4>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="metric metric-sm">
+                        <div class="metric-body text-info">@Format.Currency(commission.Total, commission.CurrencyCode)</div>
+                        <div class="metric-title">
+                            @Resources.Common.QualifiedAs: <strong>@CommonResources.Ranks(commission.PaidRank.RankID)</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <dl class="dl-metric">
+                                <dt>@Resources.Common.PreviousBalance</dt>
+                                <dd>@Format.Currency(commission.PreviousBalance, commission.CurrencyCode)</dd>
+
+                                <dt>@Resources.Common.Earnings</dt>
+                                <dd>@Format.Currency(commission.Earnings, commission.CurrencyCode)</dd>
+
+                                <dt>@Resources.Common.Fee</dt>
+                                <dd>@Format.Currency(commission.Fee, commission.CurrencyCode)</dd>
+
+                                <hr class="no-margin" />
+
+                                <dt>@Resources.Common.Total</dt>
+                                <dd>@Format.Currency(commission.Total, commission.CurrencyCode)</dd>
+
+                                <hr class="no-margin" />
+
+                                <dt>@Resources.Common.BalanceForwarded</dt>
+                                <dd>@Format.Currency(commission.BalanceForward, commission.CurrencyCode)</dd>
+                            </dl>
+                        </div>
+                        <div class="col-sm-3">
+                            <dl class="dl-metric">
+                                <dt>@Resources.Common.Active</dt>
+                                <dd>@Format.Boolean(commission.Volumes.Volume1 == 1)</dd>
+
+                            </dl>
+                        </div>
+                        <div class="col-sm-3">
+                            <dl class="dl-metric">
+                                <dt>@CommonResources.Volumes(4)</dt>
+                                <dd>@commission.Volumes.Volume4.ToString("N0")</dd>
+
+                                <dt>@CommonResources.Volumes(16)</dt>
+                                <dd>@commission.Volumes.Volume16.ToString("N0")</dd>
+
+                                <dt>@CommonResources.Volumes(2)</dt>
+                                <dd>@commission.Volumes.Volume2.ToString("N0")</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <h5>
+                    Please note the commission calculations for @commission.Period.PeriodDescription are estimates only. They are subject to change based on your qualification,
+                    close of month, returns and adjustments. They have not been paid out. Please refer to the Compensation Plan Brochure for details on definitions and qualifications.
+                </h5>
+                <h5>
+                    <span style="color:red;">PBV</span> is the personal BV of an order associated with the corresponding Bonvera ID#. A Bonvera ID could potentially have multiple orders associated with
+                    that ID in a given pay period.
+                </h5>
+                <h5>
+                    <span style="color:red;">PCBV</span> is the total personal customer BV for the current month from your retail customers and smart shoppers.
+                </h5>
+            </div>
+        </div>
+
+
+
+        <!-- Bonuses -->
+        <div class="panel-body no-padding">
+            <div class="grid"></div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    require(["kendogrids"], function (kendoGrid) {
+
+        // Settings
+        var context = "#view-commissiondetail-@contextID";
+        var cultureCode = "@Identity.Current.Market.CultureCode";
+        kendo.culture(cultureCode);
+
+
+        kendoGrid.create(context + " .grid", {
+            url: '@Url.Action("GetHistoricalBonusDetails", new { runid = ViewContext.RouteData.Values["runid"] })',
+            pageable: false,
+            columns: [
+                { field: "BonusID", title: Resources.Common.BonusID, type: "number", hidden: true },
+                { field: "Bonus_BonusDescription", title: Resources.Common.Bonus, type: "string", hidden: true },
+                { field: "FromCustomerID", title: "From Bonvera ID#", type: "number", width: 200 },
+                { field: "FromCustomer_LastName", title: Resources.Common.From, type: "string", width: 200 },
+                //{ field: "Level", title: Resources.Common.Level, type: "number", template: kendoGrid.templates.level("Level") },
+                //{ field: "PaidLevel", title: Resources.Common.PaidLevel, type: "number", template: kendoGrid.templates.level("PaidLevel") },
+                { field: "SourceAmount", title: "PBV", format: "{0:C}", attributes: { "class": "text-right" } },
+                { field: "Percentage", title: "%", type: "number", format: "{0}%", attributes: { "class": "text-right" } },
+                { field: "CommissionAmount", title: Resources.Common.Earned, type: "number", format: "{0:C}", attributes: { "class": "text-right" }, aggregates: ["sum"], groupFooterTemplate: "#= kendo.toString(sum, 'C') #" }
+            ],
+            dataSource: {
+                pageSize: 50,
+                group: {
+                    field: "Bonus_BonusDescription",
+                    aggregates: [
+                        { field: "CommissionAmount", aggregate: "sum" }
+                    ]
+                }
+            }
+        });
+    });
+</script>

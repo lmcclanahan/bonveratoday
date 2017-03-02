@@ -1,0 +1,7 @@
+.img-fluid { width: 100%; }
+
+.avatar { border-radius: 50%; display: inline-block; max-width: 100%; width: 100% \9; height: auto; padding: 4px; line-height: 1.428571429; background-color: #fff; border: 1px solid #ddd; -webkit-transition: all .2s ease-in-out; transition: all .2s ease-in-out; 
+    &.avatar-lg {  } 
+    &.avatar-sm { padding: 3px; } 
+    &.avatar-xs { padding: 0; } 
+}

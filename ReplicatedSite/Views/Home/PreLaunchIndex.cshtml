@@ -1,0 +1,61 @@
+﻿@{
+    Layout = "~/Views/Shared/_FullWidthLayout.cshtml";
+    ViewBag.Title = "Shop. Save. Share.";
+}
+
+<input type="hidden" class="activenavigation" value="home" />
+
+<div id="view-home-page">
+
+
+
+    <!-- Shop Now -->
+    <div class="container">
+        <div class="row margin-0 text-center">
+            <div class="space-70 hidden-sm hidden-xs"></div>
+            <div class="space-40 visible-xs"></div>
+            <h2>Welcome to Bonvera!</h2>
+            <div style="max-width:650px; margin: 0 auto;">
+                <p>
+                    Bonvera’s vision is simple, straightforward and revolutionary:
+                    create effortless access to everyday essentials while giving profits back to Associates.
+                    Reward the people who supply, distribute and buy our products.
+                    We call this unique concept of shopping “The Compensated Marketplace ™.”
+                </p>
+                <p>
+                    Become a business owner and join Bonvera as an Independent Associate right now and get a jump start on building your business!
+                    In March, we’ll introduce the “Retail Customer” and “Smart Shopper” options.
+                    This is the Soft Launch Phase, and we have many exciting things in store for you as we roll out more products, services and features, so hold on tight!
+                </p>
+            </div>
+            <div class="space-20"></div>
+
+            <a href="@Url.Action("EnrollmentConfiguration", "Enrollment")" class="btn btn-primary">Click Here to join as Independent Associate.</a>
+
+            <div class="space-30"></div>
+            <a href="@GlobalSettings.Company.BaseBackofficeUrl" class="btn btn-primary">Click here if you already have an Account.</a>
+            <div class="space-30"></div>
+            <p>
+                Shop. Save. Share.
+                Bonvera
+            </p>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+@section scripts
+{
+    <script>
+        require(["jquery", "bootstrap"], function ($) {
+            function init() {
+                // initiallize the carousel
+                $('#product-banner').carousel();
+            }
+            init();
+        });
+    </script>
+}

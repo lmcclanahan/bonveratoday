@@ -1,0 +1,234 @@
+﻿@model CartViewModel
+@{
+    ViewBag.Title = Resources.Common.Cart;
+    var firstOrderPackItemCode = ViewBag.FirstOrderPackItemCode;
+
+    // We need to show a specific message if there is a change made for the First Order Pack being in the cart and not allowable
+    var hasFirstOrderItemRemoved = (ViewBag.FirstOrderItemRemoved != null) ? ViewBag.FirstOrderItemRemoved : false;
+    var shipAutoOrderToday = ViewBag.ShipAutoOrderToday;
+}
+
+<input type="hidden" class="activenavigation" value="shopping" />
+
+<div class="row">
+    <div class="col-sm-9">
+        <div class="pull-left">
+            <h2>@ViewBag.Title</h2>
+        </div>
+        <div class="pull-right">
+            <a href="@Url.Action("itemlist", "shopping")" class="btn btn-primary margin-top-20">Continue to Shop</a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<div id="view-cart">
+    @if (hasFirstOrderItemRemoved)
+    {
+        <div class="space-20"></div>
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            You are attempting to purchase the First Order Pack, but you have already purchased this item. It has been removed from your cart.
+        </div>
+    }
+
+    @if (Model.Items.Count() == 0)
+    {
+        <p>@Resources.Common.NoItemsInCart</p>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-sm-9">
+                @{
+        if (shipAutoOrderToday)
+        {
+            <div class="alert alert-info" role="alert">
+                You have chosen the option to have your first Replenish process today. What this means is you will be charged today for the Replenish items as well as any additional items you have in your cart at the end of the checkout process.
+                If you make any modifications to the items required to purchase today by either reducing the quantity or removing those items, this may affect your Replenish cart items as well since purchasing them today is required in order to proceed.
+                <div class="space-10"></div>
+                If you do not wish to have your Replenish process now and purchase these items today, you can change your Replenish to run on a later date by clicking <a href="@Url.Action("AutoOrder")" class="text-underline"><strong>here</strong></a>.
+                <div class="space-10"></div>
+                Your next Replenish after today will process on: <strong>@DateTime.Now.AddMonths(1).ToShortDateString()</strong>
+                <br />
+                You can always change your process date by editing your Replenish profile. Just click on Replenish menu to find all your profiles.
+            </div>
+        }
+
+
+        var orderItems = Model.Items.Where(c => c.Type == ShoppingCartItemType.Order);
+        if (orderItems.Count() > 0)
+        {
+            @Html.Partial("Partials/Cart/PaneledCart", orderItems, new ViewDataDictionary {
+                                                    { "PanelTitle", GlobalUtilities.Capitalize(Resources.Common.ItemsToBuyNow) },
+                                                    { "Type", ShoppingCartItemType.Order },
+                                                    { "FirstOrderPackItemCode", firstOrderPackItemCode }
+                                                })
+        }
+
+
+        var autoOrderItems = Model.Items.Where(c => c.Type == ShoppingCartItemType.AutoOrder);
+        if (autoOrderItems.Count() > 0)
+        {
+            @Html.Partial("Partials/Cart/PaneledCart", autoOrderItems, new ViewDataDictionary {
+                                                    { "PanelTitle", Resources.Common.ReplenishItems},
+                                                    { "Type", ShoppingCartItemType.AutoOrder },
+                                                    { "FirstOrderPackItemCode", firstOrderPackItemCode }
+                                                })
+        }
+                }
+            </div>
+            <div class="col-sm-3">
+                <div class="panel panel-default">
+                    <div class="panel-body well">
+                        @if (Model.Items.Where(c => c.Type == ShoppingCartItemType.Order).Count() > 0)
+                        {
+                            <div class="text-center">
+                                <div class="lead">@Resources.Common.Subtotal (<span data-text="orderquantity">@orderItems.Sum(c => c.Quantity).ToString("N0")</span> @Resources.Common.Items.ToLower()):<br /><strong><span data-text="ordersubtotal">@orderItems.Sum(c => c.Quantity * c.Price).ToString("C")</span></strong></div>
+                            </div>
+                        }
+                        <div class="text-center">
+                            <a href="@Url.Action("Checkout")" class="btn btn-primary btn-block">@Resources.Common.Checkout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+<script>
+    require(["jquery", "pubsub", "ajax", "toastr", "extensions"], function ($, pubsub, ajax, toastr) {
+        var $cartcontainer = $("#view-cart"),
+            loadingHtml = "<div class='text-center'><img src='@Url.Content("~/content/images/loading/circle-48.gif")' /></div>",
+            autoOrderCount = parseInt("@Model.AutoOrderCount"),
+            maxAutoOrderCount = @GlobalSettings.AutoOrders.MaxAutoOrderCount;
+
+        function registerEventHandlers() {
+            // Handle inline auto order updates
+            window.on("autoorder.updated", function() {
+                refreshCart();
+            });
+
+            window.on('cart.updateitemquantity', function (data) {
+                ajax.json({
+                    url: '@Url.Action("updateitemquantity", "shopping")',
+                    data: data,
+                    beforeSend: function () {
+                        $cartcontainer.html(loadingHtml);
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            window.trigger('cart.cartupdated', response);
+
+                            $cartcontainer.html(response.carthtml);
+                            bindCartControls();
+
+                            if (response.message != undefined && response.message.length > 0) {
+                                toastr.warning(response.message);
+                            }
+                        }
+                    }
+                });
+            });
+            window.on('cart.removeitemfromcart', function (id) {
+                ajax.json({
+                    url: '@Url.Action("removeitemfromcart", "shopping")',
+                    data: {
+                        id: id
+                    },
+                    beforeSend: function () {
+                        $cartcontainer.html(loadingHtml);
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            window.trigger('cart.itemremoved', id);
+                            window.trigger('cart.cartupdated', response);
+
+                            $cartcontainer.html(response.carthtml);
+                            bindCartControls();
+
+                            if (response.message != undefined && response.message.length > 0) {
+                                toastr.warning(response.message);
+                            }
+                        }
+                    }
+                });
+            });
+
+            window.on('cart.cartupdated', function (data) {
+                var updatedItem = data.item;
+                var items = data.items;
+
+
+                if (updatedItem.Type == 0) {
+                    var quantity = 0;
+                    for (var i = 0, max = items.length; i < max; i++) {
+                        var item = items[i];
+
+                        if (item.Type == 0) {
+                            quantity += item.Quantity;
+                        }
+                    }
+
+                    $('[data-text="orderquantity"]').html(quantity.format("N0"));
+                    $('[data-text="ordersubtotal"]').html(data.totals.Subtotal.format("C"));
+                }
+
+                // refresh the cart counter
+                ajax.json({
+                    url: "@Url.Action("GetCartItemQuantity", "Shopping")",
+                    success: function (response)
+                    {
+                        if (response.success) {
+                            $("#my-cart").html(response.count);
+                        }
+                        else
+                        {
+                            console.log("error fetching quick shop modal", response.message);
+                        }
+                    }
+                });
+            });
+        }
+
+        function refreshCart() {
+            ajax.json({
+                url: '@Url.Action("refreshcart", "shopping")',
+                beforeSend: function () {
+                    $cartcontainer.html(loadingHtml);
+                },
+                success: function (response) {
+                    if (response.success) {
+                        $cartcontainer.html(response.carthtml);
+                        bindCartControls();
+                    } else {
+                        console.log("refreshcart failed", response);
+                    }
+                }
+            });
+        }
+
+        function validateAutoOrderCount() {
+            if (autoOrderCount == maxAutoOrderCount) {
+                window.trigger("cart.showautoordermodal");
+            }
+        }
+
+        function bindCartControls() {
+            window.trigger("cart.registerevents");
+        }
+
+        function _init() {
+            registerEventHandlers();
+
+            // Make sure the dom is ready for this one before it fires off
+            $(function() {
+                validateAutoOrderCount();
+            });
+        }
+        _init();
+    });
+
+</script>

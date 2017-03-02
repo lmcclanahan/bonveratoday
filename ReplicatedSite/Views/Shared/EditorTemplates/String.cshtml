@@ -1,0 +1,13 @@
+﻿@model String
+@{
+    Layout = "~/Views/Shared/EditorTemplates/_FormField.cshtml";
+    var role = (ViewData["role"] != null) ? ViewData["role"] : "textbox";
+    
+    var htmlAttributes = Html.GetEditorHtmlAttributes(new
+    { 
+        @class = "form-control",
+        data_role = role
+    });
+}
+
+@Html.TextBoxFor(c => c, htmlAttributes)

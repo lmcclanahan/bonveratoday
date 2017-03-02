@@ -1,0 +1,220 @@
+﻿@{
+    var requestUrl = Request.Url.AbsoluteUri;
+    var needsRedirection = !Request.IsLocal && (requestUrl.Contains("login") || requestUrl.Contains("/account") || requestUrl.Contains("settings") || requestUrl.Contains("review") || requestUrl.Contains("payment") || requestUrl.Contains("/subscriptions"));
+
+    var protocol = Request.IsSecureConnection ? "https" : "http";
+}
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>     <html class="lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>        <html class="lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>        <html class="lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html>
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <meta name="mobileoptimized" content="0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="published" content="@MvcApplication.ApplicationStartDate" />
+    <meta name="description" content="" />
+
+    <title>@ViewBag.Title - @GlobalSettings.Company.Name</title>
+
+    <link rel="app" id="apppath" href="@Request.ApplicationPath" />
+    <link rel="app" id="appauthenticated" href="@Request.IsAuthenticated.ToString()" />
+    <link rel="app" id="appsessiontimeout" href="@GlobalSettings.Backoffices.SessionTimeout" />
+
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="~/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="57x57" href="~/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="~/apple-touch-icon-72x72.png" />    
+    <link rel="apple-touch-icon" sizes="114x114" href="~/apple-touch-icon-114x114.png" />    
+    <link rel="apple-touch-icon" sizes="144x144" href="~/apple-touch-icon-144x144.png" />    
+
+    @* Styles *@
+    <link href='@protocol://fonts.googleapis.com/css?family=Raleway:400,700' rel='stylesheet' type='text/css'>
+    <link href="@protocol://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="@protocol://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="@protocol://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.2/toastr.min.css" rel="stylesheet" />
+    <link href="@protocol://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.12/css/jquery.Jcrop.min.css" rel="stylesheet" />
+    @Styles.Render("~/bundles/styles/vendor")
+    <link href="~/Content/styles/site.min.css" rel="stylesheet" />
+    <link href="~/Content/styles/tooling/itemdetails.min.css" rel="stylesheet" />
+    @RenderSection("styles", required: false)
+
+    @* Scripts *@
+    <script src="@RouteJs.RouteJsHandler.HandlerUrl"></script>
+    <script src="@Url.Action("culture", "app")"></script>
+    <script src="@ResourceJs.ResourceJsHandler.SourceUrl"></script>
+
+    @* RequireJS *@
+    <script src="@protocol://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.20/require.min.js" data-main="@Url.Content("~/Content/scripts/main.js")"></script>
+    <script>
+        require.config({
+            baseUrl: '@Url.Content("~/Content/scripts")',
+            @if(Request.IsLocal) { <text>urlArgs: "bust=" + (new Date()).getTime(),</text> }
+            paths: {
+                'addresses': 'modules/addresses',
+                'app': 'modules/app',
+                'ajax': 'modules/ajax',
+                'browser': 'modules/browser',
+                'calendars': 'modules/calendars',
+                'console': 'modules/console',
+                'containers': 'modules/containers',
+                'cookies': 'modules/cookies',
+                'debug': 'modules/debug',
+                'encryptions': 'modules/encryptions',
+                'extensions': 'modules/extensions',
+                'forms': 'modules/forms',
+                'guids': 'modules/guids',
+                'idletimeout': 'modules/idletimeout',
+                'kendogrids': 'modules/exigoweb.kendogrids',
+                'passwords': 'modules/passwords',
+                'popups': 'modules/popups',
+                'profiles': 'modules/profiles',
+                'pubsub': 'modules/pubsub',
+                'shopping': 'modules/shopping',
+                'urls': 'modules/urls',
+                'widgets': 'modules/widgets',
+                'trees': 'modules/trees',
+                'cloudzoom': 'modules/cloudzoom',
+
+                'amcharts': '@protocol://cdnjs.cloudflare.com/ajax/libs/amcharts/3.13.0/amcharts',
+                'amcharts.pie': '@protocol://cdnjs.cloudflare.com/ajax/libs/amcharts/3.13.0/pie',
+                'amcharts.serial': '@protocol://cdnjs.cloudflare.com/ajax/libs/amcharts/3.13.0/serial',
+                'bootstrap': '@protocol://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min',
+                'enquire': '@protocol://cdnjs.cloudflare.com/ajax/libs/enquire.js/2.1.2/enquire.min',
+                'fullcalendar': '@protocol://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.4.0/fullcalendar.min',
+                'fullcalendar-lang': '@protocol://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.4.0/lang-all',
+                'gcal': '@protocol://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.4.0/gcal',
+                'handlebars': '@Scripts.Url("~/bundles/scripts/handlebars")',
+                'jcrop': '@protocol://cdnjs.cloudflare.com/ajax/libs/jquery-jcrop/0.9.12/js/jquery.Jcrop.min',
+                'jquery': '@protocol://code.jquery.com/jquery-1.11.3.min',
+                'jquery-color': '@protocol://code.jquery.com/color/jquery.color-2.1.2.min',
+                'jquery-form': '@protocol://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min',
+                'jquery-knob': '@protocol://cdnjs.cloudflare.com/ajax/libs/jQuery-Knob/1.2.11/jquery.knob.min',
+                'jquery-scrollto': '@protocol://cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.2/jquery.scrollTo.min',
+                'jquery-ui': '@protocol://code.jquery.com/ui/1.11.4/jquery-ui.min',
+                'jquery-validate': 'vendor/jquery.validate.min',
+                'jquery-validate-unobtrusive': 'vendor/jquery.validate.unobtrusive.min',
+                'jquery-unobtrusive-ajax': 'vendor/jquery.unobtrusive-ajax',
+                'kendo': 'vendor/kendo/scripts/kendo.web.min',
+                'kendo-cultures': 'vendor/kendo/scripts/kendo.culture.min',
+                'moment': '@protocol://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment-with-locales.min',
+                'scrollreveal': 'vendor/scrollReveal',
+                'toastr': '@protocol://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.2/toastr.min',
+                'typeahead': 'vendor/typeahead'
+            },
+            bundles: {
+                'typeahead-bundle': ['typeahead', 'bloodhound']
+            },
+            shim: {
+                'amcharts.pie': {
+                    deps: ['amcharts'],
+                    exports: 'AmCharts',
+                    init: function () {
+                        AmCharts.isReady = true;
+                    }
+                },
+                'amcharts.serial': {
+                    deps: ['amcharts'],
+                    exports: 'AmCharts',
+                    init: function () {
+                        AmCharts.isReady = true;
+                    }
+                },
+                'bootstrap': {
+                    deps: ["jquery"]
+                },
+                'gcal': {
+                    deps: ["fullcalendar"]  
+                },
+                'jcrop': {
+                    deps: ["jquery", "jquery-color"]
+                },
+                'jquery-knob': {
+                    deps: ["jquery"]
+                },
+                'jquery-validate-unobtrusive': {
+                    deps: ['jquery-validate']
+                },
+                'jquery-unobtrusive-ajax': {
+                    deps: ['jquery']
+                },
+                'handlebars': {
+                    exports: 'Handlebars'
+                },
+                'kendogrids': {
+                    deps: ['kendo', 'kendo-cultures']
+                },
+                'typeahead': {
+                    deps: ['bloodhound']
+                }
+            },
+            deps: ["bootstrap", "extensions", "forms"]
+        });
+    </script>
+
+    @if (needsRedirection)
+    {
+        <script>
+            require(["jquery"], function ($) {
+                $(function () {
+                    if (window.location.protocol == "http:") {
+                        var restOfUrl = window.location.href.substr(5);
+                        window.location = "https:" + restOfUrl;
+                    }
+                });
+            });
+        </script>
+    }
+    else
+    {
+        <script>
+            require(["jquery"], function ($) {
+                $(function () {
+                    if (window.location.protocol == "https:") {
+                        var restOfUrl = window.location.href.substr(6);
+                        window.location = "http:" + restOfUrl;
+                    }
+                });
+            });
+        </script>
+    }
+
+    <!--[if lt IE 9]>
+        <script src="@protocol://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+        <script src="@protocol://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+        <script src="@protocol://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    @RenderSection("header", required: false)
+
+</head>
+<body>
+    @Html.Raw(GlobalUtilities.DisplayDebugWatermark())
+
+    @if (GlobalSettings.Exigo.Api.UseSandboxGlobally && GlobalSettings.Exigo.Api.SandboxID != 0)
+    {
+        <div class="space-40"></div>
+        <div class="alert alert-info text-center" role="alert">
+            <strong>Sandbox Mode</strong> <br />
+            This site is currently using sandbox @GlobalSettings.Exigo.Api.SandboxID.
+        </div>
+    }
+
+    @RenderBody()
+
+    @* Global Javascript *@
+    @Html.Partial("_GlobalScripts")
+
+    @* Page Scripts *@
+    @RenderSection("scripts", required: false)
+    @Html.PartialScripts()
+
+    @Html.AntiForgeryToken()
+
+</body>
+</html>

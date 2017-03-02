@@ -1,0 +1,42 @@
+@mixin column-margin($margin) {
+	[class^='row'].margin-#{$columnMargin}, 
+    [class*=' row'].margin-#{$columnMargin}, 
+	[class^='form-group'].margin-#{$columnMargin},
+    [class*=' form-group'].margin-#{$columnMargin}  { 
+		margin-left: -#{$columnMargin/2}px;
+		margin-right: -#{$columnMargin/2}px;
+
+		> [class^='col-'],
+        > [class*=' col-'] {
+			padding-right: #{$columnMargin/2}px;
+			padding-left: #{$columnMargin/2}px;
+		}
+		[class^='row'], 
+		[class*=' row'],
+		[class^='form-group'], 
+		[class*=' form-group'] { margin-left: 0; margin-right: 0; }
+	}
+}
+
+
+$columnMargin: 0;
+@while $columnMargin <= 50 {
+	@include column-margin($columnMargin);
+	$columnMargin: $columnMargin + 2;
+}
+$columnMargin: 5;
+@while $columnMargin <= 50 {
+	@include column-margin($columnMargin);
+	$columnMargin: $columnMargin + 10;
+}
+
+
+
+$spaceHeight: 5;
+@while $spaceHeight <= 100 {
+	.space-#{$spaceHeight}{ max-height:1px;	min-height:1px;	overflow:hidden; margin:0 0 #{$spaceHeight}px 0; }
+	$spaceHeight: $spaceHeight + 5;
+} 
+
+
+

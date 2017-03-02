@@ -1,0 +1,114 @@
+﻿@model OrganizationBrowserViewModel
+@{
+    ViewBag.Title = "Organization Browser";
+}
+
+<h2>@ViewBag.Title</h2>
+<ol class="breadcrumb">
+    <li><a href="#"><i class="fa-home"></i></a></li>
+    <li class="active">@ViewBag.Title</li>
+</ol>
+
+
+<div id="view-organizationbrowser">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="input-group">
+                <input type="search" class="form-control input-lg" placeholder="Search by name or ID..." />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default btn-lg"><i class="fa-search"></i></button>
+                </span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="space-20"></div>
+    <div class="row">
+        <div class="col-sm-2">
+            <img src="@Url.Avatar(Model.TopCustomer.CustomerID)" class="img-responsive" />
+        </div>
+        <div class="col-sm-10">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>
+                        @Model.TopCustomer.FullName<br />
+                        <small class="text-muted">@Model.TopCustomer.HighestAchievedRank.RankDescription</small>
+                    </h3>
+
+                    <button type="button" class="btn btn-default">Action</button>
+                    <button type="button" class="btn btn-default">Action</button>
+                    <button type="button" class="btn btn-default">Action</button>
+                </div>
+                <div class="col-sm-3">
+                    <div class="space-35"></div>
+                    <dl class="dl-metric">
+                        <dt>Org. Level</dt>
+                        <dd>9</dd>
+
+                        <dt>Level</dt>
+                        <dd>9</dd>
+                    </dl>
+                </div>
+                <div class="col-sm-3">
+                    <div class="space-35"></div>
+                    <dl class="dl-metric">
+                        <dt>Org. Level</dt>
+                        <dd>9</dd>
+
+                        <dt>Level</dt>
+                        <dd>9</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="space-50"></div>
+    <div style="padding: 0 40px; position: relative;">
+
+        @*<ul class="list-unstyled list-inline pull-left">
+            <li><strong>Sort by:</strong></li>
+            <li class="active"><a href="javascript:;">Name</a></li>
+            <li><a href="javascript:;">Rank</a></li>
+            <li><a href="javascript:;">Enrolled Date</a></li>
+        </ul>*@
+
+        <div class="text-center">
+            @{
+                char[] alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();                
+            }
+            @foreach(var letter in alpha)
+            {
+                <a href="javascript:;">@letter</a><text>&nbsp;</text>
+            }
+        </div>
+        <div class="space-5"></div>
+        <div class="clearfix"></div>
+
+        <div id="carousel" class="carousel slide" data-ride="carousel" data-interval="false">
+            <div class="row margin-10">
+                <a class="left" href="#carousel" data-slide="prev" style="position: absolute; left: -40px; top: 50px;">
+                    <span class="icon-prev fa-chevron-left fa-3x"></span>
+                </a>
+                <a class="right" href="#carousel" data-slide="next" style="position: absolute; right: -40px; top: 50px;">
+                    <span class="icon-next fa-chevron-right fa-3x"></span>
+                </a>
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <div class="row margin-10">
+                            @foreach (var customer in Model.Customers)
+                            {
+                                <div class="col-sm-2">
+                                    @Html.Partial("~/Views/Organization/OrganizationBrowserTreeNode.cshtml", customer)
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,84 @@
+﻿@model GetCustomerRankQualificationsResponse
+@{
+    // Removing the 2nd leg per ticket # 75082 - Mike M.
+    var qualifications = Model.QualificationLegs.Take(1);
+}
+
+
+@if (Model.IsQualified)
+{
+    <div class="panel panel-success">
+        <div class="panel-body">
+            <div class="text-center">
+                <strong class="lead text-success">@(Resources.Common.QualifiedAs): @Model.Rank.RankDescription</strong>
+            </div>
+        </div>
+    </div>
+}
+    
+    
+else
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h3>@CommonResources.Ranks(Model.Rank.RankID)</h3>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="metric metric-sm">
+                        <div class="metric-body text-info">@Model.TotalPercentComplete.ToString("N0")%</div>
+                        <div class="metric-title">
+                            @Resources.Common.Complete
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-8">
+
+                </div>
+            </div>
+        </div>
+        @if (qualifications.Count() == 1)
+        {
+            <div class="panel-body">
+                <h4>Here is your road to @CommonResources.Ranks(Model.Rank.RankID):</h4>
+            </div>
+            <div class="list-group">
+                @foreach (var requirement in Model.QualificationLegs.First().Requirements)
+                {
+                    Html.RenderPartial("_RankRequirement", requirement);
+                }
+            </div>
+        }
+    </div>
+
+    if (qualifications.Count() > 1)
+    {
+        var columns = 12 / Model.QualificationLegs.Count();
+
+        <div class="space-15"></div>
+        <h4>
+            @Resources.Common.WaysToQualify.FormatWith(Model.QualificationLegs.Count(), CommonResources.Ranks(Model.Rank.RankID)):
+            <br /><small class="text-muted">@Resources.Common.PathFullfullment</small>
+        </h4>
+
+        <div class="row">
+            @for (var index = 0; index < Model.QualificationLegs.Count(); index++)
+            {
+                var leg = Model.QualificationLegs.ToArray()[index];
+
+                <div class="col-sm-@columns">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">@Resources.Common.Path #@(index + 1)</h4>
+                        </div>
+                        <div class="list-group">
+                            @foreach (var requirement in leg.Requirements)
+                            {
+                                Html.RenderPartial("_RankRequirement", requirement);
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}

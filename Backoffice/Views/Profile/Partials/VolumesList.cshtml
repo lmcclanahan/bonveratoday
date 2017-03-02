@@ -1,0 +1,27 @@
+﻿<div id="view-volumeslist">
+    <div class="grid"></div>
+</div>
+
+<script>
+    require(["kendogrids"], function (kendoGrid) {
+
+        var cultureCode = "@Identity.Current.Market.CultureCode";
+        kendo.culture(cultureCode);
+
+
+        kendoGrid.create("#view-volumeslist .grid", {
+            url: '@Request.Url.AbsolutePath',
+            sort: { field: "PeriodID", dir: "desc" },
+            columns: [
+                { field: "PeriodID", hidden: true, type: "number" },
+                { field: "Period_EndDate", title: Resources.Common.Period, type: "date", format: "{0:MMMM, yyyy}" },
+                { field: "PaidRank_RankDescription", title: Resources.Common.PaidRank },
+                { field: "Volume55", title: "@CommonResources.Volumes(55)", type: "number", attributes: { "class": "text-right" } },
+                { field: "Volume56", title: "@CommonResources.Volumes(56)", type: "number", attributes: { "class": "text-right" } },
+                { field: "Volume57", title: "@CommonResources.Volumes(57)", type: "number", attributes: { "class": "text-right" } },
+                { field: "Volume58", title: "@CommonResources.Volumes(58)", type: "number", attributes: { "class": "text-right" } },
+                { field: "Volume59", title: "@CommonResources.Volumes(59)", type: "number", attributes: { "class": "text-right" } }
+            ]
+        });
+    });
+</script>

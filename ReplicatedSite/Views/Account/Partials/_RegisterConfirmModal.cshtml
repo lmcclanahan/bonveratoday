@@ -1,0 +1,140 @@
+﻿@model AccountRegistrationViewModel
+@{
+    var hasDiscount = Model.Discount > 0;
+    var subtotal = (hasDiscount) ? Model.Discount + Model.CalculatedOrder.Subtotal : Model.CalculatedOrder.Subtotal;
+    var hasShipMethods = Model.CalculatedOrder.ShipMethods.Count() > 0;
+    var currentMarket = GlobalUtilities.GetCurrentMarket();
+    var virtualShipMethodID = currentMarket.VirtualShipMethodID;
+    var hasVirtualShipMethod = (hasShipMethods) ? Model.CalculatedOrder.ShipMethods.Where(c => c.ShipMethodID == virtualShipMethodID).Count() > 0 : false;
+    var willCallShipMethodID = Model.WillCallShipMethodID;
+}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Confirm</h4>
+        </div>
+        <div class="modal-body">
+            <p>
+                <span class="lead">Your card ending in @Model.CreditCard.CardNumber.Substring(Model.CreditCard.CardNumber.Length - 4) will be charged @Model.CalculatedOrder.Total.ToString("C").</span>
+                <div class="space-10"></div>
+                Review the details of your membership below and click Submit Registration to complete your Smart Shopper Membership registration.
+            </p>
+            <div class="space-10"></div>
+            <div class="row">
+                <div class="col-xs-6" id="ship-method-container">
+                    @if (hasShipMethods && !hasVirtualShipMethod)
+                    {
+                        <strong>Choose your shipping speed below</strong>
+                        foreach (var shipMethod in Model.CalculatedOrder.ShipMethods.OrderBy(c => c.Price))
+                        {
+                            <div class="radio">
+                                <label>
+                                    @Html.RadioButton("ShipMethodID", shipMethod.ShipMethodID, shipMethod.Selected)
+                                    @shipMethod.ShipMethodDescription <small class="text-muted">@shipMethod.Price.ToString("C")</small>
+                                </label>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <input name="@Html.NameFor(c => c.ShipMethodID)" value="@virtualShipMethodID" type="hidden" />
+                    }
+                </div>
+                <div class="col-xs-6">
+                    <div class="row">
+                        <div class="col-xs-6 text-right">
+                            <strong>Subtotal:</strong>
+                        </div>
+                        <div class="col-xs-6">
+                            @subtotal.ToString("C")
+                        </div>
+                    </div>
+                    @if (hasDiscount)
+                    {
+                    <div class="row">
+                        <div class="col-xs-6 text-right text-success">
+                            <strong>Discount:</strong>
+                        </div>
+                        <div class="col-xs-6 text-success">
+                            <strong>@Model.Discount.ToString("C")</strong>
+                        </div>
+                    </div>
+                    }
+                    @if (hasShipMethods && !hasVirtualShipMethod)
+                    {
+                    <div class="row">
+                        <div class="col-xs-6 text-right">
+                            <strong>Shipping:</strong>
+                        </div>
+                        <div class="col-xs-6">
+                            @Model.CalculatedOrder.Shipping.ToString("C")
+                        </div>
+                    </div>
+                    }
+                    <div class="row">
+                        <div class="col-xs-6 text-right">
+                            <strong>Tax:</strong>
+                        </div>
+                        <div class="col-xs-6">
+                            @Model.CalculatedOrder.Tax.ToString("C")
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 text-right">
+                            <strong>Total:</strong>
+                        </div>
+                        <div class="col-xs-6">
+                            @Model.CalculatedOrder.Total.ToString("C")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="will-call-message-container" style="display:none;">
+                <div class="alert alert-info" role="alert">
+                    @Resources.Common.WillCallMessage
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-primary" id="btnSubmitRegistration">Submit Registration</button>
+        </div>
+    </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+
+<script>
+    require(["jquery"], function ($) {
+
+        var willCallShipMethodID = parseInt("@willCallShipMethodID"),
+        hasVirtualShipMethod = @hasVirtualShipMethod.ToString().ToLower(),
+        shipMethodRadio = "[name='@Html.NameFor(c => c.ShipMethodID)']";
+
+        function _init() {
+            $(shipMethodRadio).each(function() {
+                var $this = $(this),
+                    isSelected = $this.is(":checked"),
+                    _val = $this.val(),
+                    isWillCall = _val == willCallShipMethodID;
+
+                if (isSelected) {
+                    if (isWillCall) {
+                        $("#will-call-message-container").slideDown();
+                    } else {
+                        $("#will-call-message-container").slideUp();
+                    }
+                }
+            });
+
+            // We need to make sure if the Virtual Ship method is the only choice for shipping, we set the value of the hidden input on the parent form SmartShopperRegister so that the Virtual Ship Method is used.
+            if (hasVirtualShipMethod) {
+                $("#hdnShipMethodID").val(@virtualShipMethodID);
+            }
+        }
+        _init();
+
+    });
+</script>

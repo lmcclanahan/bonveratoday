@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = Resources.Common.UpcomingPromotions;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-sm-3">
+        @Html.Navigation()
+    </div>
+
+    <div class="col-sm-9">
+
+        <div id="grid"></div>
+    
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        require(["kendogrids"], function (kendoGrid) {
+
+            var cultureCode = "@Identity.Current.Market.CultureCode";
+            kendo.culture(cultureCode);
+
+
+            kendoGrid.create("#grid", {
+            columns: [
+                { field: "ct_CustomerID", title: "Associate", type: "number", width: 200, template: kendoGrid.templates.customer("ct_CustomerID", "ct_FirstName", "ct_LastName", "CustomerIDToken") },
+                    { field: "ct_Team", title: "Team" },
+                    { field: "r_RankDescription", title: Resources.Common.NextRank },
+                    { field: "prso_Score", title: "% " + Resources.Common.Complete, type: "number", width: 120, format: "{0:D}%", attributes: { "class": "text-right" } }
+            ]
+            });
+        });
+    </script>
+}

@@ -1,0 +1,11 @@
+.ordersummary { 
+	hr { margin: 0; }
+
+	.padded-container { padding: 10px; }
+
+	.items-container { min-height: 140px; border-left: 1px dotted #ddd; }
+
+	.item { margin-bottom: 10px;
+		.productimage img {  }
+	}
+}

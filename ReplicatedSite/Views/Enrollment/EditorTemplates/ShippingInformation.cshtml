@@ -1,0 +1,70 @@
+﻿@model EnrollmentPropertyBag
+@{
+    var contextID = Guid.NewGuid().ToString();
+}
+
+
+
+<div id="view-shippinginformation-@contextID">
+    <div class="row margin-5">
+        <div class="form-group">
+            @*@if (Model.ShipMethods != null && Model.ShipMethods.Count() > 0)
+            {
+                <label class="control-label">How would you like your order shipped?</label>
+                foreach (var shipMethod in Model.ShipMethods.OrderBy(c => c.Price))
+                {
+                    <div class="radio">
+                        <label>
+                            @Html.RadioButton("ShipMethodID", shipMethod.ShipMethodID, shipMethod.Selected)
+                            @shipMethod.ShipMethodDescription <small class="text-muted">@shipMethod.Price.ToString("C")</small>
+                        </label>
+                    </div>
+                }
+                <hr />
+            }*@
+            <div class="checkbox">
+                <label for="shipping-checkbox">
+                    <input type="checkbox" id="shipping-checkbox" name="@Html.NameFor(c => c.UseSameShippingAddress)" value="true" @((Model.UseSameShippingAddress) ? "checked" : "") />
+                    <input type="hidden" name="@Html.NameFor(c => c.UseSameShippingAddress)" value="false" />
+                    Use my main address as my shipping address
+                </label>
+            </div>
+            <div id="shipping-address-container" style="display: none;">
+                @{ var ShippingAddress = (Model.ShippingAddress != null) ? Model.ShippingAddress : new ShippingAddress(); }
+                @Html.EditorFor(c => ShippingAddress, "ShippingAddress")
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    require(["jquery"], function($) {
+
+        // Settings
+        var context      = "#view-shippinginformation-@contextID",
+            $context     = $(context),
+            sameshipping = @(Model.UseSameShippingAddress.ToString().ToLower());
+
+
+        // Event Handlers
+        function registerEventHandlers() {
+            $('[name="@Html.NameFor(c => c.UseSameShippingAddress)"]', $context).on('change', function() {
+                $('#shipping-address-container').toggle();
+            });
+        }
+
+
+        // Initialization
+        function init() {
+            registerEventHandlers();
+            if (sameshipping === false)
+            {
+                $('[name="@Html.NameFor(c => c.UseSameShippingAddress)"]', $context).triggerHandler('change');
+            }       
+
+        }
+        init();
+
+    });
+</script>

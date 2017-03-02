@@ -1,0 +1,141 @@
+﻿@model EnrollmentCompleteViewModel
+@{
+    ViewBag.Title = "Enrollment Complete";
+    var details = Model.Order.Details.ToList();
+
+}
+
+<div class="container" id="enrollmentform" style="min-height: 500px;">
+    <h2 class="hidden-print">@ViewBag.Title</h2>
+
+    @if (Model.IsBackOfficeEnrollment)
+    {
+        <div class="alert alert-info">
+            You have just completed placement from the Backoffice. Make sure you record this information for your new enrollee.
+            <div class="space-20"></div>
+            <div class="pull-right">
+                <a class="btn btn-primary" href="@GlobalSettings.Company.BaseBackofficeUrl">Return to My Backoffice</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    }
+
+    <div class="space-20"></div>
+    <h4>Thank you for joining @GlobalSettings.Company.Name!!</h4>
+    <p>Your Bonvera ID is: <strong>@Model.Order.CustomerID</strong></p>
+    <p>Your Username is: <strong>@Model.Username</strong></p>
+    <p>Your Password is: <strong>@Model.Password</strong></p>
+    @if (GlobalSettings.Globalization.HideForLive)
+    {
+        <p>Click <a class="btn btn-link no-padding" href="@GlobalSettings.Backoffices.SilentLogins.DistributorBackofficeUrl.FormatWith(Model.Token)">here</a> to Login.</p>
+    }
+    @if (Model.Order.ShipMethodID == Model.WillCallShipMethodID)
+    {
+        <div class="alert alert-success alert-dismissible" role="alert" id="will-call-alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            @Html.Raw(Resources.Common.WillCallCompleteMessage)
+        </div>
+    }
+
+    <div class="space-10"></div>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr class="active">
+                    <th>Company</th>
+                    <th>Bill To</th>
+                </tr>
+                <tr>
+                    <td>
+                        <img src="~/Content/images/bonvera-logo.PNG" class="img-responsive" style="max-width: 115px;" />
+                        @Html.Partial("~/Views/Shared/DisplayTemplates/Address.cshtml", GlobalSettings.Company.Address)
+                        <i class="fa-envelope"></i> @GlobalSettings.Emails.SupportEmail
+
+                    </td>
+                    <td>
+                        @Model.Order.Recipient.FirstName @Model.Order.Recipient.LastName<br />
+                        @Model.Order.Recipient.Address1 @Model.Order.Recipient.Address2<br />
+                        @Model.Order.Recipient.City, @Model.Order.Recipient.State, @Model.Order.Recipient.Zip<br />
+                        <span class="space-10"></span>
+                        @foreach (var payment in Model.Order.Payments)
+                        {
+                            <div class="payment">
+                                @switch (payment.PaymentTypeID)
+                                {
+                                    case 1:
+                                        @: Credit Card Ending:  @payment.CreditCardNumber
+                                    break;
+                                    default:
+                                    break;
+                                }
+                                - @payment.Amount.ToString("C")
+                            </div>
+                        }
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="active">
+                    <th colspan="2">Invoice for <strong>#@Model.Order.OrderID</strong></th>
+                </tr>
+                @foreach (var i in details)
+                {
+                    <tr class="italic">
+                        <td>@i.ItemDescription (@i.Quantity.ToString("N0"))</td>
+                        <td>@i.PriceTotal.ToString("C") </td>
+                    </tr>
+                }
+
+            </tbody>
+            <tfoot>
+                <tr class="active"><th colspan="2"></th></tr>
+                <tr>
+                    <th class="text-right">Total </th>
+                    <td class="text-left">@Model.Order.Subtotal.ToString("C")</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Shipping</th>
+                    <td class="text-left">@Model.Order.ShippingTotal.ToString("C")</td>
+                </tr>
+                <tr>
+                    <th class="text-right">Tax</th>
+                    <td class="text-left">@Model.Order.TaxTotal.ToString("C")</td>
+                </tr>
+                <tr>
+                    <th class="text-right">OrderTotal</th>
+                    <td class="text-left">@Model.Order.Total.ToString("C")</td>
+                </tr>
+            </tfoot>
+        </table>
+        @if (Model.AutoOrder != null)
+        {
+            <div class="space-10"></div>
+            <h4>@Resources.Common.ReplenishDetails #@Model.AutoOrder.AutoOrderID</h4>
+            <table class="table">
+                <tbody>
+                    <tr class="active">
+                        <th>Frequency Type</th>
+                        <th>Next Run Date</th>
+                        <th>Total</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Model.AutoOrder.FrequencyTypeDescription<br />
+                        </td>
+                        <td>
+                            @Model.AutoOrder.NextRunDate.Value.ToShortDateString()<br />
+                        </td>
+                        <td>
+                            @Model.AutoOrder.Total.ToString("C")<br />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+
+    </div>
+    <div class="hidden-print">
+        <input type="button" value="Print Invoice" onclick="window.print()" class="btn btn-primary btn-lg">
+    </div>
+    <div class="space-30"></div>
+</div>

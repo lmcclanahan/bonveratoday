@@ -1,0 +1,367 @@
+﻿@model DistributorSearch
+
+@{
+    ViewBag.Title = "Find a Distributor";
+
+    var action = ViewContext.RouteData.Values["action"].ToString();
+    var controller = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="container" id="findDistributor" style="width: 90vw; margin: 0 auto;">
+    <div id="results-modal-container"></div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2 class="text-uppercase">Find a distributor or event </h2>
+            <hr />
+        </div>
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-1">
+                <h3 class="text-muted">If you already know a Distributor:</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="row margin-0 form-group-container">
+        <div class="col-sm-6 col-sm-offset-1">
+            <div class="panel panel-primary">
+                @*WebAddress*@
+                <div class="panel-heading">
+                    <h3 class="panel-title">Search by Distributor's Site Name</h3>
+                </div>
+                <div class="panel-body">
+                    @*@Html.EditorForModel("Webalias")*@
+
+                    <div class="row margin-5">
+                        <div class="col-sm-9">
+                            @Html.LabelFor(c => c.WebAlias, new { @class = "control-label" })
+                        </div>
+                    </div>
+                    <div class="space-5"></div>
+
+                    <div class="form row margin-5">
+                        <div class="form-group col-sm-7">
+                            @using (Ajax.BeginForm("getdistributors", controller, new AjaxOptions()
+                {
+                    //OnBegin = "distributorSearch.onBegin",
+                    OnSuccess = "distributorSearch.onSuccess",
+                    OnComplete = "distributorSearch.onComplete"
+                }))
+                            {
+                                @Html.EditorForModel("Webalias")
+
+                                <input type="hidden" name="@Html.NameFor(c => c.SearchTypeID)" id="@Html.IdFor(c => c.SearchTypeID)" value="@SearchType.webaddress" />
+                            }
+                        </div>
+                        <div class="col-sm-3">
+                            <button type="submit" class="btn btn-primary search" name="FindByDistributorID" id="id-search">Search</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-sm-offset-1">
+            <div class="panel panel-primary">
+                @*DistributorID*@
+                <div class="panel-heading">
+                    <h3 class="panel-title">Search by Distributor's ID</h3>
+                </div>
+                <div class="panel-body">
+
+                    @using (Ajax.BeginForm("getdistributors", controller, new AjaxOptions()
+                {
+                    //OnBegin = "distributorSearch.onBegin",
+                    OnSuccess = "distributorSearch.onSuccess",
+                    OnComplete = "distributorSearch.onComplete"
+                }))
+                    {
+                        @Html.EditorForModel("DistributorID")
+
+                        <input type="hidden" name="@Html.NameFor(c => c.SearchTypeID)" id="@Html.IdFor(c => c.SearchTypeID)" value="@SearchType.distributorID" />
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="space-15"></div>
+
+    @*DistributorInfo*@
+
+    <div class="row form-group-container">
+        <div class="col-sm-10 col-sm-offset-1">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Search by Name and State - Add the City and Zip (optional) for precise results</h3>
+                </div>
+                <div class="panel-body">
+                    @using (Ajax.BeginForm("GetDistributors", controller, new AjaxOptions()
+            {
+                //OnBegin = "distributorSearch.onBegin",
+                OnSuccess = "distributorSearch.onSuccess",
+                OnComplete = "distributorSearch.onComplete"
+            }))
+                    {
+                        @Html.EditorForModel("DesignerInfo")
+
+                        <input type="hidden" name="@Html.NameFor(c => c.SearchTypeID)" id="@Html.IdFor(c => c.SearchTypeID)" value="@SearchType.distributorInfo" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+            <h3 class="text-muted">Don't know a distributor? Let us help you find one:</h3>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="alert alert-dismissable alert-danger" id="secondSearchMessage">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><i class="fa-close"></i></button>
+                        <p>Try Searching for Distributors in your area by entering your zip code</p>
+                    </div>
+                    <h3 class="panel-title">Find a Distributor in Your Area</h3>
+                </div>
+                <div class="panel-body">
+                    @using (Ajax.BeginForm("GetDistributors", controller, new AjaxOptions()
+                {
+                    //OnBegin = "distributorSearch.onBegin",
+                    OnSuccess = "distributorSearch.onSuccess",
+                    OnComplete = "distributorSearch.onComplete"
+                }))
+                    {
+                        @Html.EditorForModel("ZipCode")
+
+                        <input type="hidden" name="@Html.NameFor(c => c.SearchTypeID)" id="@Html.IdFor(c => c.SearchTypeID)" value="@SearchType.zipcode" />
+
+                    }
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="space-15"></div>
+
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+            <h3 class="text-muted">Find an Event:</h3>
+        </div>
+    </div>
+
+    <div class="space-15"></div>
+    <div class="row margin-0 form-group-container">
+        <div class="col-sm-6 col-sm-offset-1">
+            <div class="panel panel-primary">
+                @*Event Site*@
+                <div class="panel-heading">
+                    <h3 class="panel-title">Search by Event Site Name</h3>
+                </div>
+                <div class="panel-body">
+                    @using (Ajax.BeginForm("GetEvents", controller, new AjaxOptions()
+                {
+                    //OnBegin = "distributorSearch.onBegin",
+                    OnSuccess = "distributorSearch.onSuccess",
+                }))
+                    {
+                        @Html.EditorForModel("EventSite")
+
+                    }
+                </div>
+            </div>
+
+            <div class="divider"></div>
+        </div>
+        <div class="col-sm-3 col-sm-offset-1">
+            <div class="panel panel-primary">
+                @*EventID*@
+                <div class="panel-heading">
+                    <h3 class="panel-title">Search by Event Code</h3>
+                </div>
+                <div class="panel-body">
+                    @using (Ajax.BeginForm("GetEvents", controller, new AjaxOptions()
+                {
+                    //OnBegin = "distributorSearch.onBegin",
+                    OnSuccess = "distributorSearch.onSuccess",
+                }))
+                    {
+                        @Html.EditorForModel("EventID")
+
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="space-50"></div>
+    <div class="clearfix">&nbsp;</div>
+</div>
+
+
+<script>
+    $("#noResults").hide();
+    $("#secondSearchMessage").hide();
+
+    require(["jquery", "bootstrap", "extensions", "pubsub"], function ($) {
+
+        // Settings
+        var context = "#findDistributor",
+            $context = $(context),
+            resultsModalUrl = "@Url.Action("quickshopmodal")";
+
+
+        // Event Handlers
+        function registerEventHandlers() {
+            $('[data-role="search-field"]').on("keypress", function(e) {
+                if (e.which == 13) {
+                    e.preventDefault();
+                    $('.search').click();
+                }
+            });
+
+            $('#secondSearch').on('click', function() {
+                $("#distributorSearchModal").modal('hide');
+                $("#distributorSearchModal").on('hidden.bs.modal', function(e) {
+                    $("#secondSearchMessage").show();
+                    $('#customerZip', $context).focus();
+                });
+            });
+
+            $('#search-results', $context).on("click", '[data-role="use-distributor"]', function() {
+                var $activeRow = $(this).parents('.row:first'),
+                    id = $('.id', $activeRow).html(),
+                    name = $('.name', $activeRow).html(),
+                    url = $("[data-url]", $activeRow).data("url");
+
+                enroller = {
+                    CustomerID: id,
+                    FullName: name,
+                    Url: url
+                }
+
+                $('#enrollerID').val(parseInt(enroller.CustomerID));
+
+                window.trigger("registration.showchosenenrollerid", enroller);
+                window.trigger("registration.enrolleridchosen");
+            });
+
+            $('[data-role="corporatesignup"]', $context).on('click', function() {
+
+                window.trigger("registration.showchosenenrollerid", "corporate");
+                window.trigger("registration.enrolleridchosen");
+            });
+
+            // Pubsub events
+            window.on('registration.showchosenenrollerid', function(enroller) {
+                actions.redirectToReferrer(enroller.Url);
+            });
+        }
+
+
+        // Actions
+        var actions = {
+            redirectToReferrer: function(url) {
+                if (url != "") {
+                    window.location = url;
+                }
+            },
+
+
+        };
+
+
+// Initialization
+        function init() {
+            registerEventHandlers();
+        }
+
+        init();
+
+    });
+
+
+    var distributorSearch = (function() {
+        require(["jquery", "toastr", "bootstrap", "extensions", "pubsub"], function($, toastr) {
+
+            // Settings
+            var context      = "#findDistributor",
+                $context     = $(context),
+                formSection  = $context.find('div[data-container]'),
+                formButton   = formSection.find('button[data-role="search"]').attr('id'),
+                $formContext = $("[data-container='" + formButton + "']");
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $('[data-role="search"]', $formContext).on('click', function(e) {
+                    $(this).button('Searching');
+                });
+            }
+
+
+            // Actions
+            var actions = {
+                onSuccess: function(response) {
+                    var $submitbutton = $('[name="{0}"]'.format(response.action), $formContext);
+                    var $root = helpers.getFormRoot($submitbutton);
+
+                    if (response.success) {
+                        $('[data-role="search"]', $formContext).button('reset');
+
+                        $("#results-modal-container").html(response.html);
+                        $("#results-modal-container .modal").modal();
+
+                        if (@Model.BaseQuery.Count() == 0) {
+
+                            $("#noResults").show();
+                            $('.modal-title').hide();
+                            $("#search-results").hide();
+                            return;
+                        }
+
+                    } else {
+                        $('[data-role="search"]', $formContext).button('reset');
+                        console.log("message", response.message);
+                        toastr.error("This search returned no results.", "We're sorry");
+                        $("#noResults").show();
+                        $('.modal-title').hide();
+                        $("#search-results").hide();;
+                    }
+                },
+                onComplete: function() {
+
+                }
+            };
+
+
+            // Helpers
+            var helpers = {
+                getFormRoot: function($element) {
+                    return $element.parents('.panel-body');
+                }
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+
+
+            // Exports
+            return {
+                onSuccess: actions.onSuccess,
+                //onBegin: actions.onBegin
+            };
+
+        });
+    })();
+</script>

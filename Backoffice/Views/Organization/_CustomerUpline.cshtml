@@ -1,0 +1,23 @@
+﻿@model UplineViewModel
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Lvl</th>
+                <th>Name</th>
+                <th>ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var node in Model.UplineNodes)
+            {
+                <tr data-id="@node.CustomerID">
+                    <td>@node.Level</td>
+                    <td>@node.FullName</td>
+                    <td>@node.CustomerID</td>
+                </tr>
+            }            
+        </tbody>
+    </table>
+</div>

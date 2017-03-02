@@ -1,0 +1,384 @@
+﻿@{
+    ViewBag.Title = Resources.Common.Calendar;
+    var editEventUrl = Url.Action("editevent", new { eventid = Guid.Empty }).Replace(Guid.Empty.ToString(), "");
+    var deleteEventUrl = Url.Action("deleteevent", new { eventid = Guid.Empty }).Replace(Guid.Empty.ToString(), "");
+    var copyEventUrl = Url.Action("copyevent", new { eventid = Guid.Empty }).Replace(Guid.Empty.ToString(), "");
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div id="view-calendar">
+    <div class="row">
+        <div class="col-sm-3">
+            @Html.Navigation()
+
+            <div>@Resources.Common.EventTypes</div>
+            <div class="space-5"></div>
+            <div class="legend text-sm">
+                @foreach (var type in (List<CalendarEventType>)ViewBag.CalendarEventTypes)
+                {
+                    <div class="legend-item">
+                        <div class="legend-object">
+                            <div class="legend-color" style="background-color: @type.Color"></div>
+                        </div>
+                        <div class="legend-body">
+                            @type.CalendarEventTypeDescription
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <div id="widget-fullcalendar"></div>
+        </div>
+    </div>
+</div>
+
+
+
+<script id="calendar-popover-template" data-target="#calendar-popover" type="text/x-handlebars-template">
+    <div class="arrow"></div>
+    <h3 class="popover-title">
+        <button type="button" class="close" data-role="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        {{{title}}}
+    </h3>
+    <div class="popover-content">
+
+        {{#if Summary}}
+        {{{Summary}}}
+        <div class="space-15"></div>
+        {{/if}}
+
+        <dl class="dl-horizontal">
+            <dt>@Resources.Common.When: </dt>
+            <dd>{{date}}</dd>
+
+            {{#if Location}}
+            <dt>@Resources.Common.Where: </dt>
+            <dd>{{Location}}</dd>
+            {{/if}}
+
+            {{#if frequency}}
+            <dt>@Resources.Common.Repeats: </dt>
+            <dd>{{frequency}}</dd>
+            {{/if}}
+        </dl>
+
+        {{#unless isgooglecalendarevent}}
+        <div class="options">
+            <div class="row">
+                <div class="col-xs-8">
+                    {{#unless IsPersonal}}
+                    <a href="@copyEventUrl{{CalendarEventID}}">@Resources.Common.CopyToCalendar</a>
+                    {{/unless}}
+
+                    {{#if IsEditable}}
+                    <a href="@deleteEventUrl{{CalendarEventID}}">@Resources.Common.Delete</a>
+                    {{/if}}
+                </div>
+                <div class="col-xs-4">
+                    {{#if IsEditable}}
+                    {{#if IsRecurringEventInstance}}
+                    <strong class="text-right text-nowrap">
+                        <a href="@editEventUrl{{CalendarEventID}}">@Resources.Common.EditSeries »</a>
+                    </strong>
+                    {{/if}}
+                    {{#unless IsRecurringEventInstance}}
+                    <strong class="text-right text-nowrap">
+                        <a href="@editEventUrl{{CalendarEventID}}">@Resources.Common.EditEvent »</a>
+                    </strong>
+                    {{/unless}}
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+        {{/unless}}
+    </div>
+</script>
+
+
+
+
+@section scripts
+{
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.4.0/fullcalendar.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+
+    <script>
+        require(["jquery", "ajax", "calendars", "handlebars", "fullcalendar", "gcal", "bootstrap"], function ($, ajax, calendars, Handlebars) {
+
+            // Settings
+            var context = "#view-calendar",
+                $context = $(context),
+                $calendar = $('#widget-fullcalendar', $context),
+                currentCountry = '@Identity.Current.Country';
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+
+                // Close the popover if we didn't click on one, but one is open
+                $('body').on('click', function (event) {
+                    var $target = $(event.target),
+                        $popover = $('.calendar-popover');
+
+                    if (!$popover) return;
+
+                    if ($target != $popover && $popover.find($target).length == 0) {
+                        $popover.hide();
+                    }
+                    if ($target.is("[data-role='close']")) {
+                        $popover.hide();
+                    }
+                });
+            }
+
+
+            // Actions
+            var actions = {
+                getEvents: function (start, end, timezone, callback) {
+                    ajax.json({
+                        url: '@Url.Action("getevents")',
+                        data: {
+                            start: start,
+                            end: end
+                        },
+                        success: function (response) {
+                            var events = response.events;
+
+                            if (callback) callback(events);
+                            else console.warn('Callback was null');
+                        }
+                    });
+                }
+            };
+
+
+            // Event Sources
+            var holidayCalendarEvents = {
+                US: 'usa',
+                CA: 'canadian',
+                AL: 'al',
+                AR: 'ar',
+                AU: 'australian',
+                AT: 'austrian',
+                AZ: 'az',
+                BD: 'bd',
+                BY: 'by',
+                BE: 'be',
+                BO: 'bo',
+                BA: 'ba',
+                BR: 'brazilian',
+                BG: 'bulgarian',
+                CL: 'cl',
+                CN: 'china',
+                CO: 'co',
+                CR: 'cr',
+                HR: 'croatian',
+                CU: 'cu',
+                CZ: 'czech',
+                DK: 'danish',
+                DO: 'do',
+                EC: 'ec',
+                EG: 'eg',
+                SV: 'sv',
+                GQ: 'gq',
+                EE: 'ee',
+                ET: 'et',
+                FI: 'finnish',
+                FR: 'french',
+                GE: 'ge',
+                DE: 'german',
+                GR: 'greek',
+                GT: 'gt',
+                HN: 'hn',
+                HK: 'hong_kong',
+                IS: 'is',
+                IN: 'indian',
+                ID: 'indonesian',
+                IE: 'irish',
+                IR: 'ir',
+                IL: 'jewish',
+                IT: 'italian',
+                JP: 'japanese',
+                JO: 'jo',
+                KZ: 'kz',
+                LV: 'latvian',
+                LT: 'lithuanian',
+                LU: 'lu',
+                MY: 'malaysia',
+                MX: 'mexican',
+                MD: 'md',
+                NL: 'dutch',
+                NZ: 'new_zealand',
+                NI: 'ni',
+                NG: 'ng',
+                NO: 'norwegian',
+                PK: 'pk',
+                PA: 'pa',
+                PY: 'py',
+                PE: 'pe',
+                PH: 'philippines',
+                PL: 'polish',
+                PT: 'portuguese',
+                KR: 'south_korea',
+                RO: 'romanian',
+                RU: 'russian',
+                SA: 'saudiarabian',
+                RS: 'rs',
+                SG: 'singapore',
+                SK: 'slovak',
+                SA: 'sa',
+                ES: 'spain',
+                SE: 'swedish',
+                CH: 'ch',
+                TW: 'taiwan',
+                TH: 'th',
+                CD: 'cd',
+                MK: 'mk',
+                TR: 'turkish',
+                UA: 'ukrainian',
+                AE: 'ae',
+                UK: 'uk',
+                UY: 'uy',
+                VE: 've',
+                VN: 'vietnamese'
+            };
+            var holidaysEventSource = {
+                googleCalendarId: (holidayCalendarEvents[currentCountry] || holidayCalendarEvents["US"]) + '__en@@holiday.calendar.google.com',
+                color: 'gray'
+            };
+            var googleCalendarApiKey = ''; // Company-specific key
+            if (googleCalendarApiKey == "") {
+                console.error("No Google Calendar API key provided. Create one using the instructions at http://fullcalendar.io/docs/google_calendar/ and set the 'googleCalendarApiKey' property with the key.")
+                console.trace();
+            }
+
+            var customerEventsEventSource = {
+                dataType: 'exigo',
+                ignoreTimezone: true,
+                events: actions.getEvents,
+                eventDataTransform: function (event) {
+                    event.id = event.CalendarEventID;
+                    event.start = event.StartDate;
+                    event.end = event.EndDate;
+                    event.allDay = event.AllDay;
+                    event.title = event.Description;
+                    event.url = event.Url;
+                    event.backgroundColor = event.CalendarEventType.Color;
+                    event.borderColor = event.CalendarEventType.Color;
+                    event.textColor = '#000000';
+
+                    event.frequency = calendars.getCalendarEventRecurrenceSummary(event);
+                    if (event.frequency == 'None') delete event.frequency;
+
+                    return event;
+                }
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+
+
+                // Create the calendar popover
+                $(function () {
+                    if ($('#calendar-popover').length == 0) {
+                        $('body').append($('<div />', {
+                            id: 'calendar-popover'
+                        }).attr({
+                            'class': 'popover top calendar-popover'
+                        }));
+                    }
+                });
+
+
+                // Initialize the calendars
+                $calendar.fullCalendar({
+                    lang: '@Identity.Current.Language.CultureCode.ToLower()',
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,agendaWeek,agendaDay'
+                    },
+                    timeFormat: {
+                        'month': 'h:mm A'
+                    },
+                    columnFormat: {
+                        month: 'dddd',
+                        week: 'ddd M/D',
+                        day: 'dddd M/D'
+                    },
+                    titleFormat: {
+                        month: 'MMMM YYYY',
+                        week: "MMMM D, YYYY",
+                        day: 'dddd, MMMM D, YYYY'
+                    },
+                    firstDay: 1,
+                    editable: false,
+                    googleCalendarApiKey: googleCalendarApiKey,
+                    eventSources: [
+                        holidaysEventSource,
+                        customerEventsEventSource
+                    ],
+                    eventRender: function (event, $element) {
+                        // Holidays
+                        event.isgooglecalendarevent = event.source.dataType && event.source.dataType == 'gcal';
+                        if (event.isgooglecalendarevent) {
+                            $element.find('.fc-event-title').prepend('<i class="fa-calendar-o"></i> ');
+                        }
+
+                        // Popover
+                        $element.on('click', function (e) {
+                            e.preventDefault();
+                            e.stopImmediatePropagation();
+
+
+                            var $popover = $('.calendar-popover');
+
+                            // Prepare some view-specific data
+                            event.date = event.start.format("dddd, MMMM Do");
+
+                            // Populate the template
+                            Handlebars.render('#calendar-popover-template', event);
+                            var $arrow = $popover.find('.arrow');
+
+                            // Position the popover
+                            var popoverWidth = $popover.width(),
+                                popoverHeight = $popover.height() + 5,
+                                elementWidth = $element.width(),
+                                elementOffset = $element.offset(),
+                                windowWidth = $(window).width(),
+                                x = elementOffset.left - ((popoverWidth - elementWidth) / 2),
+                                y = elementOffset.top - popoverHeight;
+
+                            // Ensure that the popover is fully visible
+                            if (x < 0) {
+                                x = 0;
+                                $arrow.css({ 'left': (elementOffset.left + (elementWidth / 2) - 5) + 'px' });
+                            }
+                            if ((x + popoverWidth) > windowWidth) {
+                                x = (windowWidth - popoverWidth);
+                                $arrow.css({ 'left': ((elementOffset.left - x) + (elementWidth / 2)) + 'px' });
+                            }
+
+
+                            $popover
+                                .css({
+                                    top: y + 'px',
+                                    left: x + 'px'
+                                })
+                                .show();
+                        });
+                    },
+                    viewRender: function (view, element) {
+                        $('.calendar-popover').hide();
+                    }
+                });
+            }
+            init();
+
+        });
+    </script>
+}

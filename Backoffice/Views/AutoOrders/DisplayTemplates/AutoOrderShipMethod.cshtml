@@ -1,0 +1,90 @@
+﻿@model Backoffice.ViewModels.AutoOrders.AutoOrderShipMethodViewModel
+@{
+    var modelError = (Model.Error != null && Model.Error.Length > 0) ? Model.Error : null;
+
+    var hasError = (!modelError.IsNullOrEmpty());
+}
+@using (Ajax.BeginForm("updateautoordershipmethod", "autoorders", new AjaxOptions
+{
+    OnSuccess = "onUpdateShipMethodSuccess"
+}))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="top-bar-blue no-padding no-margin-top">
+        @if (!modelError.IsNullOrEmpty())
+        {
+            <div class="space-20"></div>
+            <div class="alert-danger alert-dismissable" style="display: block;" id="shiperroralert">
+                <strong>Unable to place order:</strong> @modelError
+            </div>
+        }
+        <div class="row-24 row-head">
+            <div class="col-xs-24">
+                <h3>@Resources.Common.EditShipMethod</h3>
+                <span class="autoorder-cart-name">@Resources.Common.OrderUppercase</span>
+                <span class="autoorder-cart-value">#@Model.AutoorderID</span>
+                <input type="hidden" name="autoorderid" value="@Model.AutoorderID" />
+            </div>
+        </div>
+        <div class="space-20"></div>
+        <div class="row row-body">
+            <div class="alert alert-danger alert-dismissable" id="shipmethodalert">
+                <button type="button" class="close" data-role="hide-alert" aria-hidden="true">&times;</button>
+                <h4 class="alert-error-header">@Resources.Common.SorryErrorText</h4>
+                <h4 class="alert-success-header">@Resources.Common.ShipMethodUpdated</h4>
+                <p class="alert-message-body"></p>
+            </div>
+            @if (!hasError)
+            {
+                <div class="col-xs-12">
+                    @foreach (var shipmethod in Model.ShipMethods)
+                    {
+                        var selected = (shipmethod.Selected) ? "checked" : "";
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="shipMethodID" value="@shipmethod.ShipMethodID" @selected>
+                                <span style="min-width:100px;display:inline-block;">@shipmethod.ShipMethodDescription</span>  @shipmethod.Price.ToString("C")
+                            </label>
+                        </div>
+                    }
+                </div>                
+            }
+        </div>
+        <div class="space-10"></div>
+    </div>
+    if (!hasError)
+    {
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="autoorder-cart-buttons">
+                    <button type="button" class="btn btn-sm btn-danger btn-cancel autoOrder-link" data-loading-text="Loading..."><span>@Resources.Common.CancelUppercase </span></button>
+                    <button type="submit" class="autoOrder-link btn btn-sm btn-success" data-loading-text="Loading..."><span><i class="fa-save"></i> @Resources.Common.SaveUppercase </span></button>
+                </div>
+            </div>
+        </div>
+    }
+}
+<script>
+    function onUpdateShipMethodSuccess(response) {
+        window.trigger("shipmethodalert", response);
+        $("button").each(function () {
+            $(this).button("reset");
+        });
+    }
+    function registerEventHandlers() {
+        $("button").on("click", function () {
+            $("button").each(function () {
+                $(this).button("loading");
+            });
+        });
+
+    }
+
+
+    // Initialization
+    function init() {
+        registerEventHandlers();
+    }
+    init();
+</script>

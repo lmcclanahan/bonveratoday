@@ -1,0 +1,436 @@
+﻿@model OrderReviewViewModel
+@{
+    ViewBag.Title = Resources.Common.Review;
+    Layout = "~/Views/Shopping/_CheckoutLayout.cshtml";
+
+    var orderItems = Model.OrderItems;
+    var hasOrder = orderItems.Count() > 0;
+
+    var autoOrderItems = Model.AutoOrderItems;
+    var hasAutoOrder = autoOrderItems != null && autoOrderItems.Count() > 0;
+
+    var errorMessage = Request.QueryString["error"];
+    var modelError = (Model.Errors != null && Model.Errors.Count() > 0) ? Model.Errors.First() : null;
+
+    var hasError = (!errorMessage.IsNullOrEmpty() || !modelError.IsNullOrEmpty());
+    
+
+    // We need to show a specific message if there is a change made for the First Order Pack being in the cart and not allowable
+    var hasFirstOrderItemRemoved = (ViewBag.FirstOrderItemRemoved != null) ? ViewBag.FirstOrderItemRemoved : false;
+    var hasFirstOrderItem = ViewBag.CartHasFirstOrderItem != null ? ViewBag.CartHasFirstOrderItem : false;
+    var hasFirstOrderDiscount = Model.OrderTotals != null && Model.OrderTotals.Details.Where(d => d.PriceTotal < 0).Count() > 0;
+    var firstOrderPackItemCode = ViewBag.FirstOrderPackItemCode;
+
+    // Will Call Logic
+    var willCallShipMethodID = Model.WillCallShipMethodID;
+    var hasWillCallAvailable = (ViewBag.HasWillCallAvailable != null) ? ViewBag.HasWillCallAvailable : false;
+    var userSelctedWillCall = ViewBag.UserSelectedWillCall;
+    //T.W. 7/5/2016 77999 Grab all Tier 1 items in cart to calculate shipping discount
+    var tierOneItems = Model.OrderItems.Where(i => i.Field2 == "1");
+
+    var buttonId = "";
+    var disabled = "";
+
+
+}
+<style>
+    #view-shoppingreview {
+        margin: 20px 0 50px 0;
+    }
+</style>
+<input type="hidden" class="activenavigation" value="shopping" />
+<div class="container">
+    <div id="view-shoppingreview" class="cart review shop">
+        <h2>@ViewBag.Title</h2>
+        @if (!errorMessage.IsNullOrEmpty())
+        {
+            <div class="space-20"></div>
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Unable to place order:</strong> @errorMessage
+            </div>
+        }
+        @if (!modelError.IsNullOrEmpty())
+        {
+            <div class="space-20"></div>
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Unable to place order:</strong> @modelError
+            </div>
+        }
+        @if (hasFirstOrderItemRemoved)
+        {
+            <div class="space-20"></div>
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                You are attempting to purchase the First Order Pack, but you have already purchased this item. It has been removed from your cart.
+            </div>
+        }
+        <div class="row margin-15">
+            <div class="col-sm-9">
+                @if (hasOrder)
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h3>@Resources.Common.TodaysOrder:</h3>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <h5>@Resources.Common.ShippingAddress</h5>
+                                    @Html.DisplayFor(c => c.PropertyBag.ShippingAddress)
+                                    <div class="space-10"></div>
+                                    <a href="@Url.Action("shipping")"><i class="fa-edit"></i> @Resources.Common.Edit</a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <h5>@Resources.Common.PaymentMethod</h5>
+                                    @Html.Partial("DisplayTemplates/PaymentMethod", Model.PropertyBag.PaymentMethod, new ViewDataDictionary {
+                               { "hideaddress", true },
+                               { "carttotal", Model.OrderTotals.Total }
+                               })
+                                    @if (Model.PropertyBag.BillingAddress != null && Model.PropertyBag.BillingAddress.IsComplete)
+                                    {
+                                        @Html.DisplayFor(c => c.PropertyBag.BillingAddress)
+                                    }
+                                    <div class="space-10"></div>
+                                    <a href="@Url.Action("Payment")"><i class="fa-edit"></i> @Resources.Common.Edit</a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <h5>@Resources.Common.ChooseShippingMethod:</h5>
+                                    <div id="shipmethods">
+                                        @using (Html.BeginForm("SetShipMethodID", "shopping"))
+                                        {
+                                            foreach (var shipMethod in Model.ShipMethods.OrderBy(c => c.Price))
+                                            {
+                                                <div class="radio">
+                                                    <label>
+                                                        @Html.RadioButton("ShipMethodID", shipMethod.ShipMethodID, shipMethod.Selected)
+                                                        @shipMethod.ShipMethodDescription <small class="text-muted">@shipMethod.Price.ToString("C")</small>
+                                                    </label>
+                                                </div>
+                                            }
+                                            @Html.AntiForgeryToken()
+                                            
+                                            @*T.W. 7/1/2016 77999 Shows shipping discount if TIER 1 products' BV total is greater than 75
+                                            if (tierOneItems.Sum(c => c.BV * c.Quantity) >= 75)
+                                            {
+                                                <h5>Applied shipping discount of @Convert.ToDecimal(Model.OrderTotals.Other16).ToString("C")</h5>
+                                            }*@
+                                        }
+                                        
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @Html.Partial("Partials/Cart/PaneledCart", orderItems, new ViewDataDictionary {
+                        { "PanelTitle", "These item(s) will be shipped to you today:" },
+                        { "Type", ShoppingCartItemType.Order },
+                        { "HideControls", true },
+                        { "FirstOrderPackItemCode", firstOrderPackItemCode }
+                    })
+                    <hr />
+                }
+                @if (hasAutoOrder)
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h3>@Resources.Common.AutoOrder:</h3>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <h5>@Resources.Common.ShippingAddress</h5>
+                                    @Html.DisplayFor(c => c.PropertyBag.AutoOrderShippingAddress)
+                                    <div class="space-10"></div>
+                                    <a href="@Url.Action("autoordershipping")"><i class="fa-edit"></i> @Resources.Common.Edit</a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <h5>@Resources.Common.PaymentMethod</h5>
+                                    @Html.Partial("DisplayTemplates/PaymentMethod", Model.PropertyBag.AutoOrderPaymentMethod, new ViewDataDictionary { { "hideaddress", true } })
+                                    @if (Model.PropertyBag.AutoOrderBillingAddress != null && Model.PropertyBag.AutoOrderBillingAddress.IsComplete)
+                                    {
+                                        @Html.DisplayFor(c => c.PropertyBag.AutoOrderBillingAddress)
+                                    }
+                                    <div class="space-10"></div>
+                                    <a href="@Url.Action("AutoOrderPayment")"><i class="fa-edit"></i> @Resources.Common.Edit</a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <h5>@Resources.Common.ChooseShippingMethod:</h5>
+                                    <div class="shipmethods">
+                                        @using (Html.BeginForm("SetAutoOrderShipMethodID", "shopping"))
+                                        {
+                                            foreach (var shipMethod in Model.AutoOrderShipMethods.OrderBy(c => c.Price))
+                                            {
+                                                <div class="radio">
+                                                    <label>
+                                                        @Html.RadioButton("ShipMethodID", shipMethod.ShipMethodID, shipMethod.Selected)
+                                                        @shipMethod.ShipMethodDescription <small class="text-muted">@shipMethod.Price.ToString("C")</small>
+                                                    </label>
+                                                </div>
+                                            }
+                                            @Html.AntiForgeryToken()
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @Html.Partial("Partials/Cart/PaneledCart", autoOrderItems, new ViewDataDictionary {
+                        { "PanelTitle", "These item(s) will be shipped to you <strong>{0}</strong> starting on <strong>{1:M/d/yyyy}</strong>:".FormatWith(Model.PropertyBag.AutoOrderFrequencyType.ToString().ToLower(), Model.PropertyBag.AutoOrderStartDate) },
+                        { "Type", ShoppingCartItemType.AutoOrder },
+                        { "HideControls", true }
+                    })
+                }
+            </div>
+            <div class="col-sm-3">
+                @if (hasOrder)
+                {
+                    var discountItems = Model.OrderTotals.Details.Where(d => d.PriceTotal < 0);
+                    var subtotal = Model.OrderTotals.Subtotal;
+                    if (hasFirstOrderItem && hasFirstOrderDiscount)
+                    {
+                        subtotal += discountItems.Sum(i => i.PriceTotal) * -1;
+                    }
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            @Resources.Common.TodaysOrder
+                        </div>
+                        <div class="panel-body order-totals">
+                            <dl class="dl-horizontal no-margin">
+                                <dt>@Resources.Common.Subtotal:</dt>
+                                <dd>@subtotal.ToString("C")</dd>
+                                <dt>@Resources.Common.Shipping:</dt>
+                                <dd>@Model.OrderTotals.Shipping.ToString("C")</dd>
+                            </dl>
+                        </div>
+                        @if (hasFirstOrderItem && hasFirstOrderDiscount)
+                        {
+                            var discount = discountItems.Sum(i => i.PriceTotal) * -1;
+                            <div class="panel-body order-totals">
+                                <dl class="dl-horizontal no-margin text-success">
+                                    <dt>Discount:</dt>
+                                    <dd><strong style="margin-left:-10px;">- @discount.ToString("C")</strong></dd>
+                                </dl>
+                            </div>
+                        }
+                        <div class="panel-body order-totals">
+                            <dl class="dl-horizontal no-margin">
+                                <dt>@Resources.Common.TotalBeforeTax:</dt>
+                                <dd>@((Model.OrderTotals.Subtotal + Model.OrderTotals.Shipping).ToString("C"))</dd>
+                                <dt>@Resources.Common.Tax:</dt>
+                                <dd>@Model.OrderTotals.Tax.ToString("C")</dd>
+                            </dl>
+                        </div>
+                        <div class="panel-body order-totals">
+                            <dl class="dl-horizontal grandtotal no-margin">
+                                <dt>@Resources.Common.GrandTotal:</dt>
+                                <dd>@Model.OrderTotals.Total.ToString("C")</dd>
+
+                               
+                            </dl>
+
+                        </div>
+                    </div>
+                }
+
+                @if (hasAutoOrder)
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            @Resources.Common.YourAutoOrder
+                        </div>
+                        <div class="panel-body order-totals">
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-12 col-md-6">
+                                    <dl class="no-margin">
+                                        <dt>@Resources.Common.Frequency:</dt>
+                                        <dd>@Model.PropertyBag.AutoOrderFrequencyType.ToString()</dd>
+                                    </dl>
+                                </div>
+                                <div class="col-xs-6 col-sm-12 col-md-6">
+                                    <dl class="no-margin">
+                                        <dt>@Resources.Common.StartDate:</dt>
+                                        <dd>@Model.PropertyBag.AutoOrderStartDate.ToString("M/d/yyyy")</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body order-totals">
+                            <dl class="dl-horizontal no-margin">
+                                <dt>@Resources.Common.Subtotal:</dt>
+                                <dd>@Model.AutoOrderTotals.Subtotal.ToString("C")</dd>
+                                <dt>@Resources.Common.Estimated @Resources.Common.Shipping:</dt>
+                                <dd>@Model.AutoOrderTotals.Shipping.ToString("C")</dd>
+                                <dt>@Resources.Common.Estimated @Resources.Common.Tax:</dt>
+                                <dd>@Model.AutoOrderTotals.Tax.ToString("C")</dd>
+                            </dl>
+                        </div>
+                        <div class="panel-body order-totals">
+                            <dl class="dl-horizontal grandtotal no-margin">
+                                <dt>@Resources.Common.Estimated @Resources.Common.Total:</dt>
+                                <dd>@Model.AutoOrderTotals.Total.ToString("C")</dd>
+                            </dl>
+                        </div>
+                    </div>
+                }
+                <div class="space-15"></div>
+                <div id="submission-form-container">
+                    @using (Ajax.BeginForm("submitcheckout", "shopping", new AjaxOptions()
+                {
+                    OnBegin = "reviewoverview.onBegin",
+                    OnSuccess = "reviewoverview.onSuccess",
+                    OnFailure = "reviewoverview.onFailure"
+                }))
+                    {
+                        @Html.AntiForgeryToken()
+                        //Ticket79886 - L.A. - 9/13/2016 - Added logic to gray out Place Order button if shipping calculation error occurs
+                        if (Model.Errors == null)
+                        {
+                            buttonId = "btn-submit-order";
+                        }
+                        else
+                        {
+                            buttonId = "btn-invalidorder";
+                            disabled = "disabled";
+                        }
+
+                        if (hasOrder)
+                        {
+                            <button type="submit" class="btn btn-success btn-lg btn-block @disabled" id="@buttonId" data-loading-text="Loading...">@Resources.Common.PlaceOrder</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-success btn-lg btn-block @disabled" id="@buttonId" data-loading-text="Loading...">@Resources.Common.CreateAutoOrder</button>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        @* Will Call confirm modal *@
+        <div class="modal fade" tabindex="-1" role="dialog" id="will-call-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Will Call</h4>
+                    </div>
+                    <div class="modal-body">
+                        @Resources.Common.WillCallConfirmMessage
+                    </div>
+                    @* 79669 09/02/2016 PM Changed button text from Close to No and from Submit Order to Yes, resourced text *@
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="modal-close-button">@Resources.Common.No</button>
+                        <button type="button" class="btn btn-primary" id="modal-submit-button" data-loading-text="Loading...">@Resources.Common.Yes</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        var reviewoverview;
+
+        require(["jquery", "app", "ajax", "bootstrap", "pubsub"], function ($, app, ajax) {
+            reviewoverview = (function () {
+                // Settings
+                var context = "#view-shoppingreview",
+                    $context = $(context),
+                    willCallShipMethodID = parseInt("@willCallShipMethodID"),
+                    hasWillCallAvailable = @hasWillCallAvailable.ToString().ToLower(),
+                    hasSelectedWillCall = @userSelctedWillCall.ToString().ToLower(),
+                    orderCompleteUrl = "@Url.Action("ordercomplete", "shopping")",
+                    unableToCompleteMessage = "@Resources.Common.WeWereUnableToComplete";
+
+
+                // Event Handlers
+                function registerEventHandlers() {
+
+                    $("#btn-submit-order", $context).on("click", function(e) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+
+                        $(this).button("loading");
+
+                        if (hasSelectedWillCall) {
+                            $("#will-call-modal").modal("show");
+                        } else {
+                            $("#submission-form-container form").submit();
+                        }
+                    });
+
+                    //Ticket79886 - L.A. - 9/13/2016 - If any errors this will disbale the button
+                    $("#btn-invalidorder", $context).on("click", function(e) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                    });
+
+                    $("#modal-submit-button").on("click", function () {
+                        $(this).button("loading");
+                        $("#btn-submit-order").button("loading");
+                        $("#submission-form-container form").submit();
+
+                        $(this).modal("hide");
+                    });
+                    
+                    @* 79669 09/02/2016 PM Sets ground to default after Will Call is cancelled *@
+                    @* 79669 09/06/2016 PM Changed prop('checked', true) to click() *@
+                    $("#modal-close-button").on("click", function() {
+                        $("input[name=ShipMethodID][value='2']").click();
+                    });
+
+                    $('[name="ShipMethodID"]', $context).on('change', function () {
+                        $("#btn-submit-order").button("loading");
+                        $(this).parents('form').first().submit();
+                    });
+
+                }
+
+
+                // Actions
+                var actions = {
+                    onBegin: function (xhr) {
+                        $("#btn-submit-order").button("loading");
+                    },
+                    onSuccess: function (response) {
+                        if (response.success) {
+                            var redirectUrl = orderCompleteUrl + '?token={0}'.format(response.token);
+
+                            window.location = redirectUrl;
+                        } else {
+                            // Logic here to account for the First Order Pack needing to be removed
+                            if (response.redirectUrl !== undefined) {
+                                window.location = response.redirectUrl;
+                                return;
+                            }
+
+                            app.throwError(response.message, unableToCompleteMessage);
+                            $("#btn-submit-order").button('reset');
+                        }
+                    },
+                    onFailure: function (xhr) {
+                        console.log("submit failed", xhr);
+                        $("#btn-submit-order").button('reset');
+                    }
+                };
+
+
+                // Initialization
+                function init() {
+                    registerEventHandlers();
+                }
+                init();
+
+
+                return {
+                    onBegin: actions.onBegin,
+                    onSuccess: actions.onSuccess,
+                    onFailure: actions.onFailure
+                }
+            })();
+        });
+
+    </script>
+}

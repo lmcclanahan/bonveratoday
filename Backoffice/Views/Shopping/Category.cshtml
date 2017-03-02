@@ -1,0 +1,134 @@
+﻿@model CategoryLandingViewModel
+@{
+    ViewBag.Title = Model.CategoryOptions.MainCategory.ItemCategoryDescription;
+    Layout = "~/Views/Shared/_DefaultLayout.cshtml";
+}
+
+@Html.Partial("Partials/Navigation/_ShoppingNavigation")
+
+<div id="view-productlist" class="shop">
+
+    <div class="container product-list">
+        <h2 class="category-heading">@Model.CategoryOptions.MainCategory.ItemCategoryDescription</h2>
+        <p class="category-description">
+            @Model.MainCategoryDescription
+        </p>
+
+        <div class="row">
+            <div class="col-sm-3 product-list-navigation">
+                @Html.Partial("partials/navigation/_categorylist", Model.CategoryOptions)
+            </div>
+            <div class="col-sm-9 items-list">
+
+                @foreach (var subcategory in Model.CategoryOptions.MainCategory.Subcategories)
+                {
+                    var subCategoryItems = Model.Items.Where(i => i.CategoryID == subcategory.ItemCategoryID).ToList();
+                    
+
+                    <div class="subcategory-container" data-category="@subcategory.ItemCategoryID">
+                        <h2 class="subcategory-heading">@subcategory.ItemCategoryDescription</h2>
+
+                        <div class="row">
+                            @foreach (var item in subCategoryItems)
+                            {
+                                <div class="col-sm-4 product" data-itemcode="@item.ItemCode">
+                                    @Html.Partial("Partials/Items/Cards/SingleItem", item)
+
+                                    @* Trigger button for quick shop popup modal *@
+                                    <button type="button" class="btn quick-shop-btn" data-toggle="modal" data-target=".quickShopModal-@item.ItemCode" data-quick-shop="@item.ItemCode">Quick Shop <i class="fa-long-arrow-right"></i></button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal for Quickshop Popup *@
+<div id="quickshop-container"></div>
+
+<div class="space-100"></div>
+
+
+
+@section scripts
+{
+    <script>
+        require(["jquery", "pubsub", "ajax"], function ($, pubsub, ajax) {
+
+            var $subcategoryLinks = $("[data-subcategory]"),
+                quickshopModalUrl = "@Url.Action("quickshopmodal")";
+
+
+            function registerEventHandlers() {
+                window.on('order.addtocart', function (item) {
+                    console.log('order.addtocart', item);
+                });
+
+                window.on('autoorder.addtocart', function (item) {
+                    console.log('autoorder.addtocart', item);
+                });
+
+                $("[data-itemcode]").hover(function () {
+                    var itemcode = $(this).data("itemcode"),
+                       $quickshopLink = $("[data-quick-shop='" + itemcode + "']");
+
+                    $quickshopLink.show();
+                },
+                function () {
+                    var itemcode = $(this).data("itemcode"),
+                       $quickshopLink = $("[data-quick-shop='" + itemcode + "']");
+
+                    $quickshopLink.hide();
+                });
+
+                $("[data-quick-shop]").on("click", function () {
+                    var itemcode = $(this).data("quick-shop");
+
+                    ajax.json({
+                        url: quickshopModalUrl,
+                        data: { itemcode: itemcode },
+                        success: function (response) {
+                            if (response.success) {
+                                $("#quickshop-container").html(response.html);
+                                $("#quickshop-container .modal").modal();
+                            } else {
+                                console.log("error fetching quick shop modal", response.message);
+                            }
+                        }
+                    });
+                });
+
+                $subcategoryLinks.on("click", function () {
+                    var $this = $(this);
+
+                    actions.toggleCategory($this);
+                });
+            }
+
+            var actions = {
+                toggleCategory: function (control) {
+                    var $this = control,
+                        category = $this.data("subcategory");
+                    
+                    $subcategoryLinks.removeClass("active");
+                    $this.addClass("active");
+
+                    $(".subcategory-container").hide();
+                    $(".subcategory-container[data-category='" + category + "']").show();
+                }
+            };
+
+            function _init() {
+                registerEventHandlers();
+
+                $subcategoryLinks.first().click();
+            }
+            _init();
+
+        });
+    </script>
+}
+

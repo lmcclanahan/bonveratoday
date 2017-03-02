@@ -1,0 +1,42 @@
+﻿@model IItem
+@{
+    var contextID = Guid.NewGuid();
+}
+
+<div data-widget="item" id="view-item-@contextID" class="view-item view-item-card">
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            @Html.HiddenFor(c => c.ItemID)
+            @Html.HiddenFor(c => c.ItemTypeID)
+            @Html.HiddenFor(c => c.Quantity)
+
+            <div class="image">
+                <a href="@Url.Action("itemdetail", new { itemcode = Model.ItemCode })">
+                    <img src="@Model.SmallImageUrl" />
+                </a>
+
+            </div>
+
+            <div class="details">
+                <i class="fa-circle"></i><div class="itemdescription" data-clamp="2"> @Model.ItemDescription</div>
+                <div class="second-line">
+                    @Model.ShortDetail1
+                </div>
+                <div class="price">@Model.Price.ToString("C")</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+
+    .itemdescription {
+        color: #5C3B19;
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+
+</style>

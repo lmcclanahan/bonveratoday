@@ -1,0 +1,103 @@
+﻿@model AutoOrderPaymentMethodViewModel
+@{
+    ViewBag.Title = Resources.Common.AutoOrders;
+
+    var ID = ViewContext.RouteData.Values["id"];
+}
+
+
+<h2>@ViewBag.Title</h2>
+
+<div id="view-accountoverview">
+    <div class="row">
+        <div class="col-sm-3">
+            @Html.Navigation()
+        </div>
+
+        <div class="col-sm-9">
+            <div id="view-editpaymentmethod">
+
+                @if (Model.PaymentMethods.Count() > 0)
+                {
+                    <h3>@Resources.Common.SelectPaymentMethod</h3>
+
+
+
+                    <div class="panel panel-default">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead style="background-color: #eee;">
+                                    <tr>
+                                        <th colspan="2">@Resources.Common.YourPaymentMethods</th>
+                                        <th>@Resources.Common.Name</th>
+                                        <th class="text-right" style="width: 100px;">@Resources.Common.Expires</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var method in Model.PaymentMethods)
+                                    {
+                                        if (method is CreditCard)
+                                        {
+                                            var card = method as CreditCard;
+
+                                            <tr>
+                                                <td style="width: 180px;">
+                                                    @using (Html.BeginForm("UseCreditCardOnFile", "AutoOrders"))
+                                                    {
+                                                        @Html.HiddenFor(c => ID)
+                                                        @Html.EditorFor(c => card, "CreditCardOnFile")
+
+                                                        <button type="submit" class="btn btn-primary btn-block">@Resources.Common.PayWithThisCard</button>
+                                                    }
+                                                </td>
+
+                                                <td>@Resources.Common.CardEndingIn @card.CardNumber</td>
+                                                <td>@card.NameOnCard</td>
+                                                <td class="@((card.IsExpired) ? "text-danger" : "") text-right">
+                                                    @card.ExpirationDate.ToString("M/yyyy")
+                                                    @if (card.IsExpired)
+                                                    {
+                                                        <text><br />@Resources.Common.Expired</text>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+
+                                        if (method is BankAccount)
+                                        {
+                                            var account = method as BankAccount;
+
+                                            <tr>
+                                                <td style="width: 30px;">
+                                                    @using (Html.BeginForm("UseBankAccountOnFile", "AutoOrders"))
+                                                    {
+                                                        @Html.HiddenFor(c => ID)
+                                                        @Html.EditorFor(c => account, "BankAccountOnFile")
+
+                                                        <button type="submit" class="btn btn-primary btn-block">@Resources.Common.PayWithThisAccount</button>
+                                                    }
+                                                </td>
+                                                <td>@account.BankName @Resources.Common.AccountEndingIn @account.AccountNumber</td>
+                                                <td>@account.NameOnAccount</td>
+                                                <td class="text-right text-muted">---</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="space-50"></div>
+                }
+
+                <h3>@Resources.Common.UsingNewPaymentMethod</h3>
+                <p><a href="@Url.Action("PaymentMethodList", "Account")" class="btn btn-default"><i class="fa-pencil"></i> @Resources.Common.ManagePaymentMethods</a></p>
+
+            </div>
+        </div>
+    </div>
+</div>

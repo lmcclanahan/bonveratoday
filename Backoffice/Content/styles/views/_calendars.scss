@@ -1,0 +1,34 @@
+@import "../mixins/_mixins.scss";
+#view-manageevent {
+    .k-header { background-color: transparent; }
+    .k-widget.input-sm { padding: 0; }
+
+    .k-datepicker { width: 9em;
+        .k-select { display: none; }
+    }
+    .k-timepicker { width: 7.5em;
+        .k-select { display: none; }
+    }
+    .k-picker-wrap { padding-right: 0; }
+}
+
+
+#view-calendar {
+    @include disable-highlighting();
+    .fc-event { cursor: pointer; }
+    .fc-other-month { background-color: #f0f0f0; }
+    .fc-event-time { display: block; font-size: 0.85em; font-weight: normal; @include opacity(50); }
+
+    .legend {
+        .legend-color { width: 15px; height: 15px; }
+    }
+}
+
+.calendar-popover { font-size: 0.85em; @include disable-highlighting(); @include opacity(95);
+    dl { margin: 0;
+        dt { text-align: left; width: 80px; }
+        dd { margin-left: 90px; }
+    }
+
+    .options { border-top: 1px solid #ddd; margin-top: 10px; padding-top: 5px; }
+}

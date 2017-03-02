@@ -1,0 +1,220 @@
+﻿@{
+    ViewBag.Title = Resources.Common.Avatar;
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div id="view-manageavatar">
+    <div class="row">
+        <div class="col-sm-3">
+            @Html.Navigation()
+        </div>
+
+        <div class="col-sm-9">
+            <div class="panel panel-default">
+                <div class="panel-heading"><h4 class="panel-title">@Resources.Common.Avatar</h4></div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                <div class="fileupload-preview">
+                                    <img src="@Url.Avatar(Identity.Current.CustomerID, type: AvatarType.Large, cache: false)" class="avatar img-responsive" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-9">
+                            <!--New Tabs-->
+                            <ul id="myTab" class="nav nav-underlined-tabs nav-justified">
+                                <li class="active"><a href="#view-browse" data-toggle="tab"><i class="fa-search"></i> @Resources.Common.Browse</a></li>
+                                <li class=""><a href="#view-url" data-toggle="tab"><i class="fa-globe"></i> @Resources.Common.URL</a></li>
+                                <li class=""><a href="#view-gravatar" data-toggle="tab"><i class="fa-circle-o"></i> @Resources.Common.Gravatar</a></li>
+                                <li class=""><a href="#view-facebook" data-toggle="tab"><i class="fa-facebook"></i> @Resources.Common.Facebook</a></li>
+                            </ul>
+
+                            <div class="space-30"></div>
+
+                            <div class="tab-content">
+                                <div class="tab-pane active in view-avatarform" id="view-browse">
+                                    @using (Html.BeginForm("setavatarfromfile", "account", FormMethod.Post, new { id = "form-upload", enctype = "multipart/form-data" }))
+                                    {
+                                        <h4>@Resources.Common.UploadImageFromComputer</h4>
+                                        <p>
+                                            <input type="file" name="File" class="form-control" accept=".jpg,.jpeg,.gif,.png" />
+
+                                            <div class="progress" style="display: none;">
+                                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                                                    0%
+                                                </div>
+                                            </div>
+
+                                        </p>
+                                        <p>
+                                            <button type="button" class="btn btn-primary" data-role="submit">@Resources.Common.Upload</button>
+                                        </p>
+                                    }
+                                </div>
+                                <div class="tab-pane view-avatarform" id="view-url">
+                                    @using (Html.BeginForm("setavatarfromurl", "account", FormMethod.Post))
+                                    {
+                                        <h4>@Resources.Common.UploadFromURL</h4>
+                                        <p>
+                                            <input type="url" name="Url" class="form-control" />
+                                        </p>
+                                        <p>
+                                            <button type="button" class="btn btn-primary" data-role="submit">@Resources.Common.Upload</button>
+                                        </p>
+                                    }
+                                </div>
+                                <div class="tab-pane view-avatarform" id="view-gravatar">
+                                    @using (Html.BeginForm("setavatarfromgravatar", "account", FormMethod.Post))
+                                    {
+                                        <h4>@Resources.Common.UseGravatarImage</h4>
+                                        <p>
+                                            <input type="email" name="Email" class="form-control" placeholder="@Resources.Common.WhatsYourEmailAddress" />
+                                        </p>
+                                        <p>
+                                            <button type="button" class="btn btn-primary" data-role="submit">@Resources.Common.Submit</button>
+                                            <a href="http://www.gravatar.com" target="_blank" class="btn btn-sm btn-link">@Resources.Common.WhatIsGravatar</a>
+                                        </p>
+                                    }
+                                </div>
+                                <div class="tab-pane view-avatarform" id="view-facebook">
+                                    @using (Html.BeginForm("setavatarfromfacebook", "account", FormMethod.Post))
+                                    {
+                                        <h4>@Resources.Common.UseFacebookImage</h4>
+                                        <p>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">facebook.com/</span>
+                                                <input type="text" name="Username" class="form-control" placeholder="@Resources.Common.WhatsYourFacebookUsername">
+                                            </div>
+                                        </p>
+                                        <p>
+                                            <button type="button" class="btn btn-primary" data-role="submit">@Resources.Common.Submit</button>
+                                        </p>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="space-20"></div>
+                            <hr /> 
+
+                            <h4>Or choose an avatar</h4>
+
+                            @foreach (var url in ViewBag.AvatarHistoryItems)
+                            {
+                                <a href="@Url.Action("sethistoricalavatar", new { url = url })"><img src="@url" class="avatar avatar-sm" style="max-width: 50px;" /></a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="modal-cropavatar" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modal-cropavatarLabel" aria-describedby="Heading" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Content to be loaded dynamically -->
+        </div>
+    </div>
+</div>
+
+
+
+
+@section scripts
+{
+    <script>
+        require(["jquery", "ajax", "jquery-form", "bootstrap"], function ($, ajax) {
+
+            // Settings
+            var context = "#view-manageavatar",
+                $context = $(context);
+
+
+            // Event Handlers
+            function registerEventHandlers() {
+                $('.view-avatarform [data-role="submit"]', $context).on('click', function () {
+                    $(this).button("loading");
+                    actions.submitForm($(this).parents('.tab-pane'));
+                });
+
+                $('.view-avatarform :input').on('keypress', function (event) {
+                    if (event.which == 13) {
+                        event.preventDefault();
+                        actions.submitForm($(this).parents('.tab-pane'));
+                    }
+                });
+            };
+
+
+
+            // Actions
+            var actions = {
+                submitForm: function($view) {
+                    $view.find('form').ajaxSubmit({
+                        beforeSend: function () {
+                            helpers.updateProgressBar($view, 0);
+                        },
+                        uploadProgress: function (event, position, total, percentComplete) {
+                            helpers.updateProgressBar($view, percentComplete);
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                actions.loadCroppingView();
+                            }
+                            else {
+                                toastr.error(Resources.Common.UploadImageFailed);
+                                $("[data-role='submit']").button("reset");
+                            }
+                        },
+                        complete: function (xhr) {
+                            helpers.updateProgressBar($view, 0);
+                        }
+                    });
+                },
+                loadCroppingView: function () {
+                    ajax.html({
+                        url: Router.action("Account", "CropAvatar"),
+                        success: function (html) {
+                            $('#modal-cropavatar').find('.modal-content').html(html);
+                            $('#modal-cropavatar').modal();
+                        }
+                    });
+                }
+            };
+
+
+            // Helpers
+            var helpers = {
+                updateProgressBar: function ($view, value) {
+                    var $progress = $('.progress', $view);
+                    if ($progress.length == 0) return;
+
+                    if (value > 0 && value < 100) {
+                        $progress.show();
+                    }
+                    else {
+                        $progress.hide();
+                    }
+
+                    $progress.find('.progress-bar')
+                        .attr('aria-valuenow', value)
+                        .css('width', value + '%')
+                        .html(value + '%');
+                }
+            };
+
+
+            // Initialization
+            function init() {
+                registerEventHandlers();
+            }
+            init();
+
+        });
+    </script>
+}

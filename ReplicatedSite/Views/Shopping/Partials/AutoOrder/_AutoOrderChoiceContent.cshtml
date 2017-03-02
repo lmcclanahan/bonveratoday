@@ -1,0 +1,98 @@
+﻿@model AutoOrderChoiceViewModel
+@{
+    var headerText = "";
+    if (Model.AutoOrders.Count < 3)
+    {
+        headerText = "Would you like to create a new " + Resources.Common.AutoShip + " profile or would you like to update an existing one?";
+    }
+    else
+    {
+        headerText = "You have the maximum amount of " + Resources.Common.AutoShip + " orders, choose one of the following to update.";
+    }
+}
+<div id="auto-order-choice-container">
+    <h3 class="raleway-font auto-order-choice-header-text">@headerText</h3>
+
+    <strong class="text-lg">The item(s) you are adding are listed below:</strong>
+    <div class="space-10"></div>
+    @*<ul class="">
+            @foreach (var item in Model.AutoOrderItems)
+            {
+                <li><strong class="text-uppercase">@item.Quantity.ToString("0") - @item.ItemDescription</strong> <small>(#@item.ItemCode)</small></li>
+            }
+        </ul>*@
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>QTY</th>
+                <th>ITEM</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.AutoOrderItems)
+            {
+                <tr>
+                    <td><strong class="text-uppercase text-right">@item.Quantity.ToString("0") </strong></td>
+                    <td><span class="text-uppercase">@item.ItemDescription</span> <small>(#@item.ItemCode)</small></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+
+    <div class="space-20"></div>
+
+    <div class="row">
+        @if (Model.AutoOrders.Count < 3)
+        {
+            <div class="col-sm-6">
+                <div class="panel panel-default choice-panel" data-autoorderid="0">
+                    <div class="panel-heading">
+                        <h4>Create New @Resources.Common.AutoShip</h4>
+                    </div>
+                    <div class="panel-body">
+                        Select this option to proceed through the checkout process and create your new @Resources.Common.AutoShip.
+                    </div>
+                </div>
+            </div>
+        }
+
+        @foreach (var autoorder in Model.AutoOrders)
+        {
+            <div class="col-sm-6">
+                <div class="panel panel-default choice-panel" data-autoorderid="@autoorder.AutoOrderID">
+                    <div class="panel-heading">
+                        <h4>Update @Resources.Common.AutoShip</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <ul class="list-unstyled">
+                                    <li>ID#:</li>
+                                    <li>Next Run Date:</li>
+                                    <li>Items:</li>
+                                    <li>Subtotal:</li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-6">
+                                <ul class="list-unstyled">
+                                    <li>@autoorder.AutoOrderID</li>
+                                    <li>@Convert.ToDateTime(autoorder.NextRunDate).ToShortDateString()</li>
+                                    <li>@autoorder.Details.Sum(d => d.Quantity).ToString("0")</li>
+                                    <li>@autoorder.Subtotal.ToString("C")</li>
+                                </ul>
+                            </div>
+                        </div>                              
+                    </div>
+                </div>
+            </div>
+            // Corrects bootstrap float issue on hover
+            if ((Model.AutoOrders.IndexOf(autoorder) + 1) % 2 == 0){<div class="clearfix"></div>}
+        }
+    </div>
+    <div class="space-30"></div>
+</div>
+
+@* All javascript related to this module resides in the AutoOrderChoiceModal.cshtml file - Mike M. *@

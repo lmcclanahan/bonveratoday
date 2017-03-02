@@ -1,0 +1,232 @@
+﻿@model ItemListViewModel
+@{
+    ViewBag.Title = Resources.Common.PartnerStores;
+    Layout = "~/Views/Shared/_ShoppingLayout.cshtml";
+    var customerID = (Identity.Customer != null) ? Identity.Customer.CustomerID : Identity.Owner.CustomerID;
+    var isLoggedIn = customerID != 5 || !Identity.Owner.IsOrphan;
+}
+
+<input type="hidden" class="activenavigation" value="shopping" />
+
+@section navigation
+{
+    <div id="category-banner-container" class="partnerstores-banner">
+        <h3>Partner Stores</h3>
+    </div>
+}
+<div id="view-productlist" class="shop">
+    <div class="container product-list">
+        <h2 class="header-ltblue text-center">The Brands You Know &amp; Trust</h2>
+
+        <div class="space-20"></div>
+
+        @*82558 20161117 DV.  Due to legal issues, comment out All Brands*@
+        @*<div class="col-sm-12 col-md-12 product item-fields">
+            @{
+                var partnerStoreNode = GlobalUtilities.GetPartnerStoreUrl(Identity.Owner.CustomerID, customerID, true, PartnerStoreTypes.AllBrandsForYou);
+            }
+            <div data-widget="item" id="view-item" class="view-item view-item-card">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="image">
+                                    <a data-prevent-navigate="@isLoggedIn.ToString().ToLower()" target="_blank" href="@partnerStoreNode.Url">
+                                        <img class="img-responsive" src="~/Content/images/allbrandstoyou.png" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="details">
+                                    <div class="">
+                                        All Brands To You is striving to bring the term "Anyway Money" to life.
+                                        It begins with over 1,000 pet items, including many name brand dog and cat foods, pet treats, and other pet supplies.
+                                        Next you will find over 1,000 Dollar Items including batteries, plastic bags, razors, school supplies, and many more general merchandise items.
+                                        You will also find many name brand grocery items including bread and buns, coffee, potato chips, beef jerky, and fudge.
+                                        We will continue to search for more and more items that you purchase "Anyway".
+                                    </div>
+
+                                    <div class="space-20"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <a class="btn btn-info btn-block" data-prevent-navigate="@isLoggedIn.ToString().ToLower()" target="_blank" href="@partnerStoreNode.Url">Shop Now</a>
+                        </div>
+                        <div class="space-10"></div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+        <div class="col-sm-12 col-md-12 product item-fields">
+            @{
+                var eskimoNode = GlobalUtilities.GetPartnerStoreUrl(Identity.Owner.CustomerID, customerID, true, PartnerStoreTypes.Eskimo);
+            }
+
+            <div data-widget="item" id="view-item" class="view-item view-item-card">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="image">
+                                    <a data-prevent-navigate="@isLoggedIn.ToString().ToLower()" target="_blank" href="@eskimoNode.Url">
+                                        <img class="img-responsive" src="@Url.Content("~/content/images/banners/EKCB_Logo.png")" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="details">
+                                    <div class="">
+                                        Eskimo Kisses Boutique is all about finding trendy deals and selling products at great prices. We have established relationships with suppliers and manufacturers of the hottest most fashionable items available for babies and children. We are able to deliver low prices because we work directly with the manufacturers! We find the deals, you order from Eskimo Kisses Boutique, then we place a larger order directly from the manufacturers and pass on the savings to you!
+                                    </div>
+
+                                    <div class="space-20"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <a class="btn btn-info btn-block" data-prevent-navigate="@isLoggedIn.ToString().ToLower()" target="_blank" href="@eskimoNode.Url">Shop Now</a>
+                        </div>
+                        <div class="space-10"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*T.W. 7/11/2016 78266 Added new partner store used dev site for uat, when successful change to isabelles live site http://www.isabelleslighting.com/*@
+        <div class="col-sm-12 col-md-12 product item-fields">
+            @{
+                var isabellesNode = GlobalUtilities.GetPartnerStoreUrl(Identity.Owner.CustomerID, customerID, true, PartnerStoreTypes.Isabelles);
+            }
+            <div data-widget="item" id="view-item" class="view-item view-item-card">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="image">
+                                    <a data-prevent-navigate="@isLoggedIn.ToString().ToLower()" target="_blank" href="@isabellesNode.Url">
+                                        <img class="img-responsive" src="@Url.Content("~/Content/images/banners/isabelleslightingcom_logoREP.png")" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="details">
+                                    <div class="">
+                                        @Resources.Common.IsabelleLightingDescription
+                                    </div>
+                                    <div class="space-20"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <a class="btn btn-info btn-block" data-prevent-navigate="@isLoggedIn.ToString().ToLower()" target="_blank" href="@isabellesNode.Url">Shop Now</a>
+                        </div>
+                        <div class="space-10"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @**D.H. 8-22-16 #77129 Added new partner store for Fuller Brush**@
+        @*<div class="col-sm-12 col-md-12 product item-fields">
+            @{
+                var BullionworksNode = GlobalUtilities.GetPartnerStoreUrl(Identity.Owner.CustomerID, customerID, true, PartnerStoreTypes.Bullionworks);
+            }
+            <div data-widget="item" id="view-item" class="view-item view-item-card fuller-brush-logo">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <div class="image">
+                                <a data-prevent-navigate="@isLoggedIn.ToString().ToLower()" target="_blank" href="@BullionworksNode.Url">
+                                        <img class="img-responsive" src="@Url.Content("~/Content/images/bullionworkslogo.png")" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="details">
+                                    <div>
+                                        @Resources.Common.WhenItComesToPurchasingPreciousMetals
+
+
+                                    </div>
+                                    <div class="space-20"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-container">
+                            <a class="btn btn-info btn-block" data-prevent-navigate="@isLoggedIn.ToString().ToLower()" target="_blank" href="@BullionworksNode.Url">Shop Now</a>
+                        </div>
+                        <div class="space-10"></div>
+                    </div>
+                </div>
+            </div>
+    </div>*@
+
+
+
+    </div>
+</div>
+<div class="space-100"></div>
+
+<!-- Login Modal -->
+<div class="modal fade" id="login-reminder-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Login</h4>
+            </div>
+            <div class="modal-body">
+                <strong>For some reason we are unable to identify you having an account with us at Bonvera. To receive the right benefits for your purchase we advise that you access this Partner/Affilate store by logging to your account. There are many reasons this could happen:</strong>
+                <div class="space-20"></div>
+                <ul class="list-unstyled">
+                    <li>
+                        1) You might not have created an account with us. If so, please click on "Sign In" on bonvera.com and click on "Create an Account"
+                    </li>
+                    <li>
+                        2) You have an account with us but you are not logged in. If so please login using your credentials.
+                    </li>
+                    <li>
+                        3) There could be browser security issues or problem with cookies, in which case, we advise clear your cookies for your browser or use a different browser and login again with your Bonvera account.
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <a id="override-link" href="" class="btn btn-default" target="_blank">Continue without an Account</a>
+                <a class="btn btn-primary" href="@Url.Action("login", "account", new { ReturnUrl = Request.Url.AbsoluteUri })">Login or Create an Account</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    require(["jquery"], function ($) {
+
+        function _init() {
+            $("[data-prevent-navigate]").on("click", function (e) {
+                var $this = $(this),
+                    url = $this.attr("href"),
+                    isLoggedIn = $this.data("prevent-navigate");
+
+                if (isLoggedIn) {
+
+                } else {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+
+                    $("#login-reminder-modal").find("#override-link").attr("href", url);
+
+                    $("#login-reminder-modal").modal("show");
+                }
+
+            });
+
+            $("#override-link").on("click", function () {
+                $("#login-reminder-modal").modal("hide");
+            });
+        }
+        _init();
+    });
+</script>

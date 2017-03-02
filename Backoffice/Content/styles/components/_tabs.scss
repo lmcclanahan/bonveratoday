@@ -1,0 +1,28 @@
+.tab-pane {
+	> .panel { border-top: 0; border-top-left-radius: 0; border-top-right-radius: 0; }
+}
+
+.nav-underlined-tabs {  
+	& > li { float: left; margin-bottom: -1px; 
+		& > a { margin-right: 2px; line-height: 1.428571429; border-bottom: 3px solid transparent; 
+			&:hover { border-bottom-color: #ddd; background-color: #fff;  }
+		}
+		&.active > a,
+		&.active > a:hover,
+		&.active > a:focus { color: #555; cursor: default; background-color: #fff; border-bottom-color: #428BCA; }
+	}
+
+
+	&.nav-justified { width: 100%; 
+		& > li { float: none; 
+			& > a { margin-bottom: 5px; text-align: center; }
+		}
+		& > .dropdown .dropdown-menu { top: auto; left: auto; }
+	}
+    @media (min-width: 768px) {
+        &.nav-justified > li { display: table-cell; width: 1%; 
+			& > a { margin-bottom: 0; }
+		}	
+	}
+
+}

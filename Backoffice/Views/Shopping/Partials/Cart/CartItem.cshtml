@@ -1,0 +1,149 @@
+﻿@model IEnumerable<IItem>
+@{
+    var contextID = Guid.NewGuid();
+    var type = (ShoppingCartItemType)ViewData["Type"];
+    var typeID = (int)type;
+    var hideControls = (ViewData["HideControls"] != null && ViewData["HideControls"].CanBeParsedAs<bool>()) ? (bool)ViewData["HideControls"] : false;
+}
+
+<div data-widget="cart" id="view-cart-@contextID" class="view-cart">
+
+    @if (Model.Count() > 0)
+    {
+        <table class="table cart-table table-responsive">
+            <thead>
+                <tr>
+                    <th>@Resources.Common.CartItem</th>
+                    <th>@Resources.Common.Description</th>
+                    <th>@Resources.Common.Price</th>
+                    <th>@Resources.Common.Quantity</th>
+                    <th>@Resources.Common.Total</th>
+                    @if (!hideControls)
+                    {
+                        <th></th>
+                    }
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                var itemCodeForDetail = (item.GroupMasterItemCode.IsNotNullOrEmpty()) ? item.GroupMasterItemCode : item.ItemCode;
+
+                <tbody data-ordertype="@type">
+                    <tr data-id="@item.ID" data-itemcode="@item.ItemCode">
+                        <td>
+                            <img src="@item.TinyImageUrl" class="img-responsive" style="max-height: 80px;" />
+                        </td>
+                        <td>
+                            <div>
+                                <dl>
+                                    <dt class="text-uppercase"><a href="@Url.Action("itemdetail", new { itemcode = itemCodeForDetail })">@item.ItemDescription</a></dt>
+                                    <dd><a href="@Url.Action("itemdetail", new { itemcode = itemCodeForDetail })">@item.ItemCode</a></dd>
+                                </dl>
+                            </div>
+                        </td>
+                        <td>
+                            @item.Price.ToString("C")
+                        </td>
+                        <td>
+                            @if (hideControls)
+                            {
+                                <span>@item.Quantity.ToString("0")</span>
+                            }
+                            else
+                            {
+                                <input type="hidden" name="ID" value="@item.ID" class="item-quantity" />
+
+
+                                <div class="qtyminus">
+                                    <i class="fa-minus"></i>
+                                </div>
+                                <input style="height:40px;width:40px;" class="form-control qty text-center item-quantity" name="Quantity" type="text" min="1" data-price-each="@item.Price.ToString("0.00")" value="@item.Quantity.ToString("0")" />
+                                <div class="qtyplus">
+                                    <i class="fa-plus"></i>
+                                </div>
+                                <div class="clearfix"></div>
+                            }
+                        </td>
+
+                        <td class="total-price">
+                            @{var subtotal = (item.Price * item.Quantity).ToString("C");}
+                            <span data-text="subtotal" data-price-display="@item.ItemCode">@subtotal</span>
+                        </td>
+                        @if (!hideControls)
+                        {
+                            <td>
+
+                                <a class="cart-remove" data-role="cart.removeitemfromcart" data-id="@item.ID" data-itemcode="@item.ItemCode"><span class="remove"><i class="fa-remove"></i></span></a>
+                            </td>
+                        }
+                    </tr>
+
+
+                </tbody>
+
+
+            }
+        </table>
+    }
+
+</div>
+
+@using (Html.BeginPartialScript())
+{
+    <script>
+        require(["jquery", "pubsub", "extensions"], function ($) {
+
+            // Settings
+            var context = "#view-cart-@contextID",
+                $context = $(context);
+
+            //shopping.bind(context);
+
+            window.on('cart.itemremoved', function (id) {
+                $('[data-id="{0}"]'.format(id), $context).slideUp('fast', function () {
+                    $(this).remove();
+                    window.trigger("update.cartpreview");
+                });
+            });
+
+            $('[data-role="cart.removeitemfromcart"]').on("click", function () {
+                var id = $(this).data("id");
+                window.trigger("cart.removeitemfromcart", id);
+            });
+
+            var actions = {
+                updateCart: function (itemcode, type, originalQuantity) {
+                    originalQuantity = parseInt(originalQuantity);
+
+                    var $container = $('[data-itemcode="' + itemcode + '"][data-itemtype="' + type + '"].item-container'),
+                        $item = null,
+                        quantity = 0;
+
+                    if ($container.length > 0) {
+                        $item = $container.serializeObject();
+                        quantity = parseInt($item.Quantity);
+                    }
+                    else {
+                        $item = $('[data-itemcode="' + itemcode + '"][data-itemtype="' + type + '"]tr').serializeObject();
+                        quantity = parseInt($item.Quantity);
+                    }
+
+
+                    if (originalQuantity === 0 && quantity > 0) { // Add new item
+                        console.log("add");
+                        actions.addItem($item);
+                    }
+                    else if (originalQuantity > 0 && quantity === 0) { // Remove exisitng item
+                        console.log("remove");
+                        actions.removeItem($item);
+                    }
+                    else if (originalQuantity > 0 && quantity > 0) { // Update exiting item quantity
+                        console.log("update");
+                        actions.updateItem($item);
+                    }
+                }
+            }
+        });
+    </script>
+}

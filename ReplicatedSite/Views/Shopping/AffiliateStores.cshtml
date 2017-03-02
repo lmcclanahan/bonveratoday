@@ -1,0 +1,350 @@
+﻿@model ItemListViewModel
+@{
+    ViewBag.Title = Resources.Common.AffiliateStores;
+    Layout = "~/Views/Shared/_ShoppingLayout.cshtml";
+    var customerID = (Identity.Customer != null) ? Identity.Customer.CustomerID : Identity.Owner.CustomerID;
+    var isLoggedIn = customerID != 5 || !Identity.Owner.IsOrphan;
+}
+
+<input type="hidden" class="activenavigation" value="shopping" />
+@section navigation
+{
+    <div id="category-banner-container" class="affiliate-banner">
+        <h3>Affiliate Stores</h3>
+    </div>
+}
+<div id="view-productlist" class="shop affiliateStores">
+    <div class="container product-list">
+
+        <div class="text-center">
+            <h2 class="grey-box">@Resources.Common.AffiliateStoreCurrentStoresMessage</h2>
+        </div>
+        <div class="space-20"></div>
+
+        <div class="items-list">
+            <div class="space-20"></div>
+            @* 80084 09/02/2016 PM Updated Affiliate Stores list *@
+            <div class="row" id="itemList">
+                <!--Verizon Wireless-->
+                <div class="col-sm-12 affiliate-node text-center">
+                    <a target="_blank" href="http://www.anrdoezrs.net/click-7946661-12549284-1469805208000?sid=@customerID">
+                        <img src="http://www.ftjcfx.com/image-7946661-12549284-1469805208000" width="728" height="90" alt="$100 off new phone!" border="0" />
+                    </a>
+                </div>
+                <!--Blain-->
+                <div class="col-sm-4 affiliate-node text-center">
+                    <a target="_blank" href="http://www.dpbolvw.net/click-7946661-12350126-1445527850000?sid=@customerID">
+                        <img src="http://www.lduhtrp.net/image-7946661-12350126-1445527850000" width="250" height="250" alt="Blain Farm and Fleet" border="0" />
+                    </a>
+                </div>
+                <!--Columbia-->
+                <div class="col-sm-4 affiliate-node text-center">
+                    <a target="_blank" href="http://www.jdoqocy.com/click-7946661-12366622-1444312490000?sid=@customerID">
+                        <img src="http://www.tqlkg.com/image-7946661-12366622-1444312490000" width="250" height="250" alt="Columbia Sportswear" border="0" />
+                    </a>
+                </div>
+                <!--Avis-->
+                <div class="col-sm-4 affiliate-node text-center">
+                    <a target="_blank" href="http://www.anrdoezrs.net/click-7946661-10563574-1429054181000?sid=@customerID">
+                        <img src="http://www.ftjcfx.com/image-7946661-10563574-1429054181000" width="250" height="250" alt="Click here for the lowest rates at Avis.com" border="0" />
+                    </a>
+                </div>
+                <!-- Carhartt -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://www.anrdoezrs.net/click-7946661-12260988-1447172787000?sid=@customerID">
+                        <img src="http://www.lduhtrp.net/image-7946661-12260988-1447172787000" width="125" height="125" alt="Carhartt Logo Home Black 125x125" border="0" />
+                    </a>
+                </div>
+                <!--Walgreens-->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://www.jdoqocy.com/click-7946661-11280293-1417628774000?sid=@customerID">
+                        <img src="http://www.tqlkg.com/image-7946661-11280293-1417628774000" width="125" height="125" alt="BIG Deals on Living Healthy at Walgreens" border="0" />
+                    </a>
+                </div>
+                <!-- Dish network -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://www.jdoqocy.com/click-7946661-12548614-1459839605000?sid=@customerID">
+                        <img src="http://www.tqlkg.com/image-7946661-12548614-1459839605000" width="125" height="125" alt="Dish Network" border="0" />
+                    </a>
+                </div>
+                <!-- Ink Cartridges -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://www.jdoqocy.com/click-7946661-12492762-1454444586000?sid=@customerID">
+                        <img src="http://www.ftjcfx.com/image-7946661-12492762-1454444586000" width="125" height="125" alt="InkCartridges.com" border="0" />
+                    </a>
+                </div>
+                <!--EFoodDirect-->
+                <div class="col-sm-12 affiliate-node text-center">
+                    <a target="_blank" href="http://www.kqzyfj.com/click-7946661-12258913-1435166954000?sid=@customerID">
+                        <img src="http://www.awltovhc.com/image-7946661-12258913-1435166954000" width="728" height="90" alt="6 Month Emergency Food Supply from eFoodsDirect" border="0" />
+                    </a>
+                </div>
+                <!--Otter Box-->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://www.dpbolvw.net/click-7946661-11986490-1440024949000?sid=@customerID">
+                        <img src="http://www.tqlkg.com/image-7946661-11986490-1440024949000" width="125" height="125" alt="OtterBox.com: Free Shipping" border="0" />
+                    </a>
+                </div>
+                <!--Sally Beauty-->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://www.jdoqocy.com/click-7946661-10661833-1467241246000?sid=@customerID">
+                        <img src="http://www.awltovhc.com/image-7946661-10661833-1467241246000" width="125" height="125" alt="Shop SallyBeauty.com!" border="0" />
+                    </a>
+                </div>
+                <!--Auto Parts Warehouse -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://click.linksynergy.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=173296.10000002&type=4&subid=0&u1=@customerID">
+                        <img alt="US Auto Parts Network" border="0" src="http://images.apw21.com/2010/apw125x125-b.gif">
+                    </a>
+                </div>
+                <!--Thornes Research-->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://www.tkqlhce.com/click-7946661-12493981-1457034002000?sid=@customerID">
+                        <img src="http://www.awltovhc.com/image-7946661-12493981-1457034002000" width="125" height="125" alt="Thorne Research" border="0" />
+                    </a>
+                </div>
+                <!--Tires Direct-->
+                <div class="col-sm-12 affiliate-node text-center">
+                    <a target="_blank" href="http://www.kqzyfj.com/click-7946661-12662019-1471349218000?sid=@customerID">
+                        <img src="http://www.tqlkg.com/image-7946661-12662019-1471349218000" width="728" height="90" alt="Buy tires at tires-direct.com" border="0" />
+                    </a>
+                </div>
+                <!--Fabric-->
+                <div class="col-sm-4 affiliate-node text-center">
+                    <a target="_blank" href="http://www.dpbolvw.net/click-7946661-12641700-1468608866000?sid=@customerID">
+                        <img src="http://www.ftjcfx.com/image-7946661-12641700-1468608866000" width="250" height="250" alt="Fabric.com" border="0" />
+                    </a>
+                </div>
+                <!--TJ Maxx-->
+                <div class="col-sm-4 affiliate-node text-center">
+                    <a target="_blank" href="http://www.jdoqocy.com/click-7946661-12519919-1471010824000?sid=@customerID">
+                        <img src="http://www.ftjcfx.com/image-7946661-12519919-1471010824000" width="250" height="250" alt="TJ Maxx" border="0" />
+                    </a>
+                </div>
+                <!--FamilyChristian-->
+                <div class="col-sm-4 affiliate-node text-center">
+                    <a target="_blank" href="http://www.kqzyfj.com/click-7946661-11841774-1403875991000?sid=@customerID">
+                        <img src="http://www.lduhtrp.net/image-7946661-11841774-1403875991000" width="250" height="250" alt="Family Christian: When you shop, you give:  100% of our profits are donated to Christian Charities" border="0" />
+                    </a>
+                </div>
+                <!--Hanes -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://click.linksynergy.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=261332.10000131&type=4&subid=0&u1=@customerID">
+                        <img alt="Hanes.com" border="0" src="http://www.hanes.com/images/affiliates/AFF_Promo_125x125.gif">
+                    </a>
+                </div>
+                <!-- 1-800-Florals -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://www.anrdoezrs.net/click-7946661-5598118-1441316733000?sid=@customerID">
+                        <img src="http://www.lduhtrp.net/image-7946661-5598118-1441316733000" width="125" height="125" alt="Order Flowers Online" border="0" />
+                    </a>
+                </div>
+                <!-- 1-800-Lighting -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://www.anrdoezrs.net/click-7946661-10737084-1439509242000?sid=@customerID">
+                        <img src="http://www.tqlkg.com/image-7946661-10737084-1439509242000" width="125" height="125" alt="Shop 1800Lighting.com!" border="0" />
+                    </a>
+                </div>
+                <!-- 4-Wheel Parts -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://www.dpbolvw.net/click-7946661-12490152-1460157318000?sid=@customerID">
+                        <img src="http://www.ftjcfx.com/image-7946661-12490152-1460157318000" width="125" height="125" alt="Save 5% on your favorite off-road brands when you spend $150 or more" border="0" />
+                    </a>
+                </div>
+                <!-- All Battery -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://www.tkqlhce.com/click-7946661-11421409-1394581293000?sid=@customerID">
+                        <img src="http://www.ftjcfx.com/image-7946661-11421409-1394581293000" width="125" height="125" alt="" border="0" />
+                    </a>
+                </div>
+                <!-- Bowflex -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://www.jdoqocy.com/click-7946661-11654377-1467755762000?sid=@customerID">
+                        <img src="http://www.ftjcfx.com/image-7946661-11654377-1467755762000" width="125" height="125" alt="Bowflex.com " border="0" />
+                    </a>
+                </div>
+                <!-- ETundra -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://click.linksynergy.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=244310.35&subid=0&type=4&u1=@customerID">
+                        <img border="0" height="125" width="125" alt="Tundra Restaurant Supply" src="http://ad.linksynergy.com/fs-bin/show?id=O5iRe2q7Fxg&bids=244310.35&subid=0&type=4&gridnum=14">
+                    </a>
+                </div>
+                <!-- Omaha Steak -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://click.linksynergy.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=7537.10000926&subid=0&type=4&u1=@customerID">
+                        <img border="0" height="125" width="125" alt="OmahaSteaks.com, Inc." src="http://ad.linksynergy.com/fs-bin/show?id=O5iRe2q7Fxg&bids=7537.10000926&subid=0&type=4&gridnum=4">
+                    </a>
+                </div>
+                <!-- Wal-mart -->
+                <!--I.M. 9/23/16 Swapped_Wal-Mart_link_with_new_one-->
+                <div class="col-sm-12 affiliate-node text-center">
+                    <a target="_blank" href="http://linksynergy.walmart.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=223073.10004935&type=4&subid=0&u1=@customerID">
+                        <img alt="Wal-Mart.com USA, LLC" border="0" src="http://img.affil.walmart.com/b/560c2fbb260000d208897cff.jpg?encryptedId=uRDxVtQ19DY">
+                        <img src="//beacon.affil.walmart.com/affil/ttap.gif?affillt=4&affilwmls=uRDxVtQ19DY&affilsid=0&affiloid=223073.10004935" style="display:none;" />
+                    </a>
+                </div>
+                <!-- Panasonic -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://click.linksynergy.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=368272.10000371&subid=0&type=4&u1=@customerID">
+                        <img border="0" height="125" width="125" alt="Panasonic" src="http://ad.linksynergy.com/fs-bin/show?id=O5iRe2q7Fxg&bids=368272.10000371&subid=0&type=4&gridnum=14">
+                    </a>
+                </div>
+                <!-- Britt -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://click.linksynergy.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=358111.10000449&type=4&subid=0&u1=@customerID">
+                        <img alt="Get Organic Costa Rican Coffee plus Free Shipping on 6 bags+ at Cafe Britt" border="0" src="http://www.opmpros.com/host/cafebritt/images/banners/promo2_125x125.jpg">
+                    </a>
+                </div>
+                <!-- Payless Shoe -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://click.linksynergy.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=302525.50&subid=0&type=4&u1=@customerID">
+                        <img border="0" alt="Payless ShoeSource" style="margin-top: 45px;" src="http://ad.linksynergy.com/fs-bin/show?id=O5iRe2q7Fxg&bids=302525.50&subid=0&type=4&gridnum=7">
+                    </a>
+                </div>
+                <!-- Chocolate.org -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://click.linksynergy.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=368348.10000218&subid=0&type=4&u1=@customerID">
+                        <img border="0" height="125" width="125" alt="Shop Chocolate.org 250x250-2" src="http://ad.linksynergy.com/fs-bin/show?id=O5iRe2q7Fxg&bids=368348.10000218&subid=0&type=4&gridnum=0">
+                    </a>
+                </div>
+                <!--Advanced Auto Parts-->
+                <div class="col-sm-12 affiliate-node text-center">
+                    <a target="_blank" href="http://www.jdoqocy.com/click-7946661-10709803-1447204047000?sid=@customerID">
+                        <img src="http://www.ftjcfx.com/image-7946661-10709803-1447204047000" width="728" height="90" alt="Free Shipping on All Orders Over $75!" border="0" />
+                    </a>
+                </div>
+                <!-- Target -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://goto.target.com/c/206621/79234/2092?subId1=@customerID">
+                        <img src="http://adn.impactradius.com/display-ad/2092-79202" border="0" alt="" width="125" height="125" />
+                    </a>
+                </div>
+                <!-- Best Buy -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://click.linksynergy.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=422073.33&subid=0&type=4&u1=@customerID">
+                        <img border="0" height="125" width="125" alt="Best Buy Co, Inc." src="http://ad.linksynergy.com/fs-bin/show?id=O5iRe2q7Fxg&bids=422073.33&subid=0&type=4&gridnum=13">
+                    </a>
+                </div>
+                <!-- Gander Mountain -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://click.linksynergy.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=373985.37&subid=0&type=4&u1=@customerID">
+                        <img border="0" height="125" width="125" alt="Gander Mountain" src="http://ad.linksynergy.com/fs-bin/show?id=O5iRe2q7Fxg&bids=373985.37&subid=0&type=4&gridnum=0">
+                    </a>
+                </div>
+                <!-- Sam's Club -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://click.linksynergy.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=371325.25&subid=0&type=4&u1=@customerID">
+                        <img border="0" alt="Sam’s Club" src="http://ad.linksynergy.com/fs-bin/show?id=O5iRe2q7Fxg&bids=371325.25&subid=0&type=4&gridnum=4">
+                    </a>
+                </div>
+                <!-- Blair -->
+                <!--I.M. 9/23/16 Swapped_Blair_link_with_new_one + new_image_src-->
+                <div class="col-sm-6 affiliate-node text-center">
+                    <a target="_blank" href="http://click.linksynergy.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=308080.9&subid=0&type=4&u1=@customerID">
+                        <img border="0" height="250" width="250" alt="Blair" src="http://ad.linksynergy.com/fs-bin/show?id=O5iRe2q7Fxg&bids=308080.9&subid=0&type=4&gridnum=4">
+                    </a>
+                </div>
+                <!--Dawgs-->
+                <div class="col-sm-6 affiliate-node text-center">
+                    <a target="_blank" href="http://www.dpbolvw.net/click-7946661-12222357-1454527210000?sid=@customerID">
+                        <img src="http://www.tqlkg.com/image-7946661-12222357-1454527210000" width="300" height="250" alt="" border="0" />
+                    </a>
+                </div>
+                <!--Strength-->
+                <div class="col-sm-12 affiliate-node text-center">
+                    <a target="_blank" href="http://www.jdoqocy.com/click-7946661-12628789-1467308385000?sid=@customerID">
+                        <img src="http://www.ftjcfx.com/image-7946661-12628789-1467308385000" width="728" height="90" alt="10% off site wide" border="0" />
+                    </a>
+                </div>
+                <!-- Lego Shop -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://click.linksynergy.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=115554.10000103&type=4&subid=0&u1=@customerID">
+                        <img alt="LEGO Brand Retail" height="125" width="125" border="0" src="http://cache.lego.com/2057/images/shop/Affiliate/LEGOgeneric_250x250.gif" />
+                    </a>
+                </div>
+                <!-- PetSmart -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://click.linksynergy.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=301691.10000280&subid=0&type=4&u1=@customerID">
+                        <img border="0" alt="PetSmart" src="http://ad.linksynergy.com/fs-bin/show?id=O5iRe2q7Fxg&bids=301691.10000280&subid=0&type=4&gridnum=4" />
+                    </a>
+                </div>
+                <!-- Microsoft -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://click.linksynergy.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=402138.10000820&subid=0&type=4&u1=@customerID">
+                        <img border="0" alt="Microsoft Store" src="http://ad.linksynergy.com/fs-bin/show?id=O5iRe2q7Fxg&bids=402138.10000820&subid=0&type=4&gridnum=4" />
+                    </a>
+                </div>
+                <!-- VisionDirect -->
+                <div class="col-sm-3 affiliate-node text-center">
+                    <a target="_blank" href="http://click.linksynergy.com/fs-bin/click?id=O5iRe2q7Fxg&offerid=227259.10000276&subid=0&type=4&u1=@customerID">
+                        <img border="0" alt="Vision Direct Contacts" src="http://ad.linksynergy.com/fs-bin/show?id=O5iRe2q7Fxg&bids=227259.10000276&subid=0&type=4&gridnum=4" />
+                    </a>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    @*Z.M. 77269 5-20-16 removed comming soon and brand collage img*@
+<div class="space-100"></div>
+
+
+<!-- Login Modal -->
+<div class="modal fade" id="login-reminder-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Login</h4>
+            </div>
+            <div class="modal-body">
+                <strong>For some reason we are unable to identify you having an account with us at Bonvera. To receive the right benefits for your purchase we advise that you access this Partner/Affilate store by logging to your account. There are many reasons this could happen:</strong>
+                <div class="space-20"></div>
+                <ul class="list-unstyled">
+                    <li>
+                        1) You might not have created an account with us. If so, please click on "Sign In" on bonvera.com and click on "Create an Account"
+                    </li>
+                    <li>
+                        2) You have an account with us but you are not logged in. If so please login using your credentials.
+                    </li>
+                    <li>
+                        3) There could be browser security issues or problem with cookies, in which case, we advise clear your cookies for your browser or use a different browser and login again with your Bonvera account.
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <a id="override-link" href="" class="btn btn-default" target="_blank">Continue without an Account</a>
+                <a class="btn btn-primary" href="@Url.Action("login", "account", new { ReturnUrl = Request.Url.AbsoluteUri })">Login or Create an Account</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    require(["jquery"], function ($) {
+
+        function _init() {
+            $("[data-prevent-navigate]").on("click", function (e) {
+                var $this = $(this),
+                    url = $this.attr("href"),
+                    isLoggedIn = $this.data("prevent-navigate");
+
+                if (isLoggedIn) {
+
+                } else {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+
+                    $("#login-reminder-modal").find("#override-link").attr("href", url);
+                    $("#login-reminder-modal").modal("show");
+                }
+
+            });
+
+            $("#override-link").on("click", function () {
+                $("#login-reminder-modal").modal("hide");
+            });
+        }
+        _init();
+    });
+</script>

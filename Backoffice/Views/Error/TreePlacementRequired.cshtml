@@ -1,0 +1,17 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
+    ViewBag.Title = Resources.Common.TreePlacementRequired;
+    Layout = "~/Views/Shared/_Error.cshtml";
+}
+
+<div class="jumbotron">
+    <div class="container-fluid">
+        <div class="text-center">
+            <h1>@ViewBag.Title</h1>
+            <p class="lead">
+                @Resources.Common.TreePlacementRequiredInstructions
+            </p>
+            <p><a class="btn btn-primary btn-lg" role="button" onclick="history.go(-1);">@Resources.Common.GoBack</a></p>
+        </div>
+    </div>
+</div>
